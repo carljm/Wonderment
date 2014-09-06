@@ -30,6 +30,9 @@ class Parent(models.Model):
     emergency = models.CharField(max_length=200, blank=True)
     emergency_contact = models.CharField(max_length=200, blank=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Child(models.Model):
     parent = models.ForeignKey(Parent)
@@ -39,17 +42,26 @@ class Child(models.Model):
     gender = models.CharField(
         max_length=1, choices=[('male', 'male'), ('female', 'female')])
 
+    def __str__(self):
+        return self.name
+
 
 class Session(models.Model):
     name = models.CharField(max_length=100)
     start_date = models.DateField()
     end_date = models.DateField()
 
+    def __str__(self):
+        return self.name
 
-class Participation(models.Model):
+
+class Participant(models.Model):
     parent = models.ForeignKey(Parent)
     session = models.ForeignKey(Session)
     level = models.CharField(
         max_length=20, choices=[('weekly', 'weekly'), ('monthly', 'monthly')])
     paid = models.IntegerField(default=0)
     jobs = models.TextField(blank=True)
+
+    def __str__(self):
+        return "%s is %s for %s" % (self.parent, self.level, self.session)
