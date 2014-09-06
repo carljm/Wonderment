@@ -1,1 +1,9 @@
 -r base.txt
+
+-e .
+
+pytest==2.6.2
+py==1.4.24
+pytest-cov==1.8.0
+cov-core==1.14.0
+coverage==3.7.1
