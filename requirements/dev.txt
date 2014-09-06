@@ -2,6 +2,7 @@
 
 -e .
 
+pytest-django==2.6.2
 pytest==2.6.2
 py==1.4.24
 pytest-cov==1.8.0
