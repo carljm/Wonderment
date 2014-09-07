@@ -49,6 +49,9 @@ class Parent(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+
 
 class Child(models.Model):
     parent = models.ForeignKey(Parent, related_name='children')
@@ -87,6 +90,9 @@ class Child(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+
 
 class Session(models.Model):
     name = models.CharField(max_length=100)
@@ -95,6 +101,9 @@ class Session(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ['start_date']
 
 
 class Participant(models.Model):
@@ -107,3 +116,6 @@ class Participant(models.Model):
 
     def __str__(self):
         return "%s is %s for %s" % (self.parent, self.level, self.session)
+
+    class Meta:
+        ordering = ['parent__name']
