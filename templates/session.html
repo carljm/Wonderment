@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}{{ session }} | {{ block.super }}{% endblock %}
+
+{% block body %}
+<h1>{% block header %}{{ session }}{% endblock %}</h1>
+
+{% block breadcrumb %}
+<a href="{% url 'home' %}">All sessions</a> &raquo;
+<a href="{% url 'session' session_id=session.id %}">{{ session }}</a>
+{% endblock %}
+
+{% block main %}
+<ul>
+  <li><a href="{% url 'age_groups' session_id=session.id %}">Age Groups</a></li>
+  <li><a href="">Monthly gatherings</a></li>
+  <li><a href="">Parents</a></li>
+</ul>
+{% endblock %}
+
+{% endblock %}

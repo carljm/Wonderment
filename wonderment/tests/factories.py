@@ -1,3 +1,5 @@
+import datetime
+
 import factory
 
 from wonderment.models import Parent, Child, Session, Participant
@@ -30,6 +32,8 @@ class SessionFactory(ModelFactory):
     FACTORY_FOR = Session
 
     name = "Test Session"
+    start_date = datetime.date(2014, 9, 12)
+    end_date = datetime.date(2014, 12, 5)
 
 
 class ParticipantFactory(ModelFactory):

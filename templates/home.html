@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>Sessions</h1>
+<ul>
+  {% for session in sessions %}
+  <li><a href="{% url 'session' session_id=session.id %}">{{ session }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

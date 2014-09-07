@@ -140,7 +140,7 @@ def clean_gender(v):
 
 
 def clean_date(v):
-    return parser.parse(v)
+    return parser.parse(v) if v else None
 
 
 def clean_choice_field(v, field_name, model=models.Parent):

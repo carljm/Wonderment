@@ -1,0 +1,21 @@
+{% extends "session.html" %}
+
+{% block title %}Age Groups | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: Age Groups{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }} &raquo;
+<a href="{% url 'age_groups' session_id=session.id %}">Age Groups</a>
+{% endblock %}
+
+{% block main %}
+{% for name, students in age_groups %}
+<h2>{{ name }} ({{ students|length }})</h2>
+<ul>
+  {% for student in students %}
+  <li>{{ student.name }} ({{ student.session_age|default:"?" }}): {{ student.special_needs }}</li>
+  {% endfor %}
+</ul>
+{% endfor %}
+{% endblock %}
