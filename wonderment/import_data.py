@@ -64,7 +64,7 @@ def import_csv(session, fn):
     with open(fn) as fh:
         reader = csv.DictReader(fh)
         for row in reader:
-            row = {REV_FIELDS[k]: v for k, v in row.items()}
+            row = {REV_FIELDS[k]: v for k, v in row.items() if k in REV_FIELDS}
             parent = models.Parent(
                 name='%s %s' % (row['first'], row['last']),
                 address=row['address'],
