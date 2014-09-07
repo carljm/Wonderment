@@ -1,1 +1,1 @@
-web: gunicorn coachhub.wsgi -b 0.0.0.0:$PORT -w 9
+web: gunicorn wonderment.wsgi -b 0.0.0.0:$PORT -w 9
