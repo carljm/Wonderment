@@ -58,12 +58,12 @@ FIELDS = {
 REV_FIELDS = {v: k for k, v in FIELDS.items()}
 
 
-def import_csv(fn):
+def import_csv(session, fn):
     with open(fn) as fh:
         reader = csv.DictReader(fh)
         for row in reader:
             row = {REV_FIELDS[k]: v for k, v in row.items()}
-            p = models.Parent(
+            parent = models.Parent(
                 name='%s %s' % (row['first'], row['last']),
                 address=row['address'],
                 phone=row['phone'],
@@ -81,8 +81,17 @@ def import_csv(fn):
                 emergency=row['emergency'],
                 emergency_contact=row['emergency_contact'],
             )
-            p.full_clean(validate_unique=False)
-            p.save(force_insert=True)
+            parent.full_clean(validate_unique=False)
+            parent.save(force_insert=True)
+
+            participant = models.Participant(
+                parent=parent,
+                session=session,
+                paid=clean_paid(row['paid']),
+                level=clean_level(row['level']),
+            )
+            participant.full_clean(validate_unique=False)
+            participant.save(force_insert=True)
 
 
 def clean_phone_type(v):
@@ -92,9 +101,24 @@ def clean_phone_type(v):
     return clean_choice_field(v, 'phone_type')
 
 
-def clean_choice_field(v, field_name):
+def clean_level(v):
+    if v == "ALL fall classes":
+        v = 'weekly'
+    elif v == "Monthly all ages gatherings ONLY":
+        v = 'monthly'
+    return clean_choice_field(v, 'level', models.Participant)
+
+
+def clean_paid(v):
+    try:
+        return int(v)
+    except (TypeError, ValueError):
+        return 0
+
+
+def clean_choice_field(v, field_name, model=models.Parent):
     v = v.lower()
-    field = models.Parent._meta.get_field_by_name(field_name)[0]
+    field = model._meta.get_field_by_name(field_name)[0]
     if v not in {c[0] for c in field.choices}:
         v = ''
     return v

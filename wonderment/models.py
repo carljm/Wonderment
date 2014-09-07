@@ -42,12 +42,15 @@ class Parent(models.Model):
 
 
 class Child(models.Model):
-    parent = models.ForeignKey(Parent)
+    parent = models.ForeignKey(Parent, related_name='children')
     name = models.CharField(max_length=200)
     birthdate = models.DateField(blank=True)
-    special_needs = models.TextField()
+    special_needs = models.TextField(blank=True)
     gender = models.CharField(
-        max_length=1, choices=[('male', 'male'), ('female', 'female')])
+        max_length=1,
+        choices=[('male', 'male'), ('female', 'female')],
+        blank=True,
+    )
 
     def __str__(self):
         return self.name
@@ -55,16 +58,16 @@ class Child(models.Model):
 
 class Session(models.Model):
     name = models.CharField(max_length=100)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return self.name
 
 
 class Participant(models.Model):
-    parent = models.ForeignKey(Parent)
-    session = models.ForeignKey(Session)
+    parent = models.ForeignKey(Parent, related_name='participations')
+    session = models.ForeignKey(Session, related_name='participants')
     level = models.CharField(
         max_length=20, choices=[('weekly', 'weekly'), ('monthly', 'monthly')])
     paid = models.IntegerField(default=0)

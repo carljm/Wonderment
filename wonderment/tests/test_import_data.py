@@ -4,9 +4,10 @@ import tempfile
 
 from wonderment.import_data import import_csv, FIELDS
 from wonderment import models
+from wonderment.tests import factories as f
 
 
-def do(*rows):
+def do(*rows, **kwargs):
     """Create temp CSV file from given row dicts and import it.
 
     Given field names should be short versions, will be translated.
@@ -14,18 +15,23 @@ def do(*rows):
     Order of fields is not guaranteed.
 
     """
-    f = tempfile.NamedTemporaryFile(
+    if 'session' in kwargs:
+        session = kwargs['session']
+    else:
+        session = f.SessionFactory.create()
+    tf = tempfile.NamedTemporaryFile(
         prefix='wonderment-tests-tmp-', mode='w', newline='', delete=False)
     try:
-        writer = csv.DictWriter(f.file, FIELDS.values())
+        writer = csv.DictWriter(tf.file, FIELDS.values())
         writer.writeheader()
         for row in rows:
+            row.setdefault('level', 'ALL fall classes')
             translated = {FIELDS[k]: v for k, v in row.items()}
             writer.writerow(translated)
-        f.close()
-        import_csv(f.name)
+        tf.close()
+        import_csv(session, tf.name)
     finally:
-        os.remove(f.name)
+        os.remove(tf.name)
 
 
 class TestImportCsv(object):
@@ -88,3 +94,24 @@ class TestImportCsv(object):
         types = models.Parent.objects.values_list('preferred', flat=True)
 
         assert sorted(types) == ['']
+
+    def test_participation(self, db):
+        session = f.SessionFactory.create()
+
+        do(
+            {
+                'paid': 100,
+                'level': 'ALL fall classes',
+            },
+            {
+                'paid': 50,
+                'level': 'Monthly all ages gatherings ONLY',
+            },
+            session=session,
+        )
+
+        for parent in models.Parent.objects.all():
+            p = parent.participations.get()
+            assert p.session == session
+            assert p.paid in {50, 100}
+            assert p.level == 'monthly' if p.paid == 50 else 'weekly'
