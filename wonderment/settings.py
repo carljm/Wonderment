@@ -125,4 +125,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = env('WM_STATIC_URL', default='/static/')
+STATIC_ROOT = env(
+    'WM_STATIC_ROOT', default=os.path.join(BASE_DIR, 'collected-assets'))
