@@ -89,6 +89,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djangosecure',
     'wonderment',
 )
 
@@ -130,3 +131,14 @@ STATIC_ROOT = env(
     'WM_STATIC_ROOT', default=os.path.join(BASE_DIR, 'collected-assets'))
 
 LOGIN_URL = '/admin/'
+
+SECURE_FRAME_DENY = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+
+USE_SSL = env('CH_USE_SSL', bool, default={'dev': False, 'prod': True})
+
+SESSION_COOKIE_SECURE = USE_SSL
+SECURE_SSL_REDIRECT = USE_SSL
+if USE_SSL:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
