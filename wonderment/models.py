@@ -35,6 +35,7 @@ class Parent(models.Model):
     could_assist = models.TextField(blank=True)
     all_ages_help = models.TextField(blank=True)
     other_contributions = models.TextField(blank=True)
+    classes_desired = models.TextField(blank=True)
 
     def __str__(self):
         return self.name

@@ -63,6 +63,38 @@ def import_csv(fn):
         reader = csv.DictReader(fh)
         for row in reader:
             row = {REV_FIELDS[k]: v for k, v in row.items()}
-            models.Parent.objects.create(
+            p = models.Parent(
                 name='%s %s' % (row['first'], row['last']),
+                address=row['address'],
+                phone=row['phone'],
+                phone_type=clean_phone_type(row['phone_type']),
+                email=row['email'],
+                preferred=clean_choice_field(row['preferred'], 'preferred'),
+                age_groups=row['age_groups'],
+                could_teach=row['could_teach'],
+                could_assist=row['could_assist'],
+                all_ages_help=row['all_ages_help'],
+                other_contributions=row['other_contributions'],
+                classes_desired=row['classes_desired'],
+                spouse=row['spouse'],
+                spouse_contact=row['spouse_contact'],
+                emergency=row['emergency'],
+                emergency_contact=row['emergency_contact'],
             )
+            p.full_clean(validate_unique=False)
+            p.save(force_insert=True)
+
+
+def clean_phone_type(v):
+    v = v.lower()
+    if v in {'cellular', 'mobile'}:
+        v = 'cell'
+    return clean_choice_field(v, 'phone_type')
+
+
+def clean_choice_field(v, field_name):
+    v = v.lower()
+    field = models.Parent._meta.get_field_by_name(field_name)[0]
+    if v not in {c[0] for c in field.choices}:
+        v = ''
+    return v
