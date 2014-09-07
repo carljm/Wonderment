@@ -95,17 +95,17 @@ def import_csv(session, fn):
             participant.full_clean(validate_unique=False)
             participant.save(force_insert=True)
 
-        for num in [1, 2, 3, 4]:
-            if row['name%s' % num]:
-                child = models.Child(
-                    parent=parent,
-                    name=row['name%s' % num],
-                    gender=clean_gender(row['gender%s' % num]),
-                    birthdate=clean_date(row['bday%s' % num]),
-                    special_needs=row['special%s' % num],
-                )
-                child.full_clean(validate_unique=False)
-                child.save(force_insert=True)
+            for num in [1, 2, 3, 4]:
+                if row['name%s' % num]:
+                    child = models.Child(
+                        parent=parent,
+                        name=row['name%s' % num],
+                        gender=clean_gender(row['gender%s' % num]),
+                        birthdate=clean_date(row['bday%s' % num]),
+                        special_needs=row['special%s' % num],
+                    )
+                    child.full_clean(validate_unique=False)
+                    child.save(force_insert=True)
 
 
 def clean_phone_type(v):
