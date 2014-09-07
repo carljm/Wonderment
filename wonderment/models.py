@@ -104,7 +104,7 @@ class Child(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        ordering = ['-birthdate']
 
 
 class Session(models.Model):
