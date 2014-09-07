@@ -3,7 +3,8 @@ from django.db import models
 
 
 GROUPS = [
-    ("Toddler", (1, 2)),
+    ("Nursery", (0, (1, 5))),
+    ("Toddler", ((1, 6), 2)),
     ("Pre-1", (3, 6)),
     ("Elementary", (7, 9)),
     ("Middle/High", (10, 15)),
@@ -82,8 +83,19 @@ class Child(models.Model):
         """Return name of age group this child is in."""
         age = self.age_years(as_of)
         if age is not None:
+            months = self.age(as_of).months
             for group_name, (low, high) in GROUPS:
-                if age >= low and age <= high:
+                low_months = 0
+                high_months = 12
+                if isinstance(low, tuple):
+                    low, low_months = low
+                if isinstance(high, tuple):
+                    high, high_months = high
+                if (
+                        (age > low or (age == low and months >= low_months))
+                        and
+                        (age < high or (age == high and months <= high_months))
+                ):
                     return group_name
         return None
 
