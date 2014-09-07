@@ -1,5 +1,5 @@
 import csv
-from urllib.request import urlopen
+from urllib.request import urlretrieve
 
 from dateutil import parser
 
@@ -63,10 +63,8 @@ REV_FIELDS = {v: k for k, v in FIELDS.items()}
 
 def import_csv(session, fn):
     if '://' in fn:
-        fh = urlopen(fn)
-    else:
-        fh = open(fn)
-    try:
+        fn, headers = urlretrieve(fn)
+    with open(fn) as fh:
         reader = csv.DictReader(fh)
         for row in reader:
             row = {REV_FIELDS[k]: v for k, v in row.items() if k in REV_FIELDS}
@@ -111,8 +109,6 @@ def import_csv(session, fn):
                     )
                     child.full_clean(validate_unique=False)
                     child.save(force_insert=True)
-    finally:
-        fh.close()
 
 
 def clean_phone_type(v):
