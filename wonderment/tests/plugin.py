@@ -1,6 +1,20 @@
 import os
 
 import cov_core
+import pytest
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        '--no-cov', action='store_false', dest='coverage', default=True)
+
+
+@pytest.mark.tryfirst
+def pytest_configure(config):
+    """Record coverage unless --no-cov flag given."""
+    if config.getoption('coverage'):
+        config.option.cov_source.append('wonderment')
+        config.option.cov_report.append('html')
 
 # Override pytest-cov's default implementation with our customized version
 OldCentral = cov_core.Central

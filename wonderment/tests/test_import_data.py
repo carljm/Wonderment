@@ -1,4 +1,5 @@
 import csv
+import datetime
 import os
 import tempfile
 
@@ -115,3 +116,19 @@ class TestImportCsv(object):
             assert p.session == session
             assert p.paid in {50, 100}
             assert p.level == 'monthly' if p.paid == 50 else 'weekly'
+
+    def test_children(self, db):
+        do(
+            {
+                'name1': "First Kid",
+                'gender1': 'girl',
+                'special1': "Special",
+                'bday1': '11/7/2009',
+            },
+        )
+
+        child = models.Parent.objects.get().children.get()
+        assert child.name == "First Kid"
+        assert child.gender == 'female'
+        assert child.special_needs == "Special"
+        assert child.birthdate == datetime.date(2009, 11, 7)

@@ -47,7 +47,7 @@ class Child(models.Model):
     birthdate = models.DateField(blank=True)
     special_needs = models.TextField(blank=True)
     gender = models.CharField(
-        max_length=1,
+        max_length=10,
         choices=[('male', 'male'), ('female', 'female')],
         blank=True,
     )

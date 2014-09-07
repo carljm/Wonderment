@@ -1,5 +1,7 @@
 import csv
 
+from dateutil import parser
+
 from . import models
 
 
@@ -87,11 +89,23 @@ def import_csv(session, fn):
             participant = models.Participant(
                 parent=parent,
                 session=session,
-                paid=clean_paid(row['paid']),
+                paid=clean_int(row['paid']),
                 level=clean_level(row['level']),
             )
             participant.full_clean(validate_unique=False)
             participant.save(force_insert=True)
+
+        for num in [1, 2, 3, 4]:
+            if row['name%s' % num]:
+                child = models.Child(
+                    parent=parent,
+                    name=row['name%s' % num],
+                    gender=clean_gender(row['gender%s' % num]),
+                    birthdate=clean_date(row['bday%s' % num]),
+                    special_needs=row['special%s' % num],
+                )
+                child.full_clean(validate_unique=False)
+                child.save(force_insert=True)
 
 
 def clean_phone_type(v):
@@ -109,11 +123,24 @@ def clean_level(v):
     return clean_choice_field(v, 'level', models.Participant)
 
 
-def clean_paid(v):
+def clean_int(v):
     try:
         return int(v)
     except (TypeError, ValueError):
         return 0
+
+
+def clean_gender(v):
+    v = v.lower()
+    if v in {'m', 'boy'}:
+        v = 'male'
+    elif v in {'f', 'girl'}:
+        v = 'female'
+    return clean_choice_field(v, 'gender', model=models.Child)
+
+
+def clean_date(v):
+    return parser.parse(v)
 
 
 def clean_choice_field(v, field_name, model=models.Parent):
