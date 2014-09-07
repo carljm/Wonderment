@@ -94,6 +94,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'djangosecure.middleware.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -136,7 +137,7 @@ SECURE_FRAME_DENY = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 
-USE_SSL = env('CH_USE_SSL', bool, default={'dev': False, 'prod': True})
+USE_SSL = env('WM_USE_SSL', bool, default={'dev': False, 'prod': True})
 
 SESSION_COOKIE_SECURE = USE_SSL
 SECURE_SSL_REDIRECT = USE_SSL
