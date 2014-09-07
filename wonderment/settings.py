@@ -131,7 +131,7 @@ STATIC_URL = env('WM_STATIC_URL', default='/static/')
 STATIC_ROOT = env(
     'WM_STATIC_ROOT', default=os.path.join(BASE_DIR, 'collected-assets'))
 
-LOGIN_URL = '/admin/'
+LOGIN_URL = '/admin/login/'
 
 SECURE_FRAME_DENY = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
