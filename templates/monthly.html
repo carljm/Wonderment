@@ -1,0 +1,31 @@
+{% extends "session.html" %}
+
+{% block title %}Monthly Gatherings | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: Monthly Gatherings{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }} &raquo;
+<a href="{% url 'monthly' session_id=session.id %}">Monthly Gatherings</a>
+{% endblock %}
+
+{% block main %}
+<h2>Expected attendance</h2>
+<p><strong>{{ parents|length }}</strong> families</p>
+<p><strong>{{ students|length }}</strong> kids</p>
+
+<h3>Kids by age group</h3>
+<ul>
+  {% for name, students in age_groups %}
+  <li>{{ name }}: <strong>{{ students|length }}</strong></li>
+  {% endfor %}
+</ul>
+<h2>Allergies &amp; Special Needs</h2>
+<ul>
+  {% for student in students %}
+  {% if student.special_needs %}
+  <li>{{ student }} ({{ student.session_age }}): {{ student.special_needs }}</li>
+  {% endif %}
+  {% endfor %}
+</ul>
+{% endblock %}
