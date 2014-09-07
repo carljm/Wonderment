@@ -5,7 +5,8 @@ from django.db import models
 GROUPS = [
     ("Nursery", (0, (1, 5))),
     ("Toddler", ((1, 6), 2)),
-    ("Pre-1", (3, 6)),
+    ("Preschool", (3, 4)),
+    ("K-1", (5, 6)),
     ("Elementary", (7, 9)),
     ("Middle/High", (10, 15)),
 ]
