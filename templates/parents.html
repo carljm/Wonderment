@@ -1,0 +1,24 @@
+{% extends "session.html" %}
+
+{% block title %}Parents | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: Parents{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }} &raquo;
+<a href="{% url 'parents' session_id=session.id %}">Parents</a>
+{% endblock %}
+
+{% block main %}
+<ul>
+  {% for parent in parents %}
+  <li>
+    {{ parent }}:
+    <a href="mailto:{{ parent.email }}">{{ parent.email }}</a>,
+    {{ parent.phone }} ({{ parent.phone_type }}),
+    prefers <strong>{{ parent.preferred }}</strong>,
+    {{ parent.jobs }}
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

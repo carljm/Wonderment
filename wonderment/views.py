@@ -70,3 +70,19 @@ def monthly(request, session_id):
             'session': session,
         },
     )
+
+
+@login_required
+def parents(request, session_id):
+    session = get_object_or_404(models.Session, pk=session_id)
+    participants = models.Participant.objects.filter(
+        paid__gt=0, session=session).select_related('parent')
+    parents = [p.parent for p in participants]
+    return render(
+        request,
+        'parents.html',
+        {
+            'parents': parents,
+            'session': session,
+        },
+    )
