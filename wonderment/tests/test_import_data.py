@@ -2,8 +2,9 @@ import csv
 import datetime
 import os
 import tempfile
+from unittest import mock
 
-from wonderment.import_data import import_csv, FIELDS
+from wonderment import import_data as ID
 from wonderment import models
 from wonderment.tests import factories as f
 
@@ -16,6 +17,7 @@ def do(*rows, **kwargs):
     Order of fields is not guaranteed.
 
     """
+    from_url = kwargs.get('from_url', False)
     if 'session' in kwargs:
         session = kwargs['session']
     else:
@@ -23,19 +25,32 @@ def do(*rows, **kwargs):
     tf = tempfile.NamedTemporaryFile(
         prefix='wonderment-tests-tmp-', mode='w', newline='', delete=False)
     try:
-        writer = csv.DictWriter(tf.file, FIELDS.values())
+        writer = csv.DictWriter(tf.file, ID.FIELDS.values())
         writer.writeheader()
         for row in rows:
             row.setdefault('level', 'ALL fall classes')
-            translated = {FIELDS[k]: v for k, v in row.items()}
+            translated = {ID.FIELDS[k]: v for k, v in row.items()}
             writer.writerow(translated)
         tf.close()
-        import_csv(session, tf.name)
+        fn = tf.name
+        if from_url:
+            fn = 'http://example.com/file.csv'
+        with mock.patch.object(ID, 'urlretrieve') as mock_urlretrieve:
+            mock_urlretrieve.return_value = (tf.name, None)
+            ID.import_csv(session, fn)
+        if from_url:
+            mock_urlretrieve.assert_called_once_with(fn)
     finally:
         os.remove(tf.name)
 
 
 class TestImportCsv(object):
+    def test_from_url(self, db):
+        do({'first': "First", 'last': "Last"}, from_url=True)
+
+        p = models.Parent.objects.get()
+        assert p.name == "First Last"
+
     def test_parent_info(self, db):
         do({
             'first': "First",
@@ -132,3 +147,16 @@ class TestImportCsv(object):
         assert child.gender == 'female'
         assert child.special_needs == "Special"
         assert child.birthdate == datetime.date(2009, 11, 7)
+
+
+class TestCleanLevel(object):
+    def test_invalid(self):
+        assert ID.clean_level('foo') == ''
+
+
+class TestCleanGender(object):
+    def test_male(self):
+        assert ID.clean_gender('Boy') == 'male'
+
+    def test_invalid(self):
+        assert ID.clean_gender('foo') == ''

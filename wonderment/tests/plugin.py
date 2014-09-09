@@ -2,6 +2,7 @@ import os
 
 import cov_core
 import pytest
+from pytest_cov import CovPlugin
 
 
 def pytest_addoption(parser):
@@ -15,6 +16,9 @@ def pytest_configure(config):
     if config.getoption('coverage'):
         config.option.cov_source.append('wonderment')
         config.option.cov_report.append('html')
+        if not config.pluginmanager.hasplugin('_cov'):
+            plugin = CovPlugin(config.option, config.pluginmanager)
+            config.pluginmanager.register(plugin, '_cov')
 
 # Override pytest-cov's default implementation with our customized version
 OldCentral = cov_core.Central
