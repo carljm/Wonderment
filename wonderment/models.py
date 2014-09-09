@@ -179,3 +179,19 @@ class Participant(models.Model):
 
     class Meta:
         ordering = ['parent__name']
+
+
+class ClassDay(models.Model):
+    session = models.ForeignKey(Session)
+    date = models.DateField()
+
+    def __str__(self):
+        return str(self.date)
+
+    class Meta:
+        ordering = ['-date']
+
+
+class Attendance(models.Model):
+    day = models.ForeignKey(ClassDay)
+    child = models.ForeignKey(Child)

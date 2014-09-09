@@ -2,7 +2,8 @@ import datetime
 
 import factory
 
-from wonderment.models import Parent, Child, Session, Participant
+from wonderment.models import (
+    Parent, Child, Session, Participant, ClassDay, Attendance)
 
 
 class ModelFactory(factory.DjangoModelFactory):
@@ -42,3 +43,17 @@ class ParticipantFactory(ModelFactory):
     parent = factory.SubFactory(ParentFactory)
     session = factory.SubFactory(SessionFactory)
     level = 'weekly'
+
+
+class ClassDayFactory(ModelFactory):
+    FACTORY_FOR = ClassDay
+
+    session = factory.SubFactory(SessionFactory)
+    date = datetime.date(2014, 9, 12)
+
+
+class AttendanceFactory(ModelFactory):
+    FACTORY_FOR = Attendance
+
+    day = factory.SubFactory(ClassDayFactory)
+    child = factory.SubFactory(ChildFactory)

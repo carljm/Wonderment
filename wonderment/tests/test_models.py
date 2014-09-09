@@ -157,3 +157,10 @@ class TestParticipant(object):
             parent__name="Parent", level='weekly', session__name="Session")
 
         assert str(p) == "Parent is weekly for Session"
+
+
+class TestClassDay(object):
+    def test_str(self):
+        cd = f.ClassDayFactory.build(date=date(2014, 9, 1))
+
+        assert str(cd) == "2014-09-01"
