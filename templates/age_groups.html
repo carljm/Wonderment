@@ -17,8 +17,24 @@
   <li>
     <strong>{{ student.name }}</strong> -
     <em>{{ student.gender }}</em> -
-    {{ student.real_age }} ({{ student.birthdate|date:"m/d/Y" }}</td>)
+    {{ student.real_age }} ({{ student.birthdate|date:"m/d/Y" }})
     {% if student.special_needs %}: {{ student.special_needs }}{% endif %}
+    {% if include_parents %}
+    <ul>
+      <li>
+        Parent: {{ student.parent }} -
+        <a href="mailto:{{ student.parent.email }}">{{ student.parent.email }}</a> -
+        {{ student.parent.phone }} ({{ student.parent.phone_type }}) -
+        <em>prefers {{ student.parent.preferred }}</em>
+      </li>
+      <li>
+        Spouse: {{ student.parent.spouse }} - {{ student.parent.spouse_contact }}
+      </li>
+      <li>
+        Emergencies: {{ student.parent.emergency }} - {{ student.parent.emergency_contact }}
+      </li>
+    </ul>
+    {% endif %}
   </li>
   {% endfor %}
 </ul>

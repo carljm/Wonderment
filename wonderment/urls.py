@@ -7,6 +7,12 @@ from . import views
 session_urls = [
     url(r'^$', views.session, name='session'),
     url(r'^groups/$', views.age_groups, name='age_groups'),
+    url(
+        r'^groups_with_parents/$',
+        views.age_groups,
+        {'include_parents': True},
+        name='age_groups_with_parents',
+    ),
     url(r'^monthly/$', views.monthly, name='monthly'),
     url(r'^parents/$', views.parents, name='parents'),
     url(

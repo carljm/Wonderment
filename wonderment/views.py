@@ -17,13 +17,17 @@ def session(request, session_id):
 
 
 @login_required
-def age_groups(request, session_id):
+def age_groups(request, session_id, include_parents=False):
     session = get_object_or_404(models.Session, pk=session_id)
     age_groups = session.families(level='weekly')['grouped']
     return render(
         request,
         'age_groups.html',
-        {'age_groups': age_groups, 'session': session},
+        {
+            'age_groups': age_groups,
+            'session': session,
+            'include_parents': include_parents,
+        },
     )
 
 
