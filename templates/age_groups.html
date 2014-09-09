@@ -12,19 +12,15 @@
 {% block main %}
 {% for name, students in age_groups %}
 <h2>{{ name }} ({{ students|length }})</h2>
-<table border="1" cellpadding="5">
-
-  <tbody>
-    {% for student in students %}
-    <tr>
-      <th>{{ student.name }}</th>
-      <td>{{ student.gender }}</td>
-      <td>{{ student.real_age }}</td>
-      <td>{{ student.birthdate|date:"m/d/Y" }}</td>
-      <td>{{ student.special_needs }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<ul>
+  {% for student in students %}
+  <li>
+    <strong>{{ student.name }}</strong> -
+    <em>{{ student.gender }}</em> -
+    {{ student.real_age }} ({{ student.birthdate|date:"m/d/Y" }}</td>)
+    {% if student.special_needs %}: {{ student.special_needs }}{% endif %}
+  </li>
+  {% endfor %}
+</ul>
 {% endfor %}
 {% endblock %}
