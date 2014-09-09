@@ -10,15 +10,24 @@
 {% endblock %}
 
 {% block main %}
-<ul>
-  {% for parent in parents %}
-  <li>
-    <strong>{{ parent }}</strong>:
-    <a href="mailto:{{ parent.email }}">{{ parent.email }}</a>,
-    {{ parent.phone }} ({{ parent.phone_type }}),
-    prefers <strong>{{ parent.preferred }}</strong>,
-    {{ parent.jobs }}
-  </li>
-  {% endfor %}
-</ul>
+<table border="1">
+  <thead>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>Prefers</th>
+    <th>Jobs</th>
+  </thead>
+  <tbody>
+    {% for p in participants %}
+    <tr>
+      <th>{{ p.parent }}</th>
+      <td><a href="mailto:{{ p.parent.email }}">{{ p.parent.email }}</a></td>
+      <td>{{ p.parent.phone }} ({{ p.parent.phone_type }})</td>
+      <td>{{ p.parent.preferred }}</td>
+      <td>{{ p.jobs }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

@@ -97,7 +97,7 @@ class Child(models.Model):
             if age.years < 2:
                 months = (age.years * 12) + age.months
                 return "%smo" % months
-            return str(age.years)
+            return "%syr" % age.years
         return "?"
 
     def age_group(self, as_of):
@@ -142,7 +142,10 @@ class Session(models.Model):
     def families(self, **filters):
         participants = self.participants.filter(
             paid__gt=0, **filters).select_related('parent')
-        parents = [p.parent for p in participants]
+        parents = []
+        for p in participants:
+            p.parent.jobs = p.jobs
+            parents.append(p.parent)
         students = Child.objects.filter(parent__in=parents)
         age_groups_dict = {}
         for student in students:

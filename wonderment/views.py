@@ -52,7 +52,7 @@ def parents(request, session_id):
         request,
         'parents.html',
         {
-            'parents': [p.parent for p in participants],
+            'participants': participants,
             'session': session,
         },
     )

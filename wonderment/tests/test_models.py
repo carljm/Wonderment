@@ -54,7 +54,7 @@ class TestChild(object):
     def test_age_display_over_two_years(self):
         c = f.ChildFactory.build(birthdate=date(2011, 9, 1))
 
-        assert c.age_display(date(2014, 10, 1)) == "3"
+        assert c.age_display(date(2014, 10, 1)) == "3yr"
 
     def test_age_display_none(self):
         c = f.ChildFactory.build(birthdate=None)
@@ -98,7 +98,8 @@ class TestSession(object):
         monkeypatch.setattr(
             'wonderment.models.today', lambda: date(2014, 10, 1))
         s = f.SessionFactory.create(start_date=date(2014, 9, 12))
-        p1 = f.ParticipantFactory.create(session=s, paid=30, parent__name="B")
+        p1 = f.ParticipantFactory.create(
+            session=s, paid=30, parent__name="B", jobs='some jobs')
         p2 = f.ParticipantFactory.create(session=s, paid=60, parent__name="A")
         f.ParticipantFactory.create(session=s, paid=0)
         f.ParticipantFactory.create(paid=30)
@@ -112,8 +113,10 @@ class TestSession(object):
         families = s.families()
 
         assert families['parents'] == [p2.parent, p1.parent]  # ordered by name
+        assert [p.jobs for p in families['parents']] == ['', 'some jobs']
         assert list(families['students']) == [s1b, s2a, s1a]  # ordered by age
-        assert [st.real_age for st in families['students']] == ["2", "4", "6"]
+        assert [st.real_age for st in families['students']] == [
+            "2yr", "4yr", "6yr"]
         assert families['grouped'] == [
             ("Toddler", [s1b]), ("Preschool", [s2a]), ("K-1", [s1a])]
 
@@ -136,7 +139,7 @@ class TestSession(object):
         families = s.families()
 
         assert families['grouped'] == [("Preschool", [st])]
-        assert families['students'][0].real_age == "2"
+        assert families['students'][0].real_age == "2yr"
 
     def test_families_filtered(self, db):
         s = f.SessionFactory.create(start_date=date(2014, 9, 12))
