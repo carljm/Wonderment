@@ -44,10 +44,12 @@ def monthly(request, session_id):
 
 
 @login_required
-def parents(request, session_id, emails_only=False):
+def parents(request, session_id, emails_only=False, weekly_only=False):
     session = get_object_or_404(models.Session, pk=session_id)
     participants = models.Participant.objects.filter(
         paid__gt=0, session=session).select_related('parent')
+    if weekly_only:
+        participants = participants.filter(level='weekly')
     return render(
         request,
         'emails.html' if emails_only else 'parents.html',

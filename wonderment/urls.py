@@ -15,6 +15,12 @@ session_urls = [
         {'emails_only': True},
         name='parent_emails',
     ),
+    url(
+        r'^weekly_parent_emails/$',
+        views.parents,
+        {'emails_only': True, 'weekly_only': True},
+        name='weekly_parent_emails',
+    ),
 ]
 
 
