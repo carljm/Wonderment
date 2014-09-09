@@ -1,5 +1,11 @@
+from datetime import date
+
 from dateutil.relativedelta import relativedelta
 from django.db import models
+
+
+def today():
+    return date.today()
 
 
 GROUPS = [
@@ -68,24 +74,36 @@ class Child(models.Model):
         blank=True,
     )
 
-    def age(self, as_of):
+    def age_delta(self, as_of, pretend=False):
         """Return age as relativedelta."""
-        bd = (self.pretend_birthdate or self.birthdate)
+        bd = self.birthdate
+        if pretend and self.pretend_birthdate:
+            bd = self.pretend_birthdate
         if bd:
             return relativedelta(as_of, bd)
         return None
 
     def age_years(self, as_of):
-        age = self.age(as_of)
+        age = self.age_delta(as_of)
         if age is not None:
             return age.years
         return None
 
+    def age_display(self, as_of):
+        age = self.age_delta(as_of)
+        if age is not None:
+            if age.years < 1 and age.months < 1:
+                return "%swk" % int(age.days / 7)
+            if age.years < 2:
+                months = (age.years * 12) + age.months
+                return "%smo" % months
+            return str(age.years)
+        return "?"
+
     def age_group(self, as_of):
         """Return name of age group this child is in."""
-        age = self.age_years(as_of)
+        age = self.age_delta(as_of, pretend=True)
         if age is not None:
-            months = self.age(as_of).months
             for group_name, (low, high) in GROUPS:
                 low_months = 0
                 high_months = 12
@@ -94,9 +112,11 @@ class Child(models.Model):
                 if isinstance(high, tuple):
                     high, high_months = high
                 if (
-                        (age > low or (age == low and months >= low_months))
+                        (age.years > low or (
+                            age.years == low and age.months >= low_months))
                         and
-                        (age < high or (age == high and months <= high_months))
+                        (age.years < high or (
+                            age.years == high and age.months <= high_months))
                 ):
                     return group_name
         return None
@@ -118,6 +138,29 @@ class Session(models.Model):
 
     class Meta:
         ordering = ['start_date']
+
+    def families(self, **filters):
+        participants = self.participants.filter(
+            paid__gt=0, **filters).select_related('parent')
+        parents = [p.parent for p in participants]
+        students = Child.objects.filter(parent__in=parents)
+        age_groups_dict = {}
+        for student in students:
+            student.real_age = student.age_display(today())
+            group = student.age_group(self.start_date)
+            age_groups_dict.setdefault(group, []).append(student)
+        age_groups = [
+            (name, age_groups_dict[name])
+            for name, ages in GROUPS
+            if name in age_groups_dict
+        ]
+        if None in age_groups_dict:
+            age_groups.append(("Unknown", age_groups_dict[None]))
+        return {
+            'parents': parents,
+            'students': students,
+            'grouped': age_groups,
+        }
 
 
 class Participant(models.Model):

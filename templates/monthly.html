@@ -24,7 +24,7 @@
 <ul>
   {% for student in students %}
   {% if student.special_needs %}
-  <li>{{ student }} ({{ student.session_age }}): {{ student.special_needs }}</li>
+  <li><strong>{{ student }}</strong> ({{ student.real_age }}): {{ student.special_needs }}</li>
   {% endif %}
   {% endfor %}
 </ul>

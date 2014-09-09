@@ -14,7 +14,7 @@
 <h2>{{ name }} ({{ students|length }})</h2>
 <ul>
   {% for student in students %}
-  <li>{{ student.name }} ({{ student.session_age|default_if_none:"?" }}){% if student.special_needs %}: {{ student.special_needs }}{% endif %}</li>
+  <li><strong>{{ student.name }}</strong> ({{ student.real_age }}){% if student.special_needs %}: {{ student.special_needs }}{% endif %}</li>
   {% endfor %}
 </ul>
 {% endfor %}

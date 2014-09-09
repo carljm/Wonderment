@@ -13,7 +13,7 @@
 <ul>
   {% for parent in parents %}
   <li>
-    {{ parent }}:
+    <strong>{{ parent }}</strong>:
     <a href="mailto:{{ parent.email }}">{{ parent.email }}</a>,
     {{ parent.phone }} ({{ parent.phone_type }}),
     prefers <strong>{{ parent.preferred }}</strong>,
