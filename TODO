@@ -1,4 +1,1 @@
-* fix age ordering
-* make three birthdate fields (pretend, approx, and real)
-* display age without considering pretend birthdate, and as of today
 * add view for teacher with parent contact, emergency contact, spouse, per kid
