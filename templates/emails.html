@@ -1,0 +1,18 @@
+{% extends "session.html" %}
+
+{% block title %}Parent Emails | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: Parent Emails{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }} &raquo;
+<a href="{% url 'parent_emails' session_id=session.id %}">Parent Emails</a>
+{% endblock %}
+
+{% block main %}
+<ul>
+  {% for p in participants %}
+  <li>{{ p.parent.email }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

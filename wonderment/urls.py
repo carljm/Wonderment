@@ -9,6 +9,12 @@ session_urls = [
     url(r'^groups/$', views.age_groups, name='age_groups'),
     url(r'^monthly/$', views.monthly, name='monthly'),
     url(r'^parents/$', views.parents, name='parents'),
+    url(
+        r'^parent_emails/$',
+        views.parents,
+        {'emails_only': True},
+        name='parent_emails',
+    ),
 ]
 
 
