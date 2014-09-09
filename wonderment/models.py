@@ -59,6 +59,7 @@ class Child(models.Model):
     parent = models.ForeignKey(Parent, related_name='children')
     name = models.CharField(max_length=200)
     birthdate = models.DateField(blank=True, null=True)
+    birthdate_approx = models.BooleanField(default=False)
     pretend_birthdate = models.DateField(blank=True, null=True)
     special_needs = models.TextField(blank=True)
     gender = models.CharField(
