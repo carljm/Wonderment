@@ -17,7 +17,7 @@
     <a href="mailto:{{ p.parent.email }}">{{ p.parent.email }}</a> -
     {{ p.parent.phone }} ({{ p.parent.phone_type }}) -
     <em>prefers {{ p.parent.preferred }}</em>
-    {% if p.jobs %}: {{ p.jobs }}{% endif %}
+    {% if p.jobs %}<div>{{ p.jobs|linebreaks }}</div>{% endif %}
   </li>
   {% endfor %}
 </ul>
