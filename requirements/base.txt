@@ -7,3 +7,5 @@ python-dateutil==2.2
 six==1.7.3
 
 django-secure==1.0
+
+djorm-pgarray==1.2

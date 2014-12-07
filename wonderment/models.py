@@ -3,6 +3,8 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.db import models
 
+from . import fields
+
 
 def today():
     return date.today()
@@ -15,6 +17,12 @@ GROUPS = [
     ("K-1", (5, 6)),
     ("Elementary", (7, 9)),
     ("Middle/High", (10, 15)),
+]
+
+
+PARTICIPATION_TYPES = [
+    ('one', "thing one"),
+    ('two', "thing two"),
 ]
 
 
@@ -46,6 +54,8 @@ class Parent(models.Model):
     spouse_contact = models.CharField(max_length=200, blank=True)
     emergency = models.CharField(max_length=200, blank=True)
     emergency_contact = models.CharField(max_length=200, blank=True)
+    participate_by = fields.ArrayField(
+        dbtype='text', choices=PARTICIPATION_TYPES)
     age_groups = models.TextField(blank=True)
     could_teach = models.TextField(blank=True)
     could_assist = models.TextField(blank=True)
