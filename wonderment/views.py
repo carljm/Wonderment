@@ -1,7 +1,71 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render
+from datetime import date
 
-from . import models
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, render, redirect
+
+from . import forms, models
+
+CURRENT_SESSION_NAME = "Spring 2014"
+CURRENT_SESSION_START = date(2014, 2, 12)
+CURRENT_SESSION_END = date(2014, 4, 30)
+
+
+def current_session():
+    session, created = models.Session.objects.get_or_create(
+        name=CURRENT_SESSION_NAME, defaults={
+            'start_date': CURRENT_SESSION_START,
+            'end_date': CURRENT_SESSION_END,
+        }
+    )
+
+    return session
+
+
+def participant_form(request, parent_id=None):
+    session = current_session()
+    if parent_id is None:
+        parent = None
+        participant = None
+    else:
+        parent = get_object_or_404(models.Parent, pk=parent_id)
+        try:
+            participant = models.Participant.objects.get(
+                parent=parent, session=session)
+        except models.Participant.DoesNotExist:
+            participant = None
+    form_kwargs = {'instance': parent}
+    part_kw = {'instance': participant}
+    if request.method == 'POST':
+        participant_form = forms.ParticipantForm(request.POST, **part_kw)
+        parent_form = forms.ParentForm(request.POST, **form_kwargs)
+        children_formset = forms.ChildFormSet(request.POST, **form_kwargs)
+        if parent_form.is_valid() and children_formset.is_valid():
+            parent = parent_form.save()
+            children_formset.save()
+            participant = participant_form.save(commit=False)
+            participant.parent = parent
+            participant.session = session
+            participant.save()
+            return redirect('parent_thanks', parent_id=parent.id)
+    else:
+        participant_form = forms.ParticipantForm(**part_kw)
+        parent_form = forms.ParentForm(**form_kwargs)
+        children_formset = forms.ChildFormSet(**form_kwargs)
+
+    return render(
+        request,
+        'participant_form.html',
+        {
+            'parent': parent,
+            'participant_form': participant_form,
+            'parent_form': parent_form,
+            'children_formset': children_formset,
+        },
+    )
+
+
+def participant_thanks(request, parent_id):
+    return render(request, 'participant_thanks.html')
 
 
 @login_required

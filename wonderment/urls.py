@@ -5,7 +5,7 @@ from . import views
 
 
 session_urls = [
-    url(r'^$', views.session, name='session'),
+    url(r'$', views.session, name='session'),
     url(r'^groups/$', views.age_groups, name='age_groups'),
     url(
         r'^groups_with_parents/$',
@@ -31,7 +31,22 @@ session_urls = [
 
 
 urlpatterns = [
-    url(r'^$', views.home, name='home'),
+    url(
+        r'^$',
+        views.participant_form,
+        name='new_participant_form',
+    ),
+    url(
+        r'^(?P<participant_id>\d+)/$',
+        views.participant_form,
+        name='edit_participant_form',
+    ),
+    url(
+        r'^(?P<participant_id>\d+)/done/$',
+        views.participant_thanks,
+        name='participant_thanks',
+    ),
+    url(r'^browse/$', views.home, name='home'),
     url(r'^session/(?P<session_id>\d+)/', include(session_urls)),
     url(r'^admin/', include(admin.site.urls)),
 ]
