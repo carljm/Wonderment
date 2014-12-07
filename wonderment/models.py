@@ -1,9 +1,10 @@
 from datetime import date
 
 from dateutil.relativedelta import relativedelta
+from django.core.urlresolvers import reverse
 from django.db import models
 
-from . import fields
+from . import fields, utils
 
 
 def today():
@@ -62,6 +63,13 @@ class Parent(models.Model):
     all_ages_help = models.TextField(blank=True)
     other_contributions = models.TextField(blank=True)
     classes_desired = models.TextField(blank=True)
+
+    @property
+    def participant_url(self):
+        return reverse(
+            'edit_participant_form',
+            kwargs={'parent_id': self.id, 'id_hash': utils.idhash(self.id)},
+        )
 
     def __str__(self):
         return self.name

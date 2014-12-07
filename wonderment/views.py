@@ -1,9 +1,11 @@
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 
-from . import forms, models
+from . import forms, models, utils
 
 CURRENT_SESSION_NAME = "Spring 2014"
 CURRENT_SESSION_START = date(2014, 2, 12)
@@ -21,13 +23,15 @@ def current_session():
     return session
 
 
-def participant_form(request, parent_id=None):
+def participant_form(request, parent_id=None, id_hash=None):
     session = current_session()
     if parent_id is None:
         parent = None
         participant = None
     else:
         parent = get_object_or_404(models.Parent, pk=parent_id)
+        if utils.idhash(parent.id) != id_hash:
+            raise Http404()
         try:
             participant = models.Participant.objects.get(
                 parent=parent, session=session)
@@ -47,7 +51,8 @@ def participant_form(request, parent_id=None):
             participant.parent = parent
             participant.session = session
             participant.save()
-            return redirect('participant_thanks', parent_id=parent.id)
+            return redirect(
+                'participant_thanks', parent_id=parent.id, id_hash=id_hash)
     else:
         participant_form = forms.ParticipantForm(**part_kw)
         parent_form = forms.ParentForm(**form_kwargs)
@@ -65,8 +70,15 @@ def participant_form(request, parent_id=None):
     )
 
 
-def participant_thanks(request, parent_id):
-    return render(request, 'participant_thanks.html')
+def participant_thanks(request, parent_id, id_hash):
+    parent = get_object_or_404(models.Parent, pk=parent_id)
+    if utils.idhash(parent.id) != id_hash:
+        raise Http404()
+    return render(
+        request,
+        'participant_thanks.html',
+        {'parent': parent},
+    )
 
 
 @login_required
