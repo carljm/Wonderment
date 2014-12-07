@@ -1,7 +1,6 @@
 Wonderment TODO
 ===============
 
-- Checkbox multi-select for participate-by.
 - token in URL instead of ID
 - Date input for kid birthdate
 - Bootstrap for layout
