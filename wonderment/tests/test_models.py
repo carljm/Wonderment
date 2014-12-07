@@ -1,4 +1,5 @@
 from datetime import date
+from unittest import mock
 
 from dateutil.relativedelta import relativedelta
 
@@ -136,7 +137,9 @@ class TestSession(object):
             pretend_birthdate=date(2011, 9, 1),
         )
 
-        families = s.families()
+        with mock.patch('wonderment.models.today') as mock_today:
+            mock_today.return_value = date(2014, 9, 15)
+            families = s.families()
 
         assert families['grouped'] == [("Preschool", [st])]
         assert families['students'][0].real_age == "2yr"
