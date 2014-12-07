@@ -46,7 +46,6 @@ class Parent(models.Model):
     spouse_contact = models.CharField(max_length=200, blank=True)
     emergency = models.CharField(max_length=200, blank=True)
     emergency_contact = models.CharField(max_length=200, blank=True)
-    participate_by = models.TextField(blank=True)
     age_groups = models.TextField(blank=True)
     could_teach = models.TextField(blank=True)
     could_assist = models.TextField(blank=True)
