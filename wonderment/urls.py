@@ -37,12 +37,12 @@ urlpatterns = [
         name='new_participant_form',
     ),
     url(
-        r'^(?P<participant_id>\d+)/$',
+        r'^(?P<parent_id>\d+)/$',
         views.participant_form,
         name='edit_participant_form',
     ),
     url(
-        r'^(?P<participant_id>\d+)/done/$',
+        r'^(?P<parent_id>\d+)/done/$',
         views.participant_thanks,
         name='participant_thanks',
     ),

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<form method="POST">
+  {% csrf_token %}
+  {{ parent_form.as_p }}
+  {{ children_formset.as_p }}
+  {{ participant_form.as_p }}
+  <button type="submit">Submit</button>
+</form>
+{% endblock %}

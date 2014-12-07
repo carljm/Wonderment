@@ -12,7 +12,7 @@ class ParticipantForm(forms.ModelForm):
 
 class ParentForm(forms.ModelForm):
     class Meta:
-        model = models.Participant
+        model = models.Parent
         fields = [
             'name',
             'phone',
@@ -23,6 +23,8 @@ class ParentForm(forms.ModelForm):
             'spouse_contact',
             'emergency',
             'emergency_contact',
+            'participate_by',
+            'age_groups',
             'could_teach',
             'could_assist',
             'all_ages_help',
@@ -35,6 +37,7 @@ class ChildForm(forms.ModelForm):
     class Meta:
         model = models.Child
         fields = [
+            'parent',
             'name',
             'birthdate',
             'special_needs',
@@ -43,4 +46,4 @@ class ChildForm(forms.ModelForm):
 
 
 ChildFormSet = inlineformset_factory(
-    models.Participant, models.Child, form=ChildForm, extra=5)
+    models.Parent, models.Child, form=ChildForm, extra=5)

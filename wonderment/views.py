@@ -38,6 +38,7 @@ def participant_form(request, parent_id=None):
     if request.method == 'POST':
         participant_form = forms.ParticipantForm(request.POST, **part_kw)
         parent_form = forms.ParentForm(request.POST, **form_kwargs)
+        form_kwargs['instance'] = parent_form.instance
         children_formset = forms.ChildFormSet(request.POST, **form_kwargs)
         if parent_form.is_valid() and children_formset.is_valid():
             parent = parent_form.save()
@@ -46,7 +47,7 @@ def participant_form(request, parent_id=None):
             participant.parent = parent
             participant.session = session
             participant.save()
-            return redirect('parent_thanks', parent_id=parent.id)
+            return redirect('participant_thanks', parent_id=parent.id)
     else:
         participant_form = forms.ParticipantForm(**part_kw)
         parent_form = forms.ParentForm(**form_kwargs)
