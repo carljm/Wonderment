@@ -132,6 +132,7 @@ USE_TZ = True
 STATIC_URL = env('WM_STATIC_URL', default='/static/')
 STATIC_ROOT = env(
     'WM_STATIC_ROOT', default=os.path.join(BASE_DIR, 'collected-assets'))
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 LOGIN_URL = '/admin/login/'
 

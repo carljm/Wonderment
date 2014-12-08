@@ -59,4 +59,4 @@ class ChildForm(forms.ModelForm):
 
 
 ChildFormSet = inlineformset_factory(
-    models.Parent, models.Child, form=ChildForm, extra=5)
+    models.Parent, models.Child, form=ChildForm, extra=0)

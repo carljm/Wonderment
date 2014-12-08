@@ -5,7 +5,9 @@ from wonderment.tests import factories as f
 
 
 class TestParticipantForm(object):
-    def test_new(self, app):
+    def test_new(self, app, monkeypatch):
+        monkeypatch.setattr('wonderment.forms.ChildFormSet.extra', 1)
+
         url = reverse('new_participant_form')
         form = app.get(url).forms['participant-form']
         form['name'] = "someone"
@@ -24,7 +26,9 @@ class TestParticipantForm(object):
         assert child.name == "Kid"
         assert participant.session.name == views.CURRENT_SESSION_NAME
 
-    def test_edit(self, app):
+    def test_edit(self, app, monkeypatch):
+        monkeypatch.setattr('wonderment.forms.ChildFormSet.extra', 1)
+
         session = views.current_session()
         participant = f.ParticipantFactory.create(
             session=session,

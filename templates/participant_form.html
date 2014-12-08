@@ -10,30 +10,65 @@
 <form method="POST" id="participant-form">
   {% csrf_token %}
 
-  {% bootstrap_form_errors parent_form %}
-  {% bootstrap_form parent_form %}
-
-  <h2>Children</h2>
-
-  {% bootstrap_formset_errors children_formset %}
-  {{ children_formset.management_form }}
-  {% for child_form in children_formset.forms %}
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">{{ child_form.instance.name }}</h3>
-      </div>
-      <div class="panel-body">
-        {% bootstrap_form child_form layout="horizontal" %}
-      </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2 class="panel-title">Parent Info</h2>
     </div>
-    <div class="clearfix"></div>
-  {% endfor %}
+    <fieldset class="panel-body">
+      {% bootstrap_form_errors parent_form %}
+      {% bootstrap_form parent_form %}
+    </fieldset>
+  </div>
 
-  {% bootstrap_form_errors participant_form %}
-  {% bootstrap_form participant_form %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2 class="panel-title">Children</h2>
+    </div>
+    <fieldset class="formlist panel-body">
+      {% bootstrap_formset_errors children_formset %}
+      {{ children_formset.management_form }}
+      {% for child_form in children_formset.forms %}
+        <div class="panel panel-default dynamic-form">
+          <div class="panel-heading">
+            <button class="btn btn-sm btn-default remove-child">Remove</button>
+            <h3 class="panel-title">{{ child_form.instance.name }}</h3>
+          </div>
+          <div class="panel-body">
+            {% bootstrap_form child_form layout="horizontal" %}
+          </div>
+        </div>
+      {% endfor %}
+      {% buttons %}
+        <button class="btn btn-lg btn-default add-child">Add Child</button>
+      {% endbuttons %}
+    </fieldset>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2 class="panel-title">Session Participation</h2>
+    </div>
+    <fieldset class="panel-body">
+      {% bootstrap_form_errors participant_form %}
+      {% bootstrap_form participant_form %}
+    </fieldset>
+  </div>
 
   {% buttons %}
     <button type="submit">Submit</button>
   {% endbuttons %}
 </form>
+
+<div class="empty-form" style="display: none;">
+  <div class="panel panel-default dynamic-form">
+    <div class="panel-heading">
+      <button class="btn btn-sm btn-default remove-child">Remove</button>
+      <h3 class="panel-title">New Child</h3>
+    </div>
+    <div class="panel-body">
+      {% bootstrap_form children_formset.empty_form layout="horizontal" %}
+    </div>
+  </div>
+</div>
+
 {% endblock %}
