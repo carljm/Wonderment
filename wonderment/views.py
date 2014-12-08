@@ -1,7 +1,6 @@
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 
@@ -62,6 +61,7 @@ def participant_form(request, parent_id=None, id_hash=None):
         request,
         'participant_form.html',
         {
+            'session': session,
             'parent': parent,
             'participant_form': participant_form,
             'parent_form': parent_form,
@@ -71,13 +71,17 @@ def participant_form(request, parent_id=None, id_hash=None):
 
 
 def participant_thanks(request, parent_id, id_hash):
+    session = current_session()
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
     return render(
         request,
         'participant_thanks.html',
-        {'parent': parent},
+        {
+            'session': session,
+            'parent': parent,
+        },
     )
 
 

@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}Early registration | {{ session.name }} | Wonderment{% endblock %}
+
 {% block body %}
+<h1>Wonderment {{ session.name }} early registration</h1>
 
 <form method="POST">
   {% csrf_token %}

@@ -5,7 +5,6 @@ from . import models
 
 
 class ParticipantForm(forms.ModelForm):
-
     class Meta:
         model = models.Participant
         fields = ['level', 'payment']
