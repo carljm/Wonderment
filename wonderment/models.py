@@ -40,7 +40,7 @@ PARTICIPATION_TYPES = [
 
 class Parent(models.Model):
     name = models.CharField(max_length=200)
-    phone = models.CharField(max_length=25, blank=True)
+    phone = models.CharField(max_length=25)
     phone_type = models.CharField(
         max_length=20,
         choices=[
@@ -50,7 +50,7 @@ class Parent(models.Model):
         ],
         blank=True,
     )
-    email = models.EmailField(blank=True)
+    email = models.EmailField()
     address = models.CharField(max_length=300, blank=True)
     preferred = models.CharField(
         max_length=20,

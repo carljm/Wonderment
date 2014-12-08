@@ -45,6 +45,10 @@ class ParentForm(forms.ModelForm):
             'participate_by': forms.CheckboxSelectMultiple,
         }
 
+    def __init__(self, *a, **kw):
+        super(ParentForm, self).__init__(*a, **kw)
+        self.fields['participate_by'].required = True
+
 
 class ChildForm(forms.ModelForm):
     class Meta:

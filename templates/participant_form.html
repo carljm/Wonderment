@@ -23,6 +23,12 @@
 </p>
 {% endif %}
 
+{% if parent_form.errors or children_formset.errors or participant_form.errors %}
+<p class="alert alert-danger" role="alert">
+  Please correct the errors below:
+</p>
+{% endif %}
+
 <form method="POST" id="participant-form">
   {% csrf_token %}
 
