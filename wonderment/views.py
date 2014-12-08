@@ -51,7 +51,10 @@ def participant_form(request, parent_id=None, id_hash=None):
             participant.session = session
             participant.save()
             return redirect(
-                'participant_thanks', parent_id=parent.id, id_hash=id_hash)
+                'participant_thanks',
+                parent_id=parent.id,
+                id_hash=utils.idhash(parent.id),
+            )
     else:
         participant_form = forms.ParticipantForm(**part_kw)
         parent_form = forms.ParentForm(**form_kwargs)

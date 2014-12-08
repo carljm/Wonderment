@@ -7,7 +7,7 @@
 {% block body %}
 <h1>Wonderment {{ session.name }} early registration</h1>
 
-<form method="POST">
+<form method="POST" id="participant-form">
   {% csrf_token %}
 
   {% bootstrap_form_errors parent_form %}
@@ -16,6 +16,7 @@
   <h2>Children</h2>
 
   {% bootstrap_formset_errors children_formset %}
+  {{ children_formset.management_form }}
   {% for child_form in children_formset.forms %}
     <div class="panel panel-default">
       <div class="panel-heading">

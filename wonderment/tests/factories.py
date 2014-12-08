@@ -43,6 +43,7 @@ class ParticipantFactory(ModelFactory):
     parent = factory.SubFactory(ParentFactory)
     session = factory.SubFactory(SessionFactory)
     level = 'weekly'
+    payment = 'early'
 
 
 class ClassDayFactory(ModelFactory):
