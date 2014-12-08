@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 
@@ -85,6 +86,25 @@ def participant_thanks(request, parent_id, id_hash):
             'session': session,
             'parent': parent,
         },
+    )
+
+
+def participant_url_request(request):
+    if request.method == 'POST':
+        form = forms.ParticipantUrlRequestForm(request.POST)
+        if form.is_valid():
+            form.send()
+            return redirect('participant_url_request_thanks')
+    else:
+        form = forms.ParticipantUrlRequestForm()
+
+    return render(request, 'participant_url_request.html', {'form': form})
+
+
+def participant_url_request_thanks(request):
+    return render(
+        request,
+        'participant_url_request_thanks.html',
     )
 
 

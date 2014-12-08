@@ -1,0 +1,10 @@
+Hi {{ parent.name }},
+
+Someone (hopefully you) requested that we send you a link to update your
+Wonderment registration information and register for the upcoming session. (If
+you didn't request this email, please ignore it and we apologize for the
+inconvenience). Here's your link:
+
+{{ BASE_URL }}{{ parent.participant_url }}
+
+Thanks for being part of Wonderment!

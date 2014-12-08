@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+
+{% block title %}Request registration URL | Wonderment{% endblock %}
+
+{% block body %}
+<h1>Wonderment registration URL request</h1>
+
+<p class="alert alert-info" role="alert">
+  <strong>Enter the email address you used to register</strong> (or
+  pre-register) for a previous Wonderment session, and we'll send you a link
+  where you can update that information for the upcoming session, instead of
+  re-entering everything.
+</p>
+
+<p class="alert alert-warning" role="alert">
+  If the system can't find your email address, but you are sure that you've
+  previously
+  registered, <a href="mailto:info@wondermentblackhills.com">email</a> us and
+  we'll check the database.
+</p>
+
+<form method="POST" id="participant-url-request-form">
+  {% csrf_token %}
+
+  <div class="panel panel-default">
+    <fieldset class="panel-body">
+      {% bootstrap_form_errors form %}
+      {% bootstrap_form form %}
+    </fieldset>
+  </div>
+
+  {% buttons %}
+    <button type="submit">Submit</button>
+  {% endbuttons %}
+</form>
+
+{% endblock %}

@@ -46,6 +46,16 @@ urlpatterns = [
         views.participant_thanks,
         name='participant_thanks',
     ),
+    url(
+        r'^request/$',
+        views.participant_url_request,
+        name='participant_url_request',
+    ),
+    url(
+        r'^request/done/$',
+        views.participant_url_request_thanks,
+        name='participant_url_request_thanks',
+    ),
     url(r'^browse/$', views.home, name='home'),
     url(r'^session/(?P<session_id>\d+)/', include(session_urls)),
     url(r'^admin/', include(admin.site.urls)),

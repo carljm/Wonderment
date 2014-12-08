@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
 from . import models
 
@@ -19,7 +21,12 @@ class AttendanceInline(admin.TabularInline):
 
 
 class ParentAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'phone', 'email', 'registration_link']
     inlines = [ParticipantInline, ChildInline]
+
+    def registration_link(self, obj):
+        url = settings.BASE_URL + obj.participant_url
+        return mark_safe('<a href="%s">%s</a>' % (url, url))
 
 
 class SessionAdmin(admin.ModelAdmin):

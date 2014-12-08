@@ -69,6 +69,8 @@ ALLOWED_HOSTS = env(
     default={'dev': '*'},
 )
 
+BASE_URL = env('WM_BASE_URL', default={'dev': 'http://wonderment.local:8000'})
+
 DATABASES = {
     'default': env(
         'DATABASE_URL',
@@ -145,3 +147,22 @@ SESSION_COOKIE_SECURE = USE_SSL
 SECURE_SSL_REDIRECT = USE_SSL
 if USE_SSL:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Email
+
+EMAIL_BACKEND = {
+    'prod': 'django.core.mail.backends.smtp.EmailBackend',
+    'dev': 'django.core.mail.backends.console.EmailBackend',
+}[MODE]
+
+if MODE == 'prod':
+    EMAIL_HOST = env('MAILGUN_SMTP_SERVER')
+    EMAIL_PORT = env('MAILGUN_SMTP_PORT')
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = env('MAILGUN_SMTP_LOGIN')
+    EMAIL_HOST_PASSWORD = env('MAILGUN_SMTP_PASSWORD')
+
+DEFAULT_FROM_EMAIL = env(
+    'WM_DEFAULT_FROM_EMAIL',
+    default={'dev': "Wonderment Registration <noreply@localhost>"},
+)

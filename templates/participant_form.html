@@ -2,10 +2,26 @@
 
 {% load bootstrap3 %}
 
-{% block title %}Early registration | {{ session.name }} | Wonderment{% endblock %}
+{% block title %}Early registration{% if parent %} for {{ parent.name }}{% endif %} | {{ session.name }} | Wonderment{% endblock %}
 
 {% block body %}
-<h1>Wonderment {{ session.name }} early registration</h1>
+<h1>Wonderment {{ session.name }} early registration{% if parent %} for {{ parent.name }}{% endif %}</h1>
+
+{% if not parent %}
+<p class="alert alert-info" role="alert">
+  <strong>NOTE:</strong> If you've already registered for a previous Wonderment
+  session, you don't have to enter all your information again.
+
+  <a href="{% url 'participant_url_request' %}">Click here</a> to update your
+  previous information.
+</p>
+{% else %}
+<p class="alert alert-info" role="alert">
+  If this isn't your registration information, and you haven't previously
+  registered for Wonderment, please fill out the
+  <a href="{% url 'new_participant_form' %}">new registrant form</a> instead.
+</p>
+{% endif %}
 
 <form method="POST" id="participant-form">
   {% csrf_token %}
@@ -39,7 +55,7 @@
         </div>
       {% endfor %}
       {% buttons %}
-        <button class="btn btn-lg btn-default add-child">Add Child</button>
+        <button class="btn btn-lg btn-default add-child">Add Another Child</button>
       {% endbuttons %}
     </fieldset>
   </div>

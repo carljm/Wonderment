@@ -1,4 +1,7 @@
+from django.conf import settings
+from django.core.mail import send_mail
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
+from django.template.loader import render_to_string
 import floppyforms.__future__ as forms
 
 from . import models
@@ -75,3 +78,27 @@ ChildFormSet = inlineformset_factory(
     formset=ConditionalExtraInlineFormset,
     extra=0,
 )
+
+
+class ParticipantUrlRequestForm(forms.Form):
+    """Form for a participant to request link to their registration info."""
+    email = forms.EmailField()
+
+    def clean_email(self):
+        self._parents = models.Parent.objects.filter(
+            email=self.cleaned_data['email'])
+        if not self._parents:
+            raise forms.ValidationError(
+                "No previous registrant found with that email address.")
+
+    def send(self):
+        for parent in self._parents:
+            context = {
+                'parent': parent,
+                'BASE_URL': settings.BASE_URL,
+            }
+            subject = "Wonderment registration link for %s" % parent.name
+            body = render_to_string('emails/participant_url.txt', context)
+
+            send_mail(
+                subject, body, settings.DEFAULT_FROM_EMAIL, [parent.email])
