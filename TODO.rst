@@ -1,10 +1,6 @@
 Wonderment TODO
 ===============
 
-- token in URL instead of ID
-- Date input for kid birthdate
-- Bootstrap for layout
+- Bootstrap form layout, headers
 - Child formset laid out as table
-- Wording, headers
-- Delete in child formset
-- Add-another for child formset
+- Add-another for child formset?

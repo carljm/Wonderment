@@ -22,8 +22,19 @@ GROUPS = [
 
 
 PARTICIPATION_TYPES = [
-    ('one', "thing one"),
-    ('two', "thing two"),
+    ('teaching', "teaching a class"),
+    ('assisting', "assisting another teacher"),
+    ('special', "helping to plan/facilitate special events / field trips"),
+    ('policy', "review policy handbook and guidelines"),
+    ('recruit', "publicity/recruitment"),
+    ('sub', "being available as a substitute for teachers who are ill"),
+    ('feedback', "collecting feedback from participants"),
+    ('sub-coord', "substitute coordinator"),
+    ('attendance', "monitor attendance"),
+    ('volunteers', "thank yous / volunteer follow-up"),
+    ('treasurer', "financial/treasury"),
+    ('legal', "legal consultation"),
+    ('conflict', "conflict management"),
 ]
 
 
@@ -51,18 +62,43 @@ class Parent(models.Model):
         ],
         blank=True,
         )
-    spouse = models.CharField(max_length=200, blank=True)
+    spouse = models.CharField("Spouse name", max_length=200, blank=True)
     spouse_contact = models.CharField(max_length=200, blank=True)
-    emergency = models.CharField(max_length=200, blank=True)
-    emergency_contact = models.CharField(max_length=200, blank=True)
+    emergency = models.CharField(
+        "Emergency contact name", max_length=200, blank=True)
+    emergency_contact = models.CharField(
+        "Emergency contact number", max_length=200, blank=True)
     participate_by = fields.ArrayField(
-        dbtype='text', choices=PARTICIPATION_TYPES)
-    age_groups = models.TextField(blank=True)
-    could_teach = models.TextField(blank=True)
-    could_assist = models.TextField(blank=True)
-    all_ages_help = models.TextField(blank=True)
-    other_contributions = models.TextField(blank=True)
-    classes_desired = models.TextField(blank=True)
+        verbose_name="How would you like to contribute to the co-op?",
+        dbtype='text',
+        choices=PARTICIPATION_TYPES,
+    )
+    age_groups = models.TextField(
+        "Which age groups are you most comfortable working with? "
+        "(Please note if you need to be with your own child's class.)",
+        blank=True,
+    )
+    could_teach = models.TextField(
+        "If you are interested in teaching, "
+        "describe what you would like to teach.",
+        blank=True,
+    )
+    could_assist = models.TextField(
+        "What types of classes are you comfortable assisting with?",
+        blank=True,
+    )
+    all_ages_help = models.TextField(
+        "What ideas do you have for field trips or special events?",
+        blank=True,
+    )
+    other_contributions = models.TextField(
+        "Other ideas, suggestions, or contributions?",
+        blank=True,
+    )
+    classes_desired = models.TextField(
+        "Any particular subjects you hope will be offered?",
+        blank=True,
+    )
 
     @property
     def participant_url(self):
@@ -84,7 +120,10 @@ class Child(models.Model):
     birthdate = models.DateField(blank=True, null=True)
     birthdate_approx = models.BooleanField(default=False)
     pretend_birthdate = models.DateField(blank=True, null=True)
-    special_needs = models.TextField(blank=True)
+    special_needs = models.TextField(
+        "Special needs, if any (potty training, allergies)",
+        blank=True,
+    )
     gender = models.CharField(
         max_length=10,
         choices=[('male', 'male'), ('female', 'female')],
@@ -187,7 +226,29 @@ class Participant(models.Model):
     parent = models.ForeignKey(Parent, related_name='participations')
     session = models.ForeignKey(Session, related_name='participants')
     level = models.CharField(
-        max_length=20, choices=[('weekly', 'weekly'), ('monthly', 'monthly')])
+        "I am signing my children up for:",
+        max_length=20,
+        choices=[
+            ('weekly', 'all weekly classes'),
+            ('monthly', 'only special events and field trips')
+        ],
+    )
+    payment = models.CharField(
+        max_length=20,
+        choices=[
+            (
+                'early',
+                "I am interested in discounted early registration. "
+                "I understand that Wonderment cannot offer refunds. "
+                "My family is committed to Wonderment participation "
+                "to the best of our ability."
+            ),
+            (
+                'later',
+                "I would like to wait to complete my registration and payment."
+            ),
+        ],
+    )
     paid = models.IntegerField(default=0)
     jobs = models.TextField(blank=True)
 
