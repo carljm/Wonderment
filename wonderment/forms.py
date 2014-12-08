@@ -54,7 +54,7 @@ class ChildForm(forms.ModelForm):
             'gender',
         ]
         widgets = {
-            'birthdate': forms.DateInput,
+            'birthdate': forms.DateInput(attrs={'placeholder': 'mm/dd/yyyy'}),
         }
 
 

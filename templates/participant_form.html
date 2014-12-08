@@ -17,7 +17,14 @@
 
   {% bootstrap_formset_errors children_formset %}
   {% for child_form in children_formset.forms %}
-    {% bootstrap_form child_form layout="horizontal" %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{ child_form.instance.name }}</h3>
+      </div>
+      <div class="panel-body">
+        {% bootstrap_form child_form layout="horizontal" %}
+      </div>
+    </div>
     <div class="clearfix"></div>
   {% endfor %}
 
