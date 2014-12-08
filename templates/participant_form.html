@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load bootstrap3 %}
+
 {% block title %}Early registration | {{ session.name }} | Wonderment{% endblock %}
 
 {% block body %}
@@ -8,12 +10,22 @@
 <form method="POST">
   {% csrf_token %}
 
-  {{ parent_form.as_p }}
+  {% bootstrap_form_errors parent_form %}
+  {% bootstrap_form parent_form %}
 
   <h2>Children</h2>
 
-  {{ children_formset.as_p }}
-  {{ participant_form.as_p }}
-  <button type="submit">Submit</button>
+  {% bootstrap_formset_errors children_formset %}
+  {% for child_form in children_formset.forms %}
+    {% bootstrap_form child_form layout="horizontal" %}
+    <div class="clearfix"></div>
+  {% endfor %}
+
+  {% bootstrap_form_errors participant_form %}
+  {% bootstrap_form participant_form %}
+
+  {% buttons %}
+    <button type="submit">Submit</button>
+  {% endbuttons %}
 </form>
 {% endblock %}

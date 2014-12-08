@@ -91,6 +91,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'djangosecure',
     'floppyforms',
+    'bootstrap3',
     'wonderment',
 )
 
