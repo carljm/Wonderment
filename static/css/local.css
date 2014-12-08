@@ -3,3 +3,4 @@
 [for$='-DELETE'] { display: none; }
 ul { list-style-type: none; margin-left: -2.5em; }
 [for="id_payment"] { display: none; }
+a { text-decoration: underline; }
