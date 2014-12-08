@@ -1,4 +1,4 @@
-from django.forms.models import inlineformset_factory
+from django.forms.models import inlineformset_factory, BaseInlineFormSet
 import floppyforms.__future__ as forms
 
 from . import models
@@ -58,5 +58,17 @@ class ChildForm(forms.ModelForm):
         }
 
 
+class ConditionalExtraInlineFormset(BaseInlineFormSet):
+    """Inline formset that adds one extra form if no initial forms."""
+    def __init__(self, *a, **kw):
+        super(ConditionalExtraInlineFormset, self).__init__(*a, **kw)
+        self.extra = self.extra if self.initial_form_count() else 1
+
+
 ChildFormSet = inlineformset_factory(
-    models.Parent, models.Child, form=ChildForm, extra=0)
+    models.Parent,
+    models.Child,
+    form=ChildForm,
+    formset=ConditionalExtraInlineFormset,
+    extra=0,
+)

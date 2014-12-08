@@ -76,7 +76,6 @@
       // Hide the add-trigger if we've reach the maxForms limit
       if (!methods.showAddButton(vars)) { addButton.hide(); }
       addButton.click(function (e) {
-        debugger;
         var trigger = $(this);
         var formCount = parseInt(vars.totalForms.val(), 10);
         var newRow = vars.tpl.clone(true).addClass('new-row');
