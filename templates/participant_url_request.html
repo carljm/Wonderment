@@ -10,15 +10,16 @@
 <p class="alert alert-info" role="alert">
   <strong>Enter the email address you used to register</strong> (or
   pre-register) for a previous Wonderment session, and we'll send you a link
-  where you can update that information for the upcoming session, instead of
-  re-entering everything.
+  where you can update that information for the upcoming session. If you've
+  never registered for Wonderment before, use
+  <a href="{% url 'new_participant_form' %}">the new registrant form</a>
+  instead.
 </p>
 
 <p class="alert alert-warning" role="alert">
   If the system can't find your email address, but you are sure that you've
-  previously
-  registered, <a href="mailto:info@wondermentblackhills.com">email</a> us and
-  we'll check the database.
+  previously registered, <a href="mailto:info@wondermentblackhills.com">email
+  us</a> and we'll check the database for you.
 </p>
 
 <form method="POST" id="participant-url-request-form">
