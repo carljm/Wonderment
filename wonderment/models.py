@@ -35,6 +35,7 @@ PARTICIPATION_TYPES = [
     ('treasurer', "financial/treasury"),
     ('legal', "legal consultation"),
     ('conflict', "conflict management"),
+    ('cleaning', "cleanup coordination"),
 ]
 
 
