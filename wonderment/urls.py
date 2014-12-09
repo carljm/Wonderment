@@ -5,7 +5,7 @@ from . import views
 
 
 session_urls = [
-    url(r'$', views.session, name='session'),
+    url(r'^$', views.session, name='session'),
     url(r'^groups/$', views.age_groups, name='age_groups'),
     url(
         r'^groups_with_parents/$',
