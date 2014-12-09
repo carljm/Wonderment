@@ -10,12 +10,13 @@
 {% endblock %}
 
 {% block main %}
+{% with participant.parent as parent %}
 <article class="panel panel-primary">
   <div class="panel-heading">
     <h2 class="panel-title">
-      <strong>{{ participant.parent }}</strong> -
-      <a href="mailto:{{ participant.parent.email }}">{{ participant.parent.email }}</a> -
-      {{ participant.parent.phone }} ({{ participant.parent.phone_type }})
+      <strong>{{ parent }}</strong> -
+      <a href="mailto:{{ parent.email }}">{{ parent.email }}</a> -
+      {{ parent.phone }} ({{ parent.phone_type }})
     </h2>
   </div>
   <div class="panel-body">
@@ -27,24 +28,37 @@
       <dt>Contributions</dt>
       <dd>
         <ul>
-          {% for contribution in participant.parent.participate_by_display %}
+          {% for contribution in parent.participate_by_display %}
           <li>{{ contribution }}</li>
           {% endfor %}
         </ul>
       </dd>
+      {% if parent.age_groups %}
       <dt>Work with age groups</dt>
-      <dd>{{ participant.parent.age_groups|default:"(no answer)"|linebreaksbr }}</dd>
+      <dd>{{ parent.age_groups|linebreaksbr }}</dd>
+      {% endif %}
+      {% if parent.could_teach %}
       <dt>Could teach</dt>
-      <dd>{{ participant.parent.could_teach|default:"(no answer)"|linebreaksbr }}</dd>
+      <dd>{{ parent.could_teach|linebreaksbr }}</dd>
+      {% endif %}
+      {% if parent.could_assist %}
       <dt>Could assist</dt>
-      <dd>{{ participant.parent.could_assist|default:"(no answer)"|linebreaksbr }}</dd>
+      <dd>{{ parent.could_assist|linebreaksbr }}</dd>
+      {% endif %}
+      {% if parent.all_ages_help %}
       <dt>Special event ideas</dt>
-      <dd>{{ participant.parent.all_ages_help|default:"(no answer)"|linebreaksbr }}</dd>
+      <dd>{{ parent.all_ages_help|linebreaksbr }}</dd>
+      {% endif %}
+      {% if parent.other_contributions %}
       <dt>Other suggestions</dt>
-      <dd>{{ participant.parent.other_contributions|default:"(no answer)"|linebreaksbr }}</dd>
+      <dd>{{ parent.other_contributions|linebreaksbr }}</dd>
+      {% endif %}
+      {% if parent.classes_desired %}
       <dt>Classes desired</dt>
-      <dd>{{ participant.parent.classes_desired|default:"(no answer)"|linebreaksbr }}</dd>
+      <dd>{{ parent.classes_desired|linebreaksbr }}</dd>
+      {% endif %}
     </dl>
   </div>
 </article>
+{% endwith %}
 {% endblock %}
