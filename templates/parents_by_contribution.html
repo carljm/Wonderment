@@ -1,0 +1,34 @@
+{% extends "session.html" %}
+
+{% block title %}Parents by Contribution | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: Parents by Contribution{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }} &raquo;
+<a href="{% url 'parents_by_contribution' session_id=session.id %}">Parents by Contribution</a>
+{% endblock %}
+
+{% block main %}
+<p><strong>$</strong> = paid, <strong>*</strong> = special events only</p>
+{% for contribution, ps in participants_by_contribution.items %}
+<article class="panel panel-default">
+  <div class="panel-heading">
+    <h2 class="panel-title">{{ contribution }}</h2>
+  </div>
+  <div class="panel-body">
+    <ul>
+      {% for p in ps %}
+      <li>
+        {% if p.paid %}${% endif %}
+        {% if p.level == 'monthly' %}*{% endif %}
+        <strong>{{ p.parent }}</strong> -
+        <a href="mailto:{{ p.parent.email }}">{{ p.parent.email }}</a> -
+        {{ p.parent.phone }} ({{ p.parent.phone_type }})
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</article>
+{% endfor %}
+{% endblock %}

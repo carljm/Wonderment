@@ -165,3 +165,25 @@ def parents(request, session_id, emails_only=False, weekly_only=False):
             'session': session,
         },
     )
+
+
+@login_required
+def parents_by_contribution(request, session_id):
+    session = get_object_or_404(models.Session, pk=session_id)
+    participants = models.Participant.objects.filter(
+        session=session).select_related('parent')
+    descriptions = dict(models.PARTICIPATION_TYPES)
+    participants_by_contribution = {}
+    for participant in participants:
+        for contribution in participant.parent.participate_by:
+            desc = descriptions[contribution]
+            participants_by_contribution.setdefault(desc, []).append(
+                participant)
+    return render(
+        request,
+        'parents_by_contribution.html',
+        {
+            'participants_by_contribution': participants_by_contribution,
+            'session': session,
+        },
+    )
