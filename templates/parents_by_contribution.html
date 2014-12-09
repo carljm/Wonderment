@@ -10,7 +10,9 @@
 {% endblock %}
 
 {% block main %}
-<p class="alert alert-info"><strong>$</strong> = paid, <strong>*</strong> = special events only</p>
+<p class="alert alert-info">
+  <strong>$</strong> = paid, <strong>*</strong> = special events only
+</p>
 {% for contribution, ps in participants_by_contribution.items %}
 <article class="panel panel-default">
   <div class="panel-heading">
