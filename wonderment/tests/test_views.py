@@ -11,6 +11,9 @@ class TestParticipantForm(object):
         url = reverse('new_participant_form')
         form = app.get(url).forms['participant-form']
         form['name'] = "someone"
+        form['email'] = 'someone@example.com'
+        form['phone'] = '321-6543-9876'
+        form['participate_by'] = ['teaching']
         form['level'] = 'weekly'
         form['payment'] = 'early'
         form['children-0-name'] = "Kid"
@@ -23,6 +26,9 @@ class TestParticipantForm(object):
         assert participant.level == 'weekly'
         assert participant.payment == 'early'
         assert parent.name == "someone"
+        assert parent.email == 'someone@example.com'
+        assert parent.phone == '321-6543-9876'
+        assert parent.participate_by == ['teaching']
         assert child.name == "Kid"
         assert participant.session.name == views.CURRENT_SESSION_NAME
 
@@ -35,6 +41,8 @@ class TestParticipantForm(object):
             level='monthly',
             payment='later',
             parent__name='old',
+            parent__email='old@example.com',
+            parent__phone='321-654-9876',
         )
         parent = participant.parent
         f.ChildFactory.create(parent=parent, name='old')
@@ -42,6 +50,7 @@ class TestParticipantForm(object):
 
         form = app.get(parent.participant_url).forms['participant-form']
         form['name'] = "someone"
+        form['participate_by'] = ['assisting']
         form['level'] = 'weekly'
         form['payment'] = 'early'
         form['children-0-name'] = "Kid"

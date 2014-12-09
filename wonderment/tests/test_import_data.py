@@ -29,6 +29,8 @@ def do(*rows, **kwargs):
         writer.writeheader()
         for row in rows:
             row.setdefault('level', 'ALL fall classes')
+            row.setdefault('email', 'foo@example.com')
+            row.setdefault('phone', '321-654-9876')
             translated = {ID.FIELDS[k]: v for k, v in row.items()}
             writer.writerow(translated)
         tf.close()
