@@ -39,6 +39,9 @@ PARTICIPATION_TYPES = [
 ]
 
 
+PARTICIPATION_TYPE_MAP = dict(PARTICIPATION_TYPES)
+
+
 class Parent(models.Model):
     name = models.CharField(max_length=200)
     phone = models.CharField(max_length=25)
@@ -107,6 +110,13 @@ class Parent(models.Model):
             'edit_participant_form',
             kwargs={'parent_id': self.id, 'id_hash': utils.idhash(self.id)},
         )
+
+    @property
+    def participate_by_display(self):
+        for contribution in self.participate_by:
+            val = PARTICIPATION_TYPE_MAP.get(contribution)
+            if val:
+                yield val
 
     def __str__(self):
         return self.name

@@ -1,15 +1,18 @@
 {% extends "session.html" %}
 
-{% block title %}Parents | {{ block.super }}{% endblock %}
+{% block title %}Parents Contact Info | {{ block.super }}{% endblock %}
 
-{% block header %}{{ session }}: Parents{% endblock %}
+{% block header %}{{ session }}: Parents Contact Info{% endblock %}
 
 {% block breadcrumb %}
-{{ block.super }} &raquo;
-<a href="{% url 'parents' session_id=session.id %}">Parents</a>
+{{ block.super }}
+<li><a href="{% url 'parents' session_id=session.id %}">Parents Contact Info</a></li>
 {% endblock %}
 
 {% block main %}
+<p class="alert alert-info" role="alert">
+  Includes only parents who have paid for the session.
+</p>
 <ul>
   {% for p in participants %}
   <li>

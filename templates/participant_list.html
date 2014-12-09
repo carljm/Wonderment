@@ -1,0 +1,23 @@
+{% extends "session.html" %}
+
+{% block title %}All Parents | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: All Parents{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li><a href="{% url 'participant_list' session_id=session.id %}">All Parents</a></li>
+{% endblock %}
+
+{% block main %}
+<p class="alert alert-info" role="alert">
+  Includes all parents who have signed up, paid or not.
+</p>
+<ul>
+  {% for p in participants %}
+  <li>
+    <a href="{% url 'participant_detail' session_id=session.id participant_id=p.id %}">{{ p.parent }}</a>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

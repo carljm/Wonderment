@@ -5,8 +5,8 @@
 {% block header %}{{ session }}: Age Groups{% endblock %}
 
 {% block breadcrumb %}
-{{ block.super }} &raquo;
-<a href="{% url 'age_groups' session_id=session.id %}">Age Groups</a>
+{{ block.super }}
+<li><a href="{% url 'age_groups' session_id=session.id %}">Age Groups</a></li>
 {% endblock %}
 
 {% block main %}

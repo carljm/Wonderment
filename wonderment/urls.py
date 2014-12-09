@@ -32,6 +32,16 @@ session_urls = [
         views.parents_by_contribution,
         name='parents_by_contribution',
     ),
+    url(
+        r'^all-parents/$',
+        views.participant_list,
+        name='participant_list',
+    ),
+    url(
+        r'^all-parents/(?P<participant_id>\d+)/$',
+        views.participant_detail,
+        name='participant_detail',
+    ),
 ]
 
 

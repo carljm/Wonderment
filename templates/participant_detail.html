@@ -1,0 +1,50 @@
+{% extends "participant_list.html" %}
+
+{% block title %}{{ participant.parent.name }} | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: {{ participant.parent.name }}{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li><a href="{% url 'participant_detail' session_id=session.id participant_id=participant.id %}">{{ participant.parent.name }}</a></li>
+{% endblock %}
+
+{% block main %}
+<article class="panel panel-primary">
+  <div class="panel-heading">
+    <h2 class="panel-title">
+      <strong>{{ participant.parent }}</strong> -
+      <a href="mailto:{{ participant.parent.email }}">{{ participant.parent.email }}</a> -
+      {{ participant.parent.phone }} ({{ participant.parent.phone_type }})
+    </h2>
+  </div>
+  <div class="panel-body">
+    <dl class="dl-horizontal">
+      <dt>Paid</dt>
+      <dd>${{ participant.paid|default:0 }}</dd>
+      <dt>Commitment</dt>
+      <dd>{{ participant.level }}</dd>
+      <dt>Contributions</dt>
+      <dd>
+        <ul>
+          {% for contribution in participant.parent.participate_by_display %}
+          <li>{{ contribution }}</li>
+          {% endfor %}
+        </ul>
+      </dd>
+      <dt>Work with age groups</dt>
+      <dd>{{ participant.parent.age_groups|default:"no answer"|linebreaksbr }}</dd>
+      <dt>Could teach</dt>
+      <dd>{{ participant.parent.could_teach|default:"no answer"|linebreaksbr }}</dd>
+      <dt>Could assist</dt>
+      <dd>{{ participant.parent.could_assist|default:"no answer"|linebreaksbr }}</dd>
+      <dt>Special event ideas</dt>
+      <dd>{{ participant.parent.all_ages_help|default:"no answer"|linebreaksbr }}</dd>
+      <dt>Other suggestions</dt>
+      <dd>{{ participant.parent.other_contributions|default:"no answer"|linebreaksbr }}</dd>
+      <dt>Classes desired</dt>
+      <dd>{{ participant.parent.classes_desired|default:"no answer"|linebreaksbr }}</dd>
+    </dl>
+  </div>
+</article>
+{% endblock %}

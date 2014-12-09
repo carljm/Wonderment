@@ -163,6 +163,7 @@ def parents(request, session_id, emails_only=False, weekly_only=False):
         {
             'participants': participants,
             'session': session,
+            'weekly_only': weekly_only,
         },
     )
 
@@ -186,4 +187,31 @@ def parents_by_contribution(request, session_id):
             'participants_by_contribution': participants_by_contribution,
             'session': session,
         },
+    )
+
+
+@login_required
+def participant_list(request, session_id):
+    session = get_object_or_404(models.Session, pk=session_id)
+    participants = models.Participant.objects.filter(
+        session=session).select_related('parent').order_by('parent__name')
+    return render(
+        request,
+        'participant_list.html',
+        {'participants': participants, 'session': session},
+    )
+
+
+@login_required
+def participant_detail(request, session_id, participant_id):
+    session = get_object_or_404(models.Session, pk=session_id)
+    participant = get_object_or_404(
+        models.Participant.objects.filter(
+            session=session).select_related('parent'),
+        pk=participant_id,
+    )
+    return render(
+        request,
+        'participant_detail.html',
+        {'participant': participant, 'session': session},
     )

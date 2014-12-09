@@ -5,8 +5,8 @@
 {% block header %}{{ session }}: Field Trips &amp; Special Events{% endblock %}
 
 {% block breadcrumb %}
-{{ block.super }} &raquo;
-<a href="{% url 'monthly' session_id=session.id %}">Field Trips &amp; Special Events</a>
+{{ block.super }}
+<li><a href="{% url 'monthly' session_id=session.id %}">Field Trips &amp; Special Events</a></li>
 {% endblock %}
 
 {% block main %}

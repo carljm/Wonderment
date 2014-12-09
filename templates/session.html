@@ -5,20 +5,23 @@
 {% block body %}
 <h1>{% block header %}{{ session }}{% endblock %}</h1>
 
-{% block breadcrumb %}
-<a href="{% url 'home' %}">All sessions</a> &raquo;
-<a href="{% url 'session' session_id=session.id %}">{{ session }}</a>
-{% endblock %}
+<ol class="breadcrumb">
+  {% block breadcrumb %}
+  <li><a href="{% url 'home' %}">All sessions</a></li>
+  <li><a href="{% url 'session' session_id=session.id %}">{{ session }}</a></li>
+  {% endblock %}
+</ol>
 
 {% block main %}
 <ul>
   <li><a href="{% url 'age_groups' session_id=session.id %}">Age Groups</a></li>
   <li><a href="{% url 'age_groups_with_parents' session_id=session.id %}">Age Groups (with parent contact info)</a></li>
   <li><a href="{% url 'monthly' session_id=session.id %}">Field trips and special events</a></li>
-  <li><a href="{% url 'parents' session_id=session.id %}">Parents</a></li>
-  <li><a href="{% url 'parent_emails' session_id=session.id %}">All Parent Emails</a></li>
+  <li><a href="{% url 'parents' session_id=session.id %}">Parents Contact Info</a></li>
+  <li><a href="{% url 'parent_emails' session_id=session.id %}">Parent Emails</a></li>
   <li><a href="{% url 'weekly_parent_emails' session_id=session.id %}">Weekly Parent Emails</a></li>
   <li><a href="{% url 'parents_by_contribution' session_id=session.id %}">Parents by Contribution</a></li>
+  <li><a href="{% url 'participant_list' session_id=session.id %}">All Parents</a></li>
 
 </ul>
 {% endblock %}

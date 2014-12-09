@@ -5,8 +5,8 @@
 {% block header %}{{ session }}: Parents by Contribution{% endblock %}
 
 {% block breadcrumb %}
-{{ block.super }} &raquo;
-<a href="{% url 'parents_by_contribution' session_id=session.id %}">Parents by Contribution</a>
+{{ block.super }}
+<li><a href="{% url 'parents_by_contribution' session_id=session.id %}">Parents by Contribution</a></li>
 {% endblock %}
 
 {% block main %}
