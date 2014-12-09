@@ -3,7 +3,9 @@
 {% block title %}{{ session }} | {{ block.super }}{% endblock %}
 
 {% block body %}
-<h1>{% block header %}{{ session }}{% endblock %}</h1>
+<div class="page-header">
+  <h1>{% block header %}{{ session }}{% endblock %}</h1>
+</div>
 
 <ol class="breadcrumb">
   {% block breadcrumb %}
@@ -13,17 +15,17 @@
 </ol>
 
 {% block main %}
-<ul>
-  <li><a href="{% url 'age_groups' session_id=session.id %}">Age Groups</a></li>
-  <li><a href="{% url 'age_groups_with_parents' session_id=session.id %}">Age Groups (with parent contact info)</a></li>
-  <li><a href="{% url 'monthly' session_id=session.id %}">Field trips and special events</a></li>
-  <li><a href="{% url 'parents' session_id=session.id %}">Parents Contact Info</a></li>
-  <li><a href="{% url 'parent_emails' session_id=session.id %}">Parent Emails</a></li>
-  <li><a href="{% url 'weekly_parent_emails' session_id=session.id %}">Weekly Parent Emails</a></li>
-  <li><a href="{% url 'parents_by_contribution' session_id=session.id %}">Parents by Contribution</a></li>
-  <li><a href="{% url 'participant_list' session_id=session.id %}">All Parents</a></li>
+<div class="list-group">
+  <a class="list-group-item" href="{% url 'age_groups' session_id=session.id %}">Age Groups</a>
+  <a class="list-group-item" href="{% url 'age_groups_with_parents' session_id=session.id %}">Age Groups (with parent contact info)</a>
+  <a class="list-group-item" href="{% url 'monthly' session_id=session.id %}">Field trips and special events</a>
+  <a class="list-group-item" href="{% url 'parents' session_id=session.id %}">Parents Contact Info</a>
+  <a class="list-group-item" href="{% url 'parent_emails' session_id=session.id %}">Parent Emails</a>
+  <a class="list-group-item" href="{% url 'weekly_parent_emails' session_id=session.id %}">Weekly Parent Emails</a>
+  <a class="list-group-item" href="{% url 'parents_by_contribution' session_id=session.id %}">Parents by Contribution</a>
+  <a class="list-group-item" href="{% url 'participant_list' session_id=session.id %}">All Parents</a>
 
-</ul>
+</div>
 {% endblock %}
 
 {% endblock %}

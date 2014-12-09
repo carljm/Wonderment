@@ -18,9 +18,9 @@
   Includes only parents who are signed up for weekly classes.
 </p>
 {% endif %}
-<ul>
+<ul class="list-group">
   {% for p in participants %}
-  <li>{{ p.parent.email }}</li>
+  <li class="list-group-item">{{ p.parent.email }}</li>
   {% endfor %}
 </ul>
 {% endblock %}

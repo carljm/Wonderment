@@ -12,9 +12,9 @@
 {% block main %}
 {% for name, students in age_groups %}
 <h2>{{ name }} ({{ students|length }})</h2>
-<ul>
+<ul class="list-group">
   {% for student in students %}
-  <li>
+  <li class="list-group-item">
     <strong>{{ student.name }}</strong> -
     <em>{{ student.gender }}</em> -
     {{ student.real_age }} ({{ student.birthdate|date:"m/d/Y" }})
@@ -22,10 +22,8 @@
     {% if include_parents %}
     <ul>
       <li>
-        Parent: {{ student.parent }} -
-        <a href="mailto:{{ student.parent.email }}">{{ student.parent.email }}</a> -
-        {{ student.parent.phone }} ({{ student.parent.phone_type }}) -
-        <em>prefers {{ student.parent.preferred }}</em>
+        Parent:
+        {% include "_parent.html" with parent=student.parent %}
       </li>
       <li>
         Spouse: {{ student.parent.spouse }} - {{ student.parent.spouse_contact }}

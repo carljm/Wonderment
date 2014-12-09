@@ -10,21 +10,19 @@
 {% endblock %}
 
 {% block main %}
-<p><strong>$</strong> = paid, <strong>*</strong> = special events only</p>
+<p class="alert alert-info"><strong>$</strong> = paid, <strong>*</strong> = special events only</p>
 {% for contribution, ps in participants_by_contribution.items %}
 <article class="panel panel-default">
   <div class="panel-heading">
     <h2 class="panel-title">{{ contribution }}</h2>
   </div>
   <div class="panel-body">
-    <ul>
+    <ul class="list-group">
       {% for p in ps %}
-      <li>
+      <li class="list-group-item">
         {% if p.paid %}${% endif %}
         {% if p.level == 'monthly' %}*{% endif %}
-        <strong>{{ p.parent }}</strong> -
-        <a href="mailto:{{ p.parent.email }}">{{ p.parent.email }}</a> -
-        {{ p.parent.phone }} ({{ p.parent.phone_type }})
+        {% include "_parent.html" with parent=p.parent %}
       </li>
       {% endfor %}
     </ul>

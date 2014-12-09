@@ -1,6 +1,6 @@
 .empty-form { display: none; }
-.remove-child { float: right; margin-top: -0.5em; }
-[for$='-DELETE'] { display: none; }
-ul { list-style-type: none; margin-left: -2.5em; }
-[for="id_payment"] { display: none; }
-a { text-decoration: underline; }
+#participant-form .remove-child { float: right; margin-top: -0.5em; }
+#participant-form [for$='-DELETE'] { display: none; }
+#participant-form ul { list-style-type: none; margin-left: -2.5em; }
+#participant-form [for="id_payment"] { display: none; }
+.alert a { text-decoration: underline; }

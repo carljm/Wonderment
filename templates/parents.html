@@ -13,13 +13,10 @@
 <p class="alert alert-info" role="alert">
   Includes only parents who have paid for the session.
 </p>
-<ul>
+<ul class="list-group">
   {% for p in participants %}
-  <li>
-    <strong>{{ p.parent }}</strong> -
-    <a href="mailto:{{ p.parent.email }}">{{ p.parent.email }}</a> -
-    {{ p.parent.phone }} ({{ p.parent.phone_type }}) -
-    <em>prefers {{ p.parent.preferred }}</em>
+  <li class="list-group-item">
+    {% include "_parent.html" with parent=p.parent %}
     {% if p.jobs %}<div>{{ p.jobs|linebreaks }}</div>{% endif %}
   </li>
   {% endfor %}

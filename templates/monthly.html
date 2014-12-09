@@ -15,16 +15,16 @@
 <p><strong>{{ students|length }}</strong> kids</p>
 
 <h3>Kids by age group</h3>
-<ul>
+<ul class="list-group">
   {% for name, students in age_groups %}
-  <li>{{ name }}: <strong>{{ students|length }}</strong></li>
+  <li class="list-group-item">{{ name }}: <strong>{{ students|length }}</strong></li>
   {% endfor %}
 </ul>
 <h2>Allergies &amp; Special Needs</h2>
-<ul>
+<ul class="list-group">
   {% for student in students %}
   {% if student.special_needs %}
-  <li><strong>{{ student }}</strong> ({{ student.real_age }}): {{ student.special_needs }}</li>
+  <li class="list-group-item"><strong>{{ student }}</strong> ({{ student.real_age }}): {{ student.special_needs }}</li>
   {% endif %}
   {% endfor %}
 </ul>

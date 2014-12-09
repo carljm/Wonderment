@@ -13,11 +13,9 @@
 <p class="alert alert-info" role="alert">
   Includes all parents who have signed up, paid or not.
 </p>
-<ul>
+<div class="list-group">
   {% for p in participants %}
-  <li>
-    <a href="{% url 'participant_detail' session_id=session.id participant_id=p.id %}">{{ p.parent }}</a>
-  </li>
+  <a class="list-group-item" href="{% url 'participant_detail' session_id=session.id participant_id=p.id %}">{{ p.parent }}</a>
   {% endfor %}
-</ul>
+</div>
 {% endblock %}

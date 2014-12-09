@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
 {% block body %}
-<h1>Sessions</h1>
-<ul>
+<div class="page-header">
+  <h1>Sessions</h1>
+</div>
+<div class="list-group">
   {% for session in sessions %}
-  <li><a href="{% url 'session' session_id=session.id %}">{{ session }}</a></li>
+  <a class="list-group-item" href="{% url 'session' session_id=session.id %}">{{ session }}</a>
   {% endfor %}
-</ul>
+</div>
 {% endblock %}
