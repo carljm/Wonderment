@@ -1,12 +1,12 @@
 {% extends "session.html" %}
 
-{% block title %}Monthly Gatherings | {{ block.super }}{% endblock %}
+{% block title %}Field Trips &amp; Special Events | {{ block.super }}{% endblock %}
 
-{% block header %}{{ session }}: Monthly Gatherings{% endblock %}
+{% block header %}{{ session }}: Field Trips &amp; Special Events{% endblock %}
 
 {% block breadcrumb %}
 {{ block.super }} &raquo;
-<a href="{% url 'monthly' session_id=session.id %}">Monthly Gatherings</a>
+<a href="{% url 'monthly' session_id=session.id %}">Field Trips &amp; Special Events</a>
 {% endblock %}
 
 {% block main %}
