@@ -90,7 +90,7 @@ class ParticipantUrlRequestForm(forms.Form):
 
     def clean_email(self):
         self._parents = models.Parent.objects.filter(
-            email=self.cleaned_data['email'])
+            email__iexact=self.cleaned_data['email'])
         if not self._parents:
             raise forms.ValidationError(
                 "No previous registrant found with that email address.")
