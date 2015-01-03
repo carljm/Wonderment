@@ -11,3 +11,6 @@ django-floppyforms==1.2
 django-secure==1.0
 
 djorm-pgarray==1.2
+
+dj-static==0.0.6
+static3==0.5.1
