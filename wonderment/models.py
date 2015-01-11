@@ -211,7 +211,7 @@ class Session(models.Model):
             paid__gt=0, **filters).select_related('parent')
         parents = []
         for p in participants:
-            p.parent.jobs = p.jobs
+            p.parent.job_notes = p.job_notes
             parents.append(p.parent)
         students = Child.objects.filter(parent__in=parents)
         age_groups_dict = {}
@@ -261,7 +261,7 @@ class Participant(models.Model):
         ],
     )
     paid = models.IntegerField(default=0)
-    jobs = models.TextField(blank=True)
+    job_notes = models.TextField(blank=True)
 
     def __str__(self):
         return "%s is %s for %s" % (self.parent, self.level, self.session)

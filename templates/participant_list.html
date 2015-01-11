@@ -21,10 +21,8 @@
   <a class="list-group-item" href="{% url 'participant_detail' session_id=session.id participant_id=p.id %}">
     {% if p.paid %}${% endif %}
     {% if p.level == 'monthly' %}*{% endif %}
-    <strong>{{ p.parent }}</strong>
-    {% if p.parent.email %} - {{ p.parent.email }}{% endif %}
-    {% if p.parent.phone %} - {{ p.parent.phone }}{% if p.parent.phone_type %} ({{ p.parent.phone_type }}){% endif %}{% endif %}
-    {% if p.parent.preferred %} - <em>prefers {{ p.parent.preferred }}</em>{% endif %}
+    {% include "_parent.html" with parent=p.parent %}
+    {% if p.job_notes %}<div>{{ p.job_notes|linebreaks }}</div>{% endif %}
   </a>
   {% endfor %}
 </div>
