@@ -99,8 +99,7 @@ class TestSession(object):
         monkeypatch.setattr(
             'wonderment.models.today', lambda: date(2014, 10, 1))
         s = f.SessionFactory.create(start_date=date(2014, 9, 12))
-        p1 = f.ParticipantFactory.create(
-            session=s, paid=30, parent__name="B", job_notes='some jobs')
+        p1 = f.ParticipantFactory.create(session=s, paid=30, parent__name="B")
         p2 = f.ParticipantFactory.create(session=s, paid=60, parent__name="A")
         f.ParticipantFactory.create(session=s, paid=0)
         f.ParticipantFactory.create(paid=30)
@@ -114,7 +113,6 @@ class TestSession(object):
         families = s.families()
 
         assert families['parents'] == [p2.parent, p1.parent]  # ordered by name
-        assert [p.job_notes for p in families['parents']] == ['', 'some jobs']
         assert list(families['students']) == [s1b, s2a, s1a]  # ordered by age
         assert [st.real_age for st in families['students']] == [
             "2yr", "4yr", "6yr"]

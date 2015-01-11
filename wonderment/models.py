@@ -209,10 +209,7 @@ class Session(models.Model):
     def families(self, **filters):
         participants = self.participants.filter(
             paid__gt=0, **filters).select_related('parent')
-        parents = []
-        for p in participants:
-            p.parent.job_notes = p.job_notes
-            parents.append(p.parent)
+        parents = [p.parent for p in participants]
         students = Child.objects.filter(parent__in=parents)
         age_groups_dict = {}
         for student in students:
