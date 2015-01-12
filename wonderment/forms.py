@@ -10,14 +10,7 @@ from . import models
 class ParticipantForm(forms.ModelForm):
     class Meta:
         model = models.Participant
-        fields = ['level', 'payment']
-        widgets = {'payment': forms.RadioSelect}
-
-    def __init__(self, *a, **kw):
-        super(ParticipantForm, self).__init__(*a, **kw)
-        formfield = self.fields['payment']
-        modelfield = models.Participant._meta.get_field_by_name('payment')[0]
-        formfield.choices = modelfield.get_choices(include_blank=False)
+        fields = ['level']
 
 
 class ParentForm(forms.ModelForm):

@@ -241,22 +241,6 @@ class Participant(models.Model):
             ('monthly', 'only special events and field trips')
         ],
     )
-    payment = models.CharField(
-        max_length=20,
-        choices=[
-            (
-                'early',
-                "I am interested in discounted early registration. "
-                "I understand that Wonderment cannot offer refunds. "
-                "My family is committed to Wonderment participation "
-                "to the best of our ability."
-            ),
-            (
-                'later',
-                "I would like to wait to complete my registration and payment."
-            ),
-        ],
-    )
     paid = models.IntegerField(default=0)
     job_notes = models.TextField(blank=True)
 

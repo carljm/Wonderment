@@ -15,7 +15,6 @@ class TestParticipantForm(object):
         form['phone'] = '321-6543-9876'
         form['participate_by'] = ['teaching']
         form['level'] = 'weekly'
-        form['payment'] = 'early'
         form['children-0-name'] = "Kid"
         resp = form.submit().follow()
 
@@ -24,7 +23,6 @@ class TestParticipantForm(object):
         parent = participant.parent
         child = parent.children.get()
         assert participant.level == 'weekly'
-        assert participant.payment == 'early'
         assert parent.name == "someone"
         assert parent.email == 'someone@example.com'
         assert parent.phone == '321-6543-9876'
@@ -39,7 +37,6 @@ class TestParticipantForm(object):
         participant = f.ParticipantFactory.create(
             session=session,
             level='monthly',
-            payment='later',
             parent__name='old',
             parent__email='old@example.com',
             parent__phone='321-654-9876',
@@ -52,7 +49,6 @@ class TestParticipantForm(object):
         form['name'] = "someone"
         form['participate_by'] = ['assisting']
         form['level'] = 'weekly'
-        form['payment'] = 'early'
         form['children-0-name'] = "Kid"
         form['children-1-DELETE'] = True
         form['children-2-name'] = "Hey"
@@ -63,6 +59,5 @@ class TestParticipantForm(object):
         parent = participant.parent
         child_names = {c.name for c in parent.children.all()}
         assert participant.level == 'weekly'
-        assert participant.payment == 'early'
         assert parent.name == "someone"
         assert child_names == {"Kid", "Hey"}

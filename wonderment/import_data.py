@@ -92,7 +92,6 @@ def import_csv(session, fn):
             participant = models.Participant(
                 parent=parent,
                 session=session,
-                payment='early',
                 paid=clean_int(row['paid']),
                 level=clean_level(row['level']),
             )
