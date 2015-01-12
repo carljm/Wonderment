@@ -21,7 +21,15 @@
   <a class="list-group-item" href="{% url 'participant_detail' session_id=session.id participant_id=p.id %}">
     {% if p.paid %}${% endif %}
     {% if p.level == 'monthly' %}*{% endif %}
-    {% include "_parent.html" with parent=p.parent %}
+    {% include "_parent.html" with parent=p.parent link_email=False %}
+    {% if p.assigned_job_descs %}
+      (Assigned jobs:
+      {% for job in p.assigned_job_descs %}
+        {{ job }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+      )
+    {% endif %}
+    {% if p.job_notes %}<div class="well">{{ p.job_notes|linebreaks }}</div>{% endif %}
   </a>
   {% endfor %}
 </div>

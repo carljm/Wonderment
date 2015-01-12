@@ -174,13 +174,12 @@ def parents_by_contribution(request, session_id):
     session = get_object_or_404(models.Session, pk=session_id)
     participants = models.Participant.objects.filter(
         session=session).select_related('parent')
-    descriptions = dict(models.PARTICIPATION_TYPES)
     participants_by_contribution = {}
     for participant in participants:
         all_contributions = set(participant.parent.participate_by)
         all_contributions.update(participant.assigned_jobs)
         for contribution in all_contributions:
-            desc = descriptions[contribution]
+            desc = models.PARTICIPATION_TYPE_MAP[contribution]
             assigned = (contribution in participant.assigned_jobs)
             existing = participants_by_contribution.setdefault(desc, [])
             if assigned:

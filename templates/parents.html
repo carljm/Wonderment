@@ -16,7 +16,7 @@
 <ul class="list-group">
   {% for p in participants %}
   <li class="list-group-item">
-    {% include "_parent.html" with parent=p.parent %}
+    {% include "_parent.html" with parent=p.parent, link_email=True %}
   </li>
   {% endfor %}
 </ul>

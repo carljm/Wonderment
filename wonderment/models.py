@@ -3,6 +3,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils.functional import cached_property
 
 from . import fields, utils
 
@@ -253,6 +254,10 @@ class Participant(models.Model):
     class Meta:
         ordering = ['parent__name']
         verbose_name = "participant in session"
+
+    @cached_property
+    def assigned_job_descs(self):
+        return [PARTICIPATION_TYPE_MAP[j] for j in self.assigned_jobs]
 
 
 class ClassDay(models.Model):

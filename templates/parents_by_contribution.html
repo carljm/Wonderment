@@ -26,7 +26,7 @@
       <li class="list-group-item{% if assigned %} alert-success{% endif %}">
         {% if p.paid %}${% endif %}
         {% if p.level == 'monthly' %}*{% endif %}
-        {% include "_parent.html" with parent=p.parent %}
+        {% include "_parent.html" with parent=p.parent link_email=True %}
         {% if p.job_notes %}<div class="well">{{ p.job_notes|linebreaks }}</div>{% endif %}
       </li>
       {% endfor %}
