@@ -25,14 +25,30 @@
       <dd>${{ participant.paid|default:0 }}</dd>
       <dt>Commitment</dt>
       <dd>{{ participant.level }}</dd>
-      <dt>Contributions</dt>
-      <dd>
-        <ul>
-          {% for contribution in parent.participate_by_display %}
-          <li>{{ contribution }}</li>
-          {% endfor %}
-        </ul>
-      </dd>
+      {% if participant.assigned_job_descs %}
+        <dt>Assigned to</dt>
+        <dd>
+          <ul>
+            {% for job in participant.assigned_job_descs %}
+            <li>{{ job }}</li>
+            {% endfor %}
+          </ul>
+        </dd>
+      {% endif %}
+      {% if participant.job_notes %}
+        <dt>Job notes</dt>
+        <dd>{{ participant.job_notes|linebreaks }}</dd>
+      {% endif %}
+      {% if parent.participate_by_display %}
+        <dt>Willing to</dt>
+        <dd>
+          <ul>
+            {% for contribution in parent.participate_by_display %}
+            <li>{{ contribution }}</li>
+            {% endfor %}
+          </ul>
+        </dd>
+      {% endif %}
       {% if parent.age_groups %}
       <dt>Work with age groups</dt>
       <dd>{{ parent.age_groups|linebreaksbr }}</dd>

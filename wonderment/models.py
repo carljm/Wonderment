@@ -105,19 +105,16 @@ class Parent(models.Model):
         blank=True,
     )
 
-    @property
+    @cached_property
     def participant_url(self):
         return reverse(
             'edit_participant_form',
             kwargs={'parent_id': self.id, 'id_hash': utils.idhash(self.id)},
         )
 
-    @property
+    @cached_property
     def participate_by_display(self):
-        for contribution in self.participate_by:
-            val = PARTICIPATION_TYPE_MAP.get(contribution)
-            if val:
-                yield val
+        return [PARTICIPATION_TYPE_MAP[c] for c in self.participate_by]
 
     def __str__(self):
         return self.name
