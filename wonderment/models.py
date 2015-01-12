@@ -193,6 +193,7 @@ class Child(models.Model):
 
     class Meta:
         ordering = ['-birthdate']
+        verbose_name_plural = "children"
 
 
 class Session(models.Model):
@@ -242,6 +243,8 @@ class Participant(models.Model):
         ],
     )
     paid = models.IntegerField(default=0)
+    assigned_jobs = fields.ArrayField(
+        dbtype='text', choices=PARTICIPATION_TYPES)
     job_notes = models.TextField(blank=True)
 
     def __str__(self):
@@ -249,6 +252,7 @@ class Participant(models.Model):
 
     class Meta:
         ordering = ['parent__name']
+        verbose_name = "participant in session"
 
 
 class ClassDay(models.Model):

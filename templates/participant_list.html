@@ -22,7 +22,6 @@
     {% if p.paid %}${% endif %}
     {% if p.level == 'monthly' %}*{% endif %}
     {% include "_parent.html" with parent=p.parent %}
-    {% if p.job_notes %}<div>{{ p.job_notes|linebreaks }}</div>{% endif %}
   </a>
   {% endfor %}
 </div>

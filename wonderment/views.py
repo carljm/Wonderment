@@ -1,4 +1,5 @@
 from datetime import date
+from itertools import chain
 
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
@@ -176,10 +177,16 @@ def parents_by_contribution(request, session_id):
     descriptions = dict(models.PARTICIPATION_TYPES)
     participants_by_contribution = {}
     for participant in participants:
-        for contribution in participant.parent.participate_by:
+        all_contributions = set(participant.parent.participate_by)
+        all_contributions.update(participant.assigned_jobs)
+        for contribution in all_contributions:
             desc = descriptions[contribution]
-            participants_by_contribution.setdefault(desc, []).append(
-                participant)
+            assigned = (contribution in participant.assigned_jobs)
+            existing = participants_by_contribution.setdefault(desc, [])
+            if assigned:
+                existing.insert(0, (participant, assigned))
+            else:
+                existing.append((participant, assigned))
     return render(
         request,
         'parents_by_contribution.html',

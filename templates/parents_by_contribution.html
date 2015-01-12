@@ -11,7 +11,9 @@
 
 {% block main %}
 <p class="alert alert-info">
-  <strong>$</strong> = paid, <strong>*</strong> = special events only
+  <strong>$</strong> = paid,
+  <strong>*</strong> = special events only,
+  green background = assigned
 </p>
 {% for contribution, ps in participants_by_contribution.items %}
 <article class="panel panel-default">
@@ -20,11 +22,12 @@
   </div>
   <div class="panel-body">
     <ul class="list-group">
-      {% for p in ps %}
-      <li class="list-group-item">
+      {% for p, assigned in ps %}
+      <li class="list-group-item{% if assigned %} alert-success{% endif %}">
         {% if p.paid %}${% endif %}
         {% if p.level == 'monthly' %}*{% endif %}
         {% include "_parent.html" with parent=p.parent %}
+        {% if p.job_notes %}<div class="well">{{ p.job_notes|linebreaks }}</div>{% endif %}
       </li>
       {% endfor %}
     </ul>
