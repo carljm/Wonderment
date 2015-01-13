@@ -2,13 +2,13 @@
 
 {% load bootstrap3 %}
 
-{% block title %}Attendance ({% if classday %}{{ classday }}{% else %}New{% endif %}) | {{ block.super }}{% endblock %}
+{% block title %}{% if classday %}{{ classday }}{% else %}New{% endif %} | {{ block.super }}{% endblock %}
 
-{% block header %}{{ session }}: Attendance ({% if classday %}{{ classday }}{% else %}New{% endif %}){% endblock %}
+{% block header %}{{ block.super }}: {% if classday %}{{ classday }}{% else %}New{% endif %}{% endblock %}
 
 {% block breadcrumb %}
 {{ block.super }}
-<li><a href="{% if classday %}{% url 'attendance' session_id=session.id classday_id=classday.id %}{% else %}{% url 'attendance' session_id=session.id %}{% endif %}">Attendance ({% if classday %}{{ classday }}{% else %}New{% endif %})</a></li>
+<li><a href="{% if classday %}{% url 'attendance' session_id=session.id classday_id=classday.id %}{% else %}{% url 'attendance' session_id=session.id %}{% endif %}">{% if classday %}{{ classday }}{% else %}New{% endif %}</a></li>
 {% endblock %}
 
 {% block main %}
@@ -17,7 +17,7 @@
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h2 class="panel-title">
-        Attendance ({% if classday %}{{ classday }}{% else %}New{% endif %})
+        Attendance - {% if classday %}{{ classday }}{% else %}New{% endif %}
       </h2>
     </div>
     <div class="panel-body">
