@@ -271,3 +271,8 @@ class ClassDay(models.Model):
 class Attendance(models.Model):
     day = models.ForeignKey(ClassDay)
     child = models.ForeignKey(Child)
+
+
+class ParentAttendance(models.Model):
+    day = models.ForeignKey(ClassDay)
+    parent = models.ForeignKey(Parent)
