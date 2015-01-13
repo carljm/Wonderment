@@ -16,6 +16,15 @@ class AttendanceForm(forms.ModelForm):
             'children': forms.CheckboxSelectMultiple,
         }
 
+    def __init__(self, *a, **kw):
+        self.session = kw.pop('session')
+        super(AttendanceForm, self).__init__(*a, **kw)
+        participants = models.Parent.objects.filter(
+            participations__session=self.session, participations__paid__gt=0)
+        self.fields['parents'].queryset = participants
+        self.fields['children'].queryset = models.Child.objects.filter(
+            parent__in=participants)
+
 
 class ParticipantForm(forms.ModelForm):
     class Meta:

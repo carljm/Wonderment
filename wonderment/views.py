@@ -232,6 +232,7 @@ def classdays(request, session_id):
 @login_required
 def attendance(request, session_id, classday_id=None):
     session = get_object_or_404(models.Session, pk=session_id)
+    form_kwargs = {'session': session, 'instance': None}
     classday = None
     if classday_id is not None:
         classday = get_object_or_404(
@@ -239,8 +240,9 @@ def attendance(request, session_id, classday_id=None):
             session=session,
             pk=classday_id,
         )
+        form_kwargs['instance'] = classday
     if request.method == 'POST':
-        form = forms.AttendanceForm(request.POST, instance=classday)
+        form = forms.AttendanceForm(request.POST, **form_kwargs)
         if form.is_valid():
             classday = form.save(commit=False)
             classday.session = session
@@ -248,7 +250,7 @@ def attendance(request, session_id, classday_id=None):
             form.save_m2m()
             return redirect('classdays', session_id=session.id)
     else:
-        form = forms.AttendanceForm(instance=classday)
+        form = forms.AttendanceForm(**form_kwargs)
 
     return render(
         request,
