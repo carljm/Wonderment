@@ -260,19 +260,11 @@ class Participant(models.Model):
 class ClassDay(models.Model):
     session = models.ForeignKey(Session)
     date = models.DateField()
+    children = models.ManyToManyField(Child)
+    parents = models.ManyToManyField(Parent)
 
     def __str__(self):
         return str(self.date)
 
     class Meta:
         ordering = ['-date']
-
-
-class Attendance(models.Model):
-    day = models.ForeignKey(ClassDay)
-    child = models.ForeignKey(Child)
-
-
-class ParentAttendance(models.Model):
-    day = models.ForeignKey(ClassDay)
-    parent = models.ForeignKey(Parent)

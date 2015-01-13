@@ -15,8 +15,13 @@ class ChildInline(admin.TabularInline):
     extra = 0
 
 
-class AttendanceInline(admin.TabularInline):
-    model = models.Attendance
+class ChildAttendanceInline(admin.TabularInline):
+    model = models.ClassDay.children.through
+    extra = 0
+
+
+class ParentAttendanceInline(admin.TabularInline):
+    model = models.ClassDay.parents.through
     extra = 0
 
 
@@ -34,7 +39,7 @@ class SessionAdmin(admin.ModelAdmin):
 
 
 class ClassDayAdmin(admin.ModelAdmin):
-    inlines = [AttendanceInline]
+    inlines = [ChildAttendanceInline, ParentAttendanceInline]
 
 
 admin.site.register(models.Parent, ParentAdmin)
