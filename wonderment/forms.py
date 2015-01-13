@@ -28,6 +28,7 @@ class AttendanceForm(forms.ModelForm):
             self.parent_map[child.id] = child.parent_id
         self.fields['parents'].queryset = self.parents
         self.fields['children'].queryset = self.children
+        self.fields['date'].widget.attrs['placeholder'] = 'YYYY-MM-DD'
 
 
 class ParticipantForm(forms.ModelForm):
