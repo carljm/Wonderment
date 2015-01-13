@@ -1,6 +1,6 @@
 {% extends "classday_list.html" %}
 
-{% load bootstrap3 %}
+{% load bootstrap3 wonderment %}
 
 {% block title %}{% if classday %}{{ classday }}{% else %}New{% endif %} | {{ block.super }}{% endblock %}
 
@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block main %}
-<form method="POST">
+<form method="POST" id="attendance-form" data-parent-map="{{ form.parent_map|json }}">
   {% csrf_token %}
   <div class="panel panel-primary">
     <div class="panel-heading">

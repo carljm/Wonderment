@@ -19,11 +19,15 @@ class AttendanceForm(forms.ModelForm):
     def __init__(self, *a, **kw):
         self.session = kw.pop('session')
         super(AttendanceForm, self).__init__(*a, **kw)
-        participants = models.Parent.objects.filter(
+        self.parents = models.Parent.objects.filter(
             participations__session=self.session, participations__paid__gt=0)
-        self.fields['parents'].queryset = participants
-        self.fields['children'].queryset = models.Child.objects.filter(
-            parent__in=participants)
+        self.children = models.Child.objects.filter(
+            parent__in=self.parents)
+        self.parent_map = {}
+        for child in self.children:
+            self.parent_map[child.id] = child.parent_id
+        self.fields['parents'].queryset = self.parents
+        self.fields['children'].queryset = self.children
 
 
 class ParticipantForm(forms.ModelForm):
