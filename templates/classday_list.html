@@ -1,0 +1,21 @@
+{% extends "session.html" %}
+
+{% block title %}Class Days | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: Class Days{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li><a href="{% url 'classdays' session_id=session.id %}">Class Days</a></li>
+{% endblock %}
+
+{% block main %}
+<div class="list-group">
+  <a class="list-group-item" href="{% url 'attendance' session_id=session.id %}">New</a>
+  {% for classday in session.classdays.all %}
+  <a class="list-group-item" href="{% url 'attendance' session_id=session.id classday_id=classday.id %}">
+    {{ classday }}
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

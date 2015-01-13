@@ -7,6 +7,16 @@ import floppyforms.__future__ as forms
 from . import models
 
 
+class AttendanceForm(forms.ModelForm):
+    class Meta:
+        model = models.ClassDay
+        fields = ['date', 'children', 'parents']
+        widgets = {
+            'parents': forms.CheckboxSelectMultiple,
+            'children': forms.CheckboxSelectMultiple,
+        }
+
+
 class ParticipantForm(forms.ModelForm):
     class Meta:
         model = models.Participant

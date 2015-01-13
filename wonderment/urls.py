@@ -6,6 +6,17 @@ from . import views
 
 session_urls = [
     url(r'^$', views.session, name='session'),
+    url(r'^attendance/$', views.classdays, name='classdays'),
+    url(
+        r'^attendance/new/$',
+        views.attendance,
+        name='attendance',
+    ),
+    url(
+        r'^attendance/(?P<classday_id>\d+)/$',
+        views.attendance,
+        name='attendance',
+    ),
     url(r'^groups/$', views.age_groups, name='age_groups'),
     url(
         r'^groups_with_parents/$',

@@ -16,6 +16,7 @@
 
 {% block main %}
 <div class="list-group">
+  <a class="list-group-item" href="{% url 'classdays' session_id=session.id %}">Attendance</a>
   <a class="list-group-item" href="{% url 'age_groups' session_id=session.id %}">Age Groups</a>
   <a class="list-group-item" href="{% url 'age_groups_with_parents' session_id=session.id %}">Age Groups (with parent contact info)</a>
   <a class="list-group-item" href="{% url 'monthly' session_id=session.id %}">Field trips and special events</a>

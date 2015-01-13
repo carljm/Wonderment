@@ -164,4 +164,4 @@ class TestClassDay(object):
     def test_str(self):
         cd = f.ClassDayFactory.build(date=date(2014, 9, 1))
 
-        assert str(cd) == "2014-09-01"
+        assert str(cd) == "September 01, 2014"

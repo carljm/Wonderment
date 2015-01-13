@@ -258,13 +258,13 @@ class Participant(models.Model):
 
 
 class ClassDay(models.Model):
-    session = models.ForeignKey(Session)
+    session = models.ForeignKey(Session, related_name='classdays')
     date = models.DateField()
     children = models.ManyToManyField(Child)
     parents = models.ManyToManyField(Parent)
 
     def __str__(self):
-        return str(self.date)
+        return self.date.strftime('%B %d, %Y')
 
     class Meta:
         ordering = ['-date']

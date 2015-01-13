@@ -1,0 +1,32 @@
+{% extends "classday_list.html" %}
+
+{% load bootstrap3 %}
+
+{% block title %}Attendance ({% if classday %}{{ classday }}{% else %}New{% endif %}) | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: Attendance ({% if classday %}{{ classday }}{% else %}New{% endif %}){% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li><a href="{% if classday %}{% url 'attendance' session_id=session.id classday_id=classday.id %}{% else %}{% url 'attendance' session_id=session.id %}{% endif %}">Attendance ({% if classday %}{{ classday }}{% else %}New{% endif %})</a></li>
+{% endblock %}
+
+{% block main %}
+<form method="POST">
+  {% csrf_token %}
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h2 class="panel-title">
+        Attendance ({% if classday %}{{ classday }}{% else %}New{% endif %})
+      </h2>
+    </div>
+    <div class="panel-body">
+      {% bootstrap_form_errors form %}
+      {% bootstrap_form form %}
+      {% buttons %}
+        <button type="submit">Save</button>
+      {% endbuttons %}
+    </div>
+  </div>
+</form>
+{% endblock %}

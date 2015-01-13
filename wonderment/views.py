@@ -221,3 +221,37 @@ def participant_detail(request, session_id, participant_id):
         'participant_detail.html',
         {'participant': participant, 'session': session},
     )
+
+
+@login_required
+def classdays(request, session_id):
+    session = get_object_or_404(models.Session, pk=session_id)
+    return render(request, 'classday_list.html', {'session': session})
+
+
+@login_required
+def attendance(request, session_id, classday_id=None):
+    session = get_object_or_404(models.Session, pk=session_id)
+    classday = None
+    if classday_id is not None:
+        classday = get_object_or_404(
+            models.ClassDay,
+            session=session,
+            pk=classday_id,
+        )
+    if request.method == 'POST':
+        form = forms.AttendanceForm(request.POST, instance=classday)
+        if form.is_valid():
+            classday = form.save(commit=False)
+            classday.session = session
+            classday.save()
+            form.save_m2m()
+            return redirect('classdays', session_id=session.id)
+    else:
+        form = forms.AttendanceForm(instance=classday)
+
+    return render(
+        request,
+        'attendance_form.html',
+        {'form': form, 'classday': classday, 'session': session},
+    )
