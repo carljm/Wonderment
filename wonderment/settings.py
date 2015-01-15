@@ -69,7 +69,7 @@ ALLOWED_HOSTS = env(
     default={'dev': '*'},
 )
 
-BASE_URL = env('WM_BASE_URL', default={'dev': 'http://wonderment.local:8000'})
+BASE_URL = env('WM_BASE_URL', default={'dev': 'http://wonderment.hexxie.com:8000'})
 
 DATABASES = {
     'default': env(
