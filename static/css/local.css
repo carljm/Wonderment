@@ -3,6 +3,13 @@
 #participant-form [for$='-DELETE'] { display: none; }
 #participant-form ul { list-style-type: none; margin-left: -2.5em; }
 .alert a { text-decoration: underline; }
-.parent-attendance-label { margin-left: 1em; font-size: small; }
-.child-attendance-label { margin-left: 3em; font-size: small; }
+.parent-attendance-label {
+    margin-left: 1em;
+    font-size: medium;
+    font-weight: bold;
+}
+.child-attendance-label {
+    margin-left: 3em;
+    font-size: medium;
+}
 .attendance-select-label { margin: 0 0.5em; font-size: small; }

@@ -24,31 +24,33 @@
       {% bootstrap_form_errors form %}
       {% bootstrap_form form %}
     </div>
-    <ul class="list-group">
-      <li class="list-group-item">
-        <span class="label label-default">unknown</span>
-        <span class="label label-success">present</span>
-        <span class="label label-info">planned absence</span>
-        <span class="label label-warning">absence (short notice)</span>
-        <span class="label label-danger">absence (no notice)</span>
-      </li>
-      {{ form.parent_formset.management_form }}
-      {{ form.child_formset.management_form }}
-      {% for parent_form in form.parent_formset %}
-        <li class="parent-attendance-form list-group-item" data-parent-id="{{ parent_form.instance.parent_id }}">
-          {{ parent_form.id }}
-          {{ parent_form.attendance }}
-          <span class="label label-primary parent-attendance-label">{{ parent_form.instance.parent }}</span>
+    {{ form.parent_formset.management_form }}
+    {{ form.child_formset.management_form }}
+    {% if form.parent_formset|length %}
+      <ul class="list-group">
+        <li class="list-group-item">
+          <span class="label label-default">unknown</span>
+          <span class="label label-success">present</span>
+          <span class="label label-info">planned absence</span>
+          <span class="label label-warning">absence (short notice)</span>
+          <span class="label label-danger">absence (no notice)</span>
         </li>
-        {% for child_form in parent_form.child_forms %}
-          <li class="child-attendance-form list-group-item" data-parent-id="{{ child_form.instance.child.parent_id }}">
-            {{ child_form.id }}
-            {{ child_form.attendance }}
-            <span class="label label-default child-attendance-label">{{ child_form.instance.child }}</span>
+        {% for parent_form in form.parent_formset %}
+          <li class="parent-attendance-form list-group-item" data-parent-id="{{ parent_form.instance.parent_id }}">
+            {{ parent_form.id }}
+            {{ parent_form.attendance }}
+            <span class="parent-attendance-label">{{ parent_form.instance.parent }}</span>
           </li>
+          {% for child_form in parent_form.child_forms %}
+            <li class="child-attendance-form list-group-item" data-parent-id="{{ child_form.instance.child.parent_id }}">
+              {{ child_form.id }}
+              {{ child_form.attendance }}
+              <span class="child-attendance-label">{{ child_form.instance.child }}</span>
+            </li>
+          {% endfor %}
         {% endfor %}
-      {% endfor %}
-    </ul>
+      </ul>
+    {% endif %}
     <div class="panel-footer">
       {% buttons %}
         <button type="submit">{% if classday %}Save{% else %}Continue{% endif %}</button>
