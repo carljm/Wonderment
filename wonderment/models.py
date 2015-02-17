@@ -269,7 +269,6 @@ class ClassDay(models.Model):
 
 
 ATTENDANCE = [
-    ('', 'unknown'),
     ('present', 'present'),
     ('planned', 'absent (planned)'),
     ('short', 'absent (short notice)'),
@@ -281,11 +280,11 @@ class ParentAttendance(models.Model):
     classday = models.ForeignKey(ClassDay)
     parent = models.ForeignKey(Parent)
     attendance = models.CharField(
-        max_length=20, choices=ATTENDANCE, default='')
+        max_length=20, choices=ATTENDANCE, blank=True, null=True)
 
 
 class ChildAttendance(models.Model):
     classday = models.ForeignKey(ClassDay)
     child = models.ForeignKey(Child)
     attendance = models.CharField(
-        max_length=20, choices=ATTENDANCE, default='')
+        max_length=20, choices=ATTENDANCE, blank=True, null=True)

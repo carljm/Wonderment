@@ -1,9 +1,9 @@
 from datetime import date
-from itertools import chain
 
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
+from django.db import transaction
 
 from . import forms, models, utils
 
@@ -234,6 +234,7 @@ def attendance(request, session_id, classday_id=None):
     session = get_object_or_404(models.Session, pk=session_id)
     form_kwargs = {'session': session, 'instance': None}
     classday = None
+    creating = True
     if classday_id is not None:
         classday = get_object_or_404(
             models.ClassDay,
@@ -241,14 +242,19 @@ def attendance(request, session_id, classday_id=None):
             pk=classday_id,
         )
         form_kwargs['instance'] = classday
+        creating = False
     if request.method == 'POST':
-        form = forms.AttendanceForm(request.POST, **form_kwargs)
-        if form.is_valid():
-            classday = form.save(commit=False)
-            classday.session = session
-            classday.save()
-            form.save_m2m()
-            return redirect('classdays', session_id=session.id)
+        with transaction.atomic():
+            form = forms.AttendanceForm(request.POST, **form_kwargs)
+            if form.is_valid():
+                classday = form.save()
+                if creating:
+                    return redirect(
+                        'attendance',
+                        session_id=session.id,
+                        classday_id=classday.id,
+                    )
+                return redirect('classdays', session_id=session.id)
     else:
         form = forms.AttendanceForm(**form_kwargs)
 
