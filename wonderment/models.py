@@ -260,11 +260,32 @@ class Participant(models.Model):
 class ClassDay(models.Model):
     session = models.ForeignKey(Session, related_name='classdays')
     date = models.DateField()
-    children = models.ManyToManyField(Child)
-    parents = models.ManyToManyField(Parent)
 
     def __str__(self):
         return self.date.strftime('%B %d, %Y')
 
     class Meta:
         ordering = ['-date']
+
+
+ATTENDANCE = [
+    ('', 'unknown'),
+    ('present', 'present'),
+    ('planned', 'absent (planned)'),
+    ('short', 'absent (short notice)'),
+    ('surprise', 'absent (no notice)'),
+]
+
+
+class ParentAttendance(models.Model):
+    classday = models.ForeignKey(ClassDay)
+    parent = models.ForeignKey(Parent)
+    attendance = models.CharField(
+        max_length=20, choices=ATTENDANCE, default='')
+
+
+class ChildAttendance(models.Model):
+    classday = models.ForeignKey(ClassDay)
+    child = models.ForeignKey(Child)
+    attendance = models.CharField(
+        max_length=20, choices=ATTENDANCE, default='')

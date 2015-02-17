@@ -16,12 +16,12 @@ class ChildInline(admin.TabularInline):
 
 
 class ChildAttendanceInline(admin.TabularInline):
-    model = models.ClassDay.children.through
+    model = models.ChildAttendance
     extra = 0
 
 
 class ParentAttendanceInline(admin.TabularInline):
-    model = models.ClassDay.parents.through
+    model = models.ParentAttendance
     extra = 0
 
 

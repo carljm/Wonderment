@@ -10,24 +10,11 @@ from . import models
 class AttendanceForm(forms.ModelForm):
     class Meta:
         model = models.ClassDay
-        fields = ['date', 'children', 'parents']
-        widgets = {
-            'parents': forms.CheckboxSelectMultiple,
-            'children': forms.CheckboxSelectMultiple,
-        }
+        fields = ['date']
 
     def __init__(self, *a, **kw):
         self.session = kw.pop('session')
         super(AttendanceForm, self).__init__(*a, **kw)
-        self.parents = models.Parent.objects.filter(
-            participations__session=self.session, participations__paid__gt=0)
-        self.children = models.Child.objects.filter(
-            parent__in=self.parents)
-        self.parent_map = {}
-        for child in self.children:
-            self.parent_map[child.id] = child.parent_id
-        self.fields['parents'].queryset = self.parents
-        self.fields['children'].queryset = self.children
         self.fields['date'].widget.attrs['placeholder'] = 'YYYY-MM-DD'
 
 
