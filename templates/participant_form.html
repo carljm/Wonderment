@@ -2,10 +2,10 @@
 
 {% load bootstrap3 %}
 
-{% block title %}Early registration{% if parent %} for {{ parent.name }}{% endif %} | {{ session.name }} | Wonderment{% endblock %}
+{% block title %}Registration{% if parent %} for {{ parent.name }}{% endif %} | {{ session.name }} | Wonderment{% endblock %}
 
 {% block body %}
-<h1>Wonderment {{ session.name }} early registration{% if parent %} for {{ parent.name }}{% endif %}</h1>
+<h1>Wonderment {{ session.name }} registration{% if parent %} for {{ parent.name }}{% endif %}</h1>
 
 {% if not parent %}
 <p class="alert alert-info" role="alert">
