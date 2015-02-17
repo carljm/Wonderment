@@ -14,24 +14,21 @@ jQuery(function($) {
   });
 
   var attendanceForm = $('#attendance-form');
-  if (attendanceForm) {
-    var parentMap = attendanceForm.data('parent-map');
-    var kidLists = {};
-    $("[for^='id_parents_']").each(function () {
-      var label = $(this);
-      var kidList = $('<ul class="children"></ul>');
-      var parentId = label.find('input').attr('value');
-      kidLists[parentId] = kidList;
-      label.parent('li').append(kidList);
-    });
-    $("[for^='id_children_']").each(function () {
-      var label = $(this);
-      var li = label.parent('li');
-      var childId = label.find('input').attr('value');
-      var parentId = parentMap[childId];
-      var kidList = kidLists[parentId];
-      li.detach();
-      kidList.append(li);
+  if (attendanceForm.length) {
+    var parentRadioSel = '.parent-attendance-form input[type="radio"]';
+    attendanceForm.on('change', parentRadioSel, function () {
+      var newVal = $(this).val();
+      var parentId = $(this).closest(
+        '.parent-attendance-form').data('parent-id');
+      attendanceForm.find(
+        '.child-attendance-form[data-parent-id="' + parentId + '"] ' +
+          'input[type="radio"]'
+      ).filter(function () {
+        return $(this).val() === '' && $(this).prop('checked');
+      }).each(function () {
+        var inputName = $(this).attr('name');
+        attendanceForm.find('input[name="' + inputName + '"]').val([newVal]);
+      });
     });
   }
 });

@@ -3,6 +3,6 @@
 #participant-form [for$='-DELETE'] { display: none; }
 #participant-form ul { list-style-type: none; margin-left: -2.5em; }
 .alert a { text-decoration: underline; }
-#attendance-form [for='id_parents'] { display: none; }
-#attendance-form [for='id_children'] { display: none; }
-#attendance-form ul { list-style-type: none; }
+.parent-attendance-label { margin-left: 1em; font-size: small; }
+.child-attendance-label { margin-left: 3em; font-size: small; }
+.attendance-select-label { margin: 0 0.5em; font-size: small; }

@@ -23,17 +23,23 @@ class AttendanceForm(forms.ModelForm):
         )
         self.children = models.Child.objects.filter(
             parent__in=self.parents)
-        self.parent_map = {}
-        for child in self.children:
-            self.parent_map[child.id] = child.parent_id
         self.parent_formset = ParentAttendanceFormset(
             data=data.copy() if (data is not None) else None,
             instance=self.instance,
         )
+        self.parent_forms_by_id = {}
+        for parent_form in self.parent_formset:
+            parent_form.child_forms = []
+            parent_id = parent_form.instance.parent_id
+            self.parent_forms_by_id[parent_id] = parent_form
         self.child_formset = ChildAttendanceFormset(
             data=data.copy() if (data is not None) else None,
             instance=self.instance,
         )
+        for child_form in self.child_formset:
+            parent_id = child_form.instance.child.parent_id
+            parent_form = self.parent_forms_by_id[parent_id]
+            parent_form.child_forms.append(child_form)
 
     def is_valid(self):
         return (
@@ -70,12 +76,17 @@ class AttendanceForm(forms.ModelForm):
         return classday
 
 
+class AttendanceRadioSelect(forms.RadioSelect):
+    template_name = '_attendance_select.html'
+
+
 ParentAttendanceFormset = inlineformset_factory(
     models.ClassDay,
     models.ParentAttendance,
     fields=['attendance'],
     extra=0,
     can_delete=False,
+    widgets={'attendance': AttendanceRadioSelect},
 )
 
 
@@ -85,6 +96,7 @@ ChildAttendanceFormset = inlineformset_factory(
     fields=['attendance'],
     extra=0,
     can_delete=False,
+    widgets={'attendance': AttendanceRadioSelect},
 )
 
 

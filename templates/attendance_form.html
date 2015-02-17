@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block main %}
-<form method="POST" id="attendance-form" data-parent-map="{{ form.parent_map|json }}">
+<form method="POST" id="attendance-form">
   {% csrf_token %}
   <div class="panel panel-primary">
     <div class="panel-heading">
@@ -23,21 +23,33 @@
     <div class="panel-body">
       {% bootstrap_form_errors form %}
       {% bootstrap_form form %}
-
-      {% bootstrap_formset_errors form.parent_formset %}
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <span class="label label-default">unknown</span>
+        <span class="label label-success">present</span>
+        <span class="label label-info">planned absence</span>
+        <span class="label label-warning">absence (short notice)</span>
+        <span class="label label-danger">absence (no notice)</span>
+      </li>
       {{ form.parent_formset.management_form }}
-      {% for parent_form in form.parent_formset %}
-        {% bootstrap_form_errors parent_form %}
-        {% bootstrap_form parent_form %}
-      {% endfor %}
-
-      {% bootstrap_formset_errors form.child_formset %}
       {{ form.child_formset.management_form }}
-      {% for child_form in form.child_formset %}
-        {% bootstrap_form_errors child_form %}
-        {% bootstrap_form child_form %}
+      {% for parent_form in form.parent_formset %}
+        <li class="parent-attendance-form list-group-item" data-parent-id="{{ parent_form.instance.parent_id }}">
+          {{ parent_form.id }}
+          {{ parent_form.attendance }}
+          <span class="label label-primary parent-attendance-label">{{ parent_form.instance.parent }}</span>
+        </li>
+        {% for child_form in parent_form.child_forms %}
+          <li class="child-attendance-form list-group-item" data-parent-id="{{ child_form.instance.child.parent_id }}">
+            {{ child_form.id }}
+            {{ child_form.attendance }}
+            <span class="label label-default child-attendance-label">{{ child_form.instance.child }}</span>
+          </li>
+        {% endfor %}
       {% endfor %}
-
+    </ul>
+    <div class="panel-footer">
       {% buttons %}
         <button type="submit">{% if classday %}Save{% else %}Continue{% endif %}</button>
       {% endbuttons %}
