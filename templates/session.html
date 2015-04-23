@@ -25,6 +25,7 @@
   <a class="list-group-item" href="{% url 'weekly_parent_emails' session_id=session.id %}">Weekly Parent Emails</a>
   <a class="list-group-item" href="{% url 'parents_by_contribution' session_id=session.id %}">Parents by Contribution</a>
   <a class="list-group-item" href="{% url 'participant_list' session_id=session.id %}">All Parents</a>
+  <a class="list-group-item" href="{% url 'paid_participants_csv' session_id=session.id %}">Paid Parents CSV</a>
 
 </div>
 {% endblock %}

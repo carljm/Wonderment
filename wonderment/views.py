@@ -1,9 +1,11 @@
+import csv
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
-from django.shortcuts import get_object_or_404, render, redirect
 from django.db import transaction
+from django.http import Http404, HttpResponse
+from django.shortcuts import get_object_or_404, render, redirect
+from django.utils.text import slugify
 
 from . import forms, models, utils
 
@@ -263,3 +265,28 @@ def attendance(request, session_id, classday_id=None):
         'attendance_form.html',
         {'form': form, 'classday': classday, 'session': session},
     )
+
+
+@login_required
+def paid_participants_csv(request, session_id):
+    session = get_object_or_404(models.Session, pk=session_id)
+    participants = models.Participant.objects.filter(
+        paid__gt=0, session=session).select_related('parent')
+    response = HttpResponse(content_type='text/csv')
+    fn = "%s-paid-parents.csv" % slugify(session.name)
+    response['Content-Disposition'] = 'attachment; filename="%s"' % fn
+
+    writer = csv.writer(response)
+    writer.writerow(
+        ['email', 'name', 'spouse', 'participant_url', 'spring2015survey_url'])
+    for part in participants:
+        p = part.parent
+        writer.writerow([
+            p.email,
+            p.name,
+            p.spouse,
+            p.participant_url,
+            p.spring2015survey_url,
+        ])
+
+    return response

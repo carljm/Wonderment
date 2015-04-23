@@ -53,6 +53,11 @@ session_urls = [
         views.participant_detail,
         name='participant_detail',
     ),
+    url(
+        r'^paid-parents-csv/$',
+        views.paid_participants_csv,
+        name='paid_participants_csv',
+    ),
 ]
 
 
