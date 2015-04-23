@@ -36,4 +36,6 @@ class ResponseForm(forms.ModelForm):
         widgets = {
             'hear_about': forms.CheckboxSelectMultiple,
             'intention': forms.CheckboxSelectMultiple,
+            'pay_more': forms.RadioSelect,
+            'time_commitment': forms.RadioSelect,
         }

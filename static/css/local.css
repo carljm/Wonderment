@@ -15,3 +15,5 @@
 .attendance-select-label { margin: 0 0.5em; font-size: small; }
 
 #spring2015survey-form [for$="_other"] { display: none; }
+#spring2015survey-form [for="id_pay_more"] { display: none; }
+#spring2015survey-form [for="id_time_commitment"] { display: none; }
