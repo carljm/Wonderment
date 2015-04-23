@@ -7,7 +7,7 @@
 {% block body %}
   <h1>Wonderment Spring 2015 Survey for {{ parent.name }}</h1>
 
-  <form method="POST">
+  <form method="POST" id="spring2015survey-form">
     {% csrf_token %}
 
     {% bootstrap_form form %}

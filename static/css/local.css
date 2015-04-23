@@ -13,3 +13,5 @@
     font-size: medium;
 }
 .attendance-select-label { margin: 0 0.5em; font-size: small; }
+
+#spring2015survey-form [for$="_other"] { display: none; }

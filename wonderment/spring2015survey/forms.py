@@ -33,3 +33,7 @@ class ResponseForm(forms.ModelForm):
             'suggestions',
             'other_dreams',
         ]
+        widgets = {
+            'hear_about': forms.CheckboxSelectMultiple,
+            'intention': forms.CheckboxSelectMultiple,
+        }

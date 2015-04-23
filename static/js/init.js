@@ -31,4 +31,24 @@ jQuery(function($) {
       });
     });
   }
+
+  var surveyForm = $('#spring2015survey-form');
+  if (surveyForm.length) {
+    var initOtherField = function (fieldName) {
+      var checkboxGroup = $('input[name="' + fieldName + '"]');
+      var checkbox = checkboxGroup.filter('[value="other"]');
+      var otherInputGroup = $('#id_' + fieldName + '_other').parent();
+      var update = function () {
+        if (checkbox.prop('checked')) {
+          otherInputGroup.show();
+        } else {
+          otherInputGroup.hide();
+        }
+      };
+      update();
+      checkboxGroup.on('change', update);
+    };
+    initOtherField('hear_about');
+    initOtherField('intention');
+  }
 });
