@@ -290,3 +290,7 @@ def paid_participants_csv(request, session_id):
         ])
 
     return response
+
+
+def registration_closed(request):
+    return render(request, 'registration_closed.html')
