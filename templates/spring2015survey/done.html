@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Done! | {{ parent.name }} | Spring 2015 Survey | {{ block.super }}{% endblock %}
+
+{% block body %}
+<h2>Thanks for completing the survey!</h2>
+
+<p class="alert alert-info" role="alert">
+  If you want to review or change your answers, just return to
+  <a href="{{ parent.spring2015survey_url }}">this link</a>.
+</p>
+
+{% endblock %}

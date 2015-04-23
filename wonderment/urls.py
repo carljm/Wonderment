@@ -56,7 +56,7 @@ session_urls = [
 ]
 
 
-urlpatterns = [
+registration_urls = [
     url(
         r'^$',
         views.participant_form,
@@ -82,7 +82,13 @@ urlpatterns = [
         views.participant_url_request_thanks,
         name='participant_url_request_thanks',
     ),
+]
+
+
+urlpatterns = [
+    url(r'^registration/', include(registration_urls)),
     url(r'^browse/$', views.home, name='home'),
     url(r'^session/(?P<session_id>\d+)/', include(session_urls)),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^', include('wonderment.spring2015survey.urls')),
 ]

@@ -26,11 +26,21 @@ class ParentAttendanceInline(admin.TabularInline):
 
 
 class ParentAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'phone', 'email', 'registration_link']
+    list_display = [
+        '__str__',
+        'phone',
+        'email',
+        'registration_link',
+        'spring2015survey_link',
+    ]
     inlines = [ParticipantInline, ChildInline]
 
     def registration_link(self, obj):
         url = settings.BASE_URL + obj.participant_url
+        return mark_safe('<a href="%s">%s</a>' % (url, url))
+
+    def spring2015survey_link(self, obj):
+        url = settings.BASE_URL + obj.spring2015survey_url
         return mark_safe('<a href="%s">%s</a>' % (url, url))
 
 

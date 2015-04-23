@@ -2,7 +2,7 @@ from django.db import models
 
 from wonderment.fields import ArrayField
 from wonderment.models import Parent
-from .forms import RatingWidget
+from .widgets import RatingWidget
 
 
 ONE_TO_FIVE = [(5, 5), (4, 4), (3, 3), (2, 2), (1, 1)]
