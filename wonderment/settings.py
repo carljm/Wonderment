@@ -95,6 +95,7 @@ INSTALLED_APPS = (
     'floppyforms',
     'bootstrap3',
     'wonderment',
+    'wonderment.spring2015survey',
 )
 
 MIDDLEWARE_CLASSES = (
