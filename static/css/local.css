@@ -17,3 +17,7 @@
 #spring2015survey-form [for$="_other"] { display: none; }
 #spring2015survey-form [for="id_pay_more"] { display: none; }
 #spring2015survey-form [for="id_time_commitment"] { display: none; }
+#spring2015survey-form [for="id_overall_worthwhile"] { display: none; }
+#spring2015survey-form [for="id_help_out"] { display: none; }
+.rating-widget .desc { display: inline-block; width: 8em; }
+.rating-widget .opt { padding: 1em; }

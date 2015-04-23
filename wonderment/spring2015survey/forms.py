@@ -1,6 +1,6 @@
 import floppyforms.__future__ as forms
 
-from . import models
+from . import models, widgets
 
 
 class ResponseForm(forms.ModelForm):
@@ -36,6 +36,6 @@ class ResponseForm(forms.ModelForm):
         widgets = {
             'hear_about': forms.CheckboxSelectMultiple,
             'intention': forms.CheckboxSelectMultiple,
-            'pay_more': forms.RadioSelect,
-            'time_commitment': forms.RadioSelect,
+            'pay_more': widgets.RadioSelect,
+            'time_commitment': widgets.RadioSelect,
         }

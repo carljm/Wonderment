@@ -90,15 +90,20 @@ class Response(models.Model):
     )
 
     overall_worthwhile = RatingField(
+        "Overall, Wonderment was",
+        low_desc="waste of time",
+        high_desc="worthwhile",
+    )
+
+    opening_closing = RatingField(
         "For my family, the opening and closing events were",
         low_desc="waste of time",
         high_desc="worthwhile",
     )
 
     help_out = RatingField(
-        "I was",
-        low_desc="overwhelmed with my Wonderment responsibilities",
-        high_desc="happy to do more to help out",
+        low_desc="I was overwhelmed with my Wonderment responsibilities",
+        high_desc="I would love to do more to help out",
     )
 
     pay_more = models.CharField(
