@@ -196,10 +196,15 @@ class Response(models.Model):
         high_desc="provided valuable learning experiences",
     )
 
-    teachers_karissa = RatingField(
-        "Karissa Loewen (18mo - 7yr Spanish)",
+    teachers_lisa = RatingField(
+        "Ms. Lisa (18mo - 6yr Dance)",
         low_desc="not much learned",
         high_desc="provided valuable learning experiences",
+    )
+
+    teacher_comments = models.TextField(
+        "Any comments on teachers (including parent teachers)",
+        blank=True,
     )
 
     most_valuable = models.TextField(
