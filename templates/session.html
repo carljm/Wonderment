@@ -26,7 +26,9 @@
   <a class="list-group-item" href="{% url 'parents_by_contribution' session_id=session.id %}">Parents by Contribution</a>
   <a class="list-group-item" href="{% url 'participant_list' session_id=session.id %}">All Parents</a>
   <a class="list-group-item" href="{% url 'paid_participants_csv' session_id=session.id %}">Paid Parents CSV</a>
-
+  {% if session.name == "Spring 2015" %}
+  <a class="list-group-item" href="{% url 'spring2015survey_results' %}">Evaluation Summary</a>
+  {% endif %}
 </div>
 {% endblock %}
 

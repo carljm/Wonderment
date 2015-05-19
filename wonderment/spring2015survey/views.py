@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 
 from ..models import Parent
 from .. import utils
 from . import forms, models
+from .viewmodels import ResponseSummary
 
 
 def survey(request, parent_id, id_hash):
@@ -40,3 +42,11 @@ def done(request, parent_id, id_hash):
     context = {'parent': parent}
 
     return render(request, 'spring2015survey/done.html', context)
+
+
+@login_required
+def results(request):
+    responses = models.Response.objects.all()
+    summary = ResponseSummary(responses)
+    return render(
+        request, 'spring2015survey/results.html', {'summary': summary})

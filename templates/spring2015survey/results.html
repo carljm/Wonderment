@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Results Summary | Spring 2015 Survey | {{ block.super }}{% endblock %}
+
+{% block body %}
+<h2>Evaluation Results Summary</h2>
+
+{% for question in summary.questions %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3>{{ question.verbose_name }}</h3>
+  </div>
+  {% if question.type == 'array' or question.type == 'choices' %}
+    <table class="table">
+      <tr>
+        <th>#</th>
+        <th>Response</th>
+      </tr>
+      {% for answer, count in question.counts %}
+      <tr>
+        <td>{{ count }}</td>
+        <td>
+          {{ answer }}
+          {% if answer|lower == 'other' and question.other %}
+          ({% for o in question.other %}"{{ o }}"{% if not forloop.last %}, {% endif %}{% endfor %})
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% elif question.type == 'free' %}
+    <ul class="list-group">
+      {% for answer in question.answers %}
+      <li class="list-group-item">
+        {{ answer }}
+      </li>
+      {% endfor %}
+    </ul>
+  {% elif question.type == 'rating' %}
+    <table class="table">
+      <tr>
+        <th rowspan="2">{{ question.low_desc }}</th>
+        {% for choice, count in question.counts %}
+        <th>{{ choice }}</th>
+        {% endfor %}
+        <th rowspan="2">{{ question.high_desc }}</th>
+      </tr>
+      <tr>
+        {% for choice, count in question.counts %}
+        <td>{{ count }}</td>
+        {% endfor %}
+      </tr>
+    </table>
+  {% endif %}
+</div>
+{% endfor %}
+
+{% endblock %}
