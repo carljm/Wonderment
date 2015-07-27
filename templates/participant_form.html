@@ -66,15 +66,8 @@
     </fieldset>
   </div>
 
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h2 class="panel-title">Session Participation</h2>
-    </div>
-    <fieldset class="panel-body">
-      {% bootstrap_form_errors participant_form %}
-      {% bootstrap_form participant_form %}
-    </fieldset>
-  </div>
+  {% bootstrap_form_errors participant_form %}
+  {% bootstrap_form participant_form %}
 
   {% buttons %}
     <button type="submit">Submit</button>

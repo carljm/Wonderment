@@ -103,7 +103,7 @@ ChildAttendanceFormset = inlineformset_factory(
 class ParticipantForm(forms.ModelForm):
     class Meta:
         model = models.Participant
-        fields = ['level']
+        fields = []
 
 
 class ParentForm(forms.ModelForm):
@@ -119,11 +119,11 @@ class ParentForm(forms.ModelForm):
             'spouse_contact',
             'emergency',
             'emergency_contact',
+            'drop_off',
+            'on_site',
             'participate_by',
-            'age_groups',
             'could_teach',
             'could_assist',
-            'all_ages_help',
             'other_contributions',
             'classes_desired',
         ]

@@ -23,20 +23,25 @@ GROUPS = [
 
 
 PARTICIPATION_TYPES = [
+    (
+        'coordination',
+        (
+            "coordination "
+            "(greetings, nametags, attendance, "
+            "arranging subs, supervising cleanup)"
+        )
+    ),
     ('teaching', "teaching a class"),
     ('assisting', "assisting another teacher"),
-    ('special', "helping to plan/facilitate special events / field trips"),
-    ('policy', "review policy handbook and guidelines"),
-    ('recruit', "publicity/recruitment"),
-    ('sub', "being available as a substitute for teachers who are ill"),
-    ('feedback', "collecting feedback from participants"),
-    ('sub-coord', "substitute coordinator"),
-    ('attendance', "monitor attendance"),
-    ('volunteers', "thank yous / volunteer follow-up"),
-    ('treasurer', "financial/treasury"),
-    ('legal', "legal consultation"),
-    ('conflict', "conflict management"),
-    ('cleaning', "cleanup coordination"),
+    ('sub', "available as a substitute for teachers who are ill"),
+    ('sensory', "facilitate sensory activity for toddlers"),
+    ('cleaning', "cleaning"),
+    # ('policy', "review policy handbook and guidelines"),
+    # ('recruit', "publicity/recruitment"),
+    # ('feedback', "collecting feedback from participants"),
+    # ('volunteers', "thank yous / volunteer follow-up"),
+    # ('legal', "legal consultation"),
+    # ('conflict', "conflict management"),
 ]
 
 
@@ -73,27 +78,47 @@ class Parent(models.Model):
         "Emergency contact name", max_length=200, blank=True)
     emergency_contact = models.CharField(
         "Emergency contact number", max_length=200, blank=True)
+    drop_off = models.BooleanField(
+        (
+            "I am interested in the option to drop off my children "
+            "for Wonderment classes. I understand that I may lose this "
+            "option if I fail to pick my child up before 11:35am from class. "
+            "I also understand that my child must be potty-trained and must "
+            "be comfortable being away from me."
+        ),
+        default=False,
+    )
+    on_site = models.BooleanField(
+        (
+            "I am interested in staying on-site during class "
+            "either to observe my child's classroom "
+            "or to be outside the classroom "
+            "doing something of my own choosing "
+            "or visiting with other parents."
+        ),
+        default=False,
+    )
     participate_by = fields.ArrayField(
-        verbose_name="How would you like to contribute to the co-op?",
+        verbose_name=(
+            "I would be interested in helping out during Wonderment "
+            "in one of the following ways (check any that interest you):"
+        ),
         dbtype='text',
         choices=PARTICIPATION_TYPES,
     )
-    age_groups = models.TextField(
-        "Which age groups are you most comfortable working with? "
-        "(Please note if you need to be with your own child's class.)",
-        blank=True,
-    )
     could_teach = models.TextField(
-        "If you are interested in teaching, "
-        "describe what you would like to teach.",
+        (
+            "If you are interested in teaching, "
+            "describe what you would like to teach, "
+            "and to which age groups:"
+        ),
         blank=True,
     )
     could_assist = models.TextField(
-        "What types of classes are you comfortable assisting with?",
-        blank=True,
-    )
-    all_ages_help = models.TextField(
-        "What ideas do you have for field trips or special events?",
+        (
+            "What types of classes (and which age groups) "
+            "are you comfortable assisting with?"
+        ),
         blank=True,
     )
     other_contributions = models.TextField(
@@ -246,6 +271,7 @@ class Participant(models.Model):
             ('weekly', 'all weekly classes'),
             ('monthly', 'only special events and field trips')
         ],
+        default='weekly',
     )
     paid = models.IntegerField(default=0)
     assigned_jobs = fields.ArrayField(
