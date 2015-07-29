@@ -14,7 +14,6 @@ class TestParticipantForm(object):
         form['email'] = 'someone@example.com'
         form['phone'] = '321-6543-9876'
         form['participate_by'] = ['teaching']
-        form['level'] = 'weekly'
         form['children-0-name'] = "Kid"
         resp = form.submit().follow()
 
@@ -36,7 +35,6 @@ class TestParticipantForm(object):
         session = views.current_session()
         participant = f.ParticipantFactory.create(
             session=session,
-            level='monthly',
             parent__name='old',
             parent__email='old@example.com',
             parent__phone='321-654-9876',
@@ -48,7 +46,6 @@ class TestParticipantForm(object):
         form = app.get(parent.participant_url).forms['participant-form']
         form['name'] = "someone"
         form['participate_by'] = ['assisting']
-        form['level'] = 'weekly'
         form['children-0-name'] = "Kid"
         form['children-1-DELETE'] = True
         form['children-2-name'] = "Hey"
@@ -58,6 +55,5 @@ class TestParticipantForm(object):
         participant = models.Participant.objects.get()
         parent = participant.parent
         child_names = {c.name for c in parent.children.all()}
-        assert participant.level == 'weekly'
         assert parent.name == "someone"
         assert child_names == {"Kid", "Hey"}

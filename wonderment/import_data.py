@@ -16,14 +16,8 @@ FIELDS = {
     'preferred': 'Preferred method of communication',
     'level': 'I want to sign my child(ren) up for:',
     'participate_by': 'I am interested in participating by:',
-    'age_groups': (
-        'I feel most comfortable working with the following age groups:'),
     'could_teach': 'If you are interested in teaching...',
     'could_assist': 'If you are interested in assisting...',
-    'all_ages_help': (
-        'If you are interested in helping '
-        'with the monthly all ages gathering...'
-    ),
     'other_contributions': (
         'Other ideas/skills/contributions you might have to offer:'),
     'classes_desired': (
@@ -75,10 +69,8 @@ def import_csv(session, fn):
                 phone_type=clean_phone_type(row['phone_type']),
                 email=row['email'],
                 preferred=clean_choice_field(row['preferred'], 'preferred'),
-                age_groups=row['age_groups'],
                 could_teach=row['could_teach'],
                 could_assist=row['could_assist'],
-                all_ages_help=row['all_ages_help'],
                 other_contributions=row['other_contributions'],
                 classes_desired=row['classes_desired'],
                 spouse=row['spouse'],

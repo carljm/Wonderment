@@ -62,10 +62,8 @@ class TestImportCsv(object):
             'phone_type': 'cell',
             'email': 'foo@example.com',
             'preferred': 'email',
-            'age_groups': "Any",
             'could_teach': "Whatev",
             'could_assist': "Anywhere",
-            'all_ages_help': "Yes!",
             'other_contributions': "Everything",
             'classes_desired': "All",
             'spouse': "Spouse",
@@ -81,10 +79,8 @@ class TestImportCsv(object):
         assert p.phone_type == 'cell'
         assert p.email == 'foo@example.com'
         assert p.preferred == 'email'
-        assert p.age_groups == "Any"
         assert p.could_teach == "Whatev"
         assert p.could_assist == "Anywhere"
-        assert p.all_ages_help == "Yes!"
         assert p.other_contributions == "Everything"
         assert p.classes_desired == "All"
         assert p.spouse == "Spouse"
