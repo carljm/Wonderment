@@ -273,6 +273,40 @@ class Participant(models.Model):
         ],
         default='weekly',
     )
+    payment = models.CharField(
+        max_length=20,
+        choices=[
+            (
+                'ready',
+                (
+                    "My family is ready to commit "
+                    "to participation in Wonderment. "
+                    "We understand that registration fees "
+                    "are non-refundable."
+                ),
+            ),
+            (
+                'wait-for-role',
+                (
+                    "I will wait to make my payment "
+                    "until I know for sure "
+                    "if I will be assigned to a role "
+                    "that would help off-set my tuition fees. "
+                    "My family is otherwise committed "
+                    "to participation in Wonderment this fall 2015."
+                ),
+            ),
+            (
+                'not-ready',
+                (
+                    "I am not yet ready to make my payment. "
+                    "I understand that class space "
+                    "may be limited and that Wonderment "
+                    "enrollment fees will increase after August 26th, 2015. "
+                ),
+            ),
+        ],
+    )
     paid = models.IntegerField(default=0)
     assigned_jobs = fields.ArrayField(
         dbtype='text', choices=PARTICIPATION_TYPES)
