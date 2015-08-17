@@ -96,7 +96,8 @@ class Parent(models.Model):
     pick_up_names = models.TextField(
         (
             "If dropping off, please list name, relationship, and contact "
-            "for anyone authorized to pick up your child."
+            "for anyone authorized to pick up your child "
+            "(or permission for child to transport themselves)."
         ),
         blank=True,
     )
