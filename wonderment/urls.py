@@ -91,8 +91,8 @@ registration_urls = [
 
 
 urlpatterns = [
-    url(r'^$', views.registration_closed, name='registration_closed'),
-    url(r'^registration/', include(registration_urls)),
+    # url(r'^$', views.registration_closed, name='registration_closed'),
+    url(r'', include(registration_urls)),
     url(r'^browse/$', views.home, name='home'),
     url(r'^session/(?P<session_id>\d+)/', include(session_urls)),
     url(r'^admin/', include(admin.site.urls)),
