@@ -81,12 +81,24 @@ class Parent(models.Model):
     drop_off = models.BooleanField(
         (
             "I am interested in the option to drop off my children "
-            "for Wonderment classes. I understand that I may lose this "
-            "option if I fail to pick my child up before 11:35am from class. "
-            "I also understand that my child must be potty-trained and must "
-            "be comfortable being away from me."
+            "for Wonderment classes.  I understand that I may be asked "
+            "to remain on-site if behavioral issues, potty-training, "
+            "or separation anxiety are a problem. I understand that I "
+            "may lose the drop-off option if I fail to pick my child up "
+            "before 11:35am from class and will also be charged a late "
+            "pick-up fee. I understand that if my child is under four, "
+            "I am expected to remain on-site for their first Wonderment "
+            "class to make sure there are no issues with potty-training "
+            "or separation anxiety."
         ),
         default=False,
+    )
+    pick_up_names = models.TextField(
+        (
+            "If dropping off, please list name, relationship, and contact "
+            "for anyone authorized to pick up your child."
+        ),
+        blank=True,
     )
     on_site = models.BooleanField(
         (
@@ -101,7 +113,8 @@ class Parent(models.Model):
     participate_by = fields.ArrayField(
         verbose_name=(
             "I would be interested in helping out during Wonderment "
-            "in one of the following ways (check any that interest you):"
+            "in one of the following ways for this or future sessions "
+            "(check any that interest you):"
         ),
         dbtype='text',
         choices=PARTICIPATION_TYPES,
@@ -302,7 +315,7 @@ class Participant(models.Model):
                     "I am not yet ready to make my payment. "
                     "I understand that class space "
                     "may be limited and that Wonderment "
-                    "enrollment fees will increase after August 26th, 2015. "
+                    "enrollment fees will increase after August 28th, 2015. "
                 ),
             ),
         ],

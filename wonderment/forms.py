@@ -127,6 +127,7 @@ class ParentForm(forms.ModelForm):
             'emergency',
             'emergency_contact',
             'drop_off',
+            'pick_up_names',
             'on_site',
             'participate_by',
             'could_teach',
