@@ -87,9 +87,9 @@ class Parent(models.Model):
             "may lose the drop-off option if I fail to pick my child up "
             "before 11:35am from class and will also be charged a late "
             "pick-up fee. I understand that if my child is under four, "
-            "I am expected to remain on-site for their first Wonderment "
-            "class to make sure there are no issues with potty-training "
-            "or separation anxiety."
+            "I should be prepared to remain on-site for their first "
+            "Wonderment class to make sure there are no issues with "
+            "potty-training or separation anxiety."
         ),
         default=False,
     )

@@ -51,4 +51,22 @@ jQuery(function($) {
     initOtherField('hear_about');
     initOtherField('intention');
   }
+
+  var regForm = $('#participant-form');
+  if (regForm.length) {
+    var initDependentField = function (checkboxName, dependentName) {
+      var checkbox = $('input[name="' + checkboxName + '"]');
+      var dependent = $('#id_' + dependentName).parent();
+      var update = function () {
+        if (checkbox.prop('checked')) {
+          dependent.show();
+        } else {
+          dependent.hide();
+        }
+      };
+      update();
+      checkbox.on('change', update);
+    };
+    initDependentField('drop_off', 'pick_up_names');
+  }
 });
