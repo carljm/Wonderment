@@ -65,7 +65,7 @@ class TestChild(object):
     def test_age_group(self):
         c = f.ChildFactory.build(birthdate=date(2006, 9, 5))
 
-        assert c.age_group(date(2014, 9, 6)) == "Elementary"
+        assert c.age_group(date(2014, 9, 6)) == "8-11"
 
     def test_age_group_months(self):
         one = f.ChildFactory.build(birthdate=date(2013, 6, 1))
@@ -88,7 +88,7 @@ class TestChild(object):
     def test_age_group_pretend(self):
         c = f.ChildFactory.build(pretend_birthdate=date(2006, 9, 5))
 
-        assert c.age_group(date(2014, 9, 6)) == "Elementary"
+        assert c.age_group(date(2014, 9, 6)) == "8-11"
 
 
 class TestSession(object):
@@ -117,7 +117,7 @@ class TestSession(object):
         assert [st.real_age for st in families['students']] == [
             "2yr", "4yr", "6yr"]
         assert families['grouped'] == [
-            ("Toddler", [s1b]), ("Preschool", [s2a]), ("K-1", [s1a])]
+            ("Toddler", [s1b]), ("3-5", [s2a]), ("5-7", [s1a])]
 
     def test_families_unknown_group(self, db):
         s = f.SessionFactory.create(start_date=date(2014, 9, 12))
@@ -139,7 +139,7 @@ class TestSession(object):
             mock_today.return_value = date(2014, 9, 15)
             families = s.families()
 
-        assert families['grouped'] == [("Preschool", [st])]
+        assert families['grouped'] == [("3-5", [st])]
         assert families['students'][0].real_age == "2yr"
 
     def test_families_filtered(self, db):
