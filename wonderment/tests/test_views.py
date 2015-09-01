@@ -18,7 +18,7 @@ class TestParticipantForm(object):
         form['payment'] = 'ready'
         resp = form.submit().follow()
 
-        resp.mustcontain("look for a Paypal invoice")
+        resp.mustcontain("http://wondermentblackhills.com/register/")
         participant = models.Participant.objects.get()
         parent = participant.parent
         child = parent.children.get()
@@ -53,7 +53,7 @@ class TestParticipantForm(object):
         form['payment'] = 'ready'
         resp = form.submit().follow()
 
-        resp.mustcontain("look for a Paypal invoice")
+        resp.mustcontain("http://wondermentblackhills.com/register/")
         participant = models.Participant.objects.get()
         parent = participant.parent
         child_names = {c.name for c in parent.children.all()}
