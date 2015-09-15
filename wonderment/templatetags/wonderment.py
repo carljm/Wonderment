@@ -16,3 +16,8 @@ def age(child):
 @register.filter
 def json(val):
     return stdlib_json.dumps(val)
+
+
+@register.filter
+def newlineslash(val):
+    return val.strip().replace('\n', ' / ')
