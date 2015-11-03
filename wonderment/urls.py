@@ -97,4 +97,5 @@ urlpatterns = [
     url(r'^session/(?P<session_id>\d+)/', include(session_urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^spring2015survey/', include('wonderment.spring2015survey.urls')),
+    url(r'^fall2015eval/', include('wonderment.fall2015eval.urls')),
 ]

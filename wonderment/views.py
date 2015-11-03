@@ -278,7 +278,7 @@ def paid_participants_csv(request, session_id):
 
     writer = csv.writer(response)
     writer.writerow(
-        ['email', 'name', 'spouse', 'participant_url', 'spring2015survey_url'])
+        ['email', 'name', 'spouse', 'participant_url', 'fall2015eval_url'])
     for part in participants:
         p = part.parent
         writer.writerow([
@@ -286,7 +286,7 @@ def paid_participants_csv(request, session_id):
             p.name,
             p.spouse,
             p.participant_url,
-            p.spring2015survey_url,
+            p.fall2015eval_url,
         ])
 
     return response

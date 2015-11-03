@@ -32,7 +32,7 @@ jQuery(function($) {
     });
   }
 
-  var surveyForm = $('#spring2015survey-form');
+  var surveyForm = $('.evaluation-form');
   if (surveyForm.length) {
     var initOtherField = function (fieldName) {
       var checkboxGroup = $('input[name="' + fieldName + '"]');

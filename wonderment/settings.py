@@ -96,6 +96,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'wonderment',
     'wonderment.spring2015survey',
+    'wonderment.fall2015eval',
 )
 
 MIDDLEWARE_CLASSES = (
