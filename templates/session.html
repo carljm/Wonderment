@@ -28,6 +28,8 @@
   <a class="list-group-item" href="{% url 'paid_participants_csv' session_id=session.id %}">Paid Parents CSV</a>
   {% if session.name == "Spring 2015" %}
   <a class="list-group-item" href="{% url 'spring2015survey_results' %}">Evaluation Summary</a>
+  {% elif session.name == "Fall 2015" %}
+  <a class="list-group-item" href="{% url 'fall2015eval_results' %}">Evaluation Summary</a>
   {% endif %}
 </div>
 {% endblock %}
