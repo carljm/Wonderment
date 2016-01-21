@@ -12,15 +12,12 @@
 {% block main %}
 <p class="alert alert-info" role="alert">
   Includes all parents who have signed up, paid or not.
-</p>
-<p class="alert alert-info">
-  <strong>$</strong> = paid, <strong>*</strong> = special events only
+  (<strong>$</strong> = paid)
 </p>
 <div class="list-group">
   {% for p in participants %}
   <a class="list-group-item" href="{% url 'participant_detail' session_id=session.id participant_id=p.id %}">
     {% if p.paid %}${% endif %}
-    {% if p.level == 'monthly' %}*{% endif %}
     {% include "_contact.html" with person=p.parent link_email=False %}
     {% if p.assigned_job_descs %}
     {% endif %}

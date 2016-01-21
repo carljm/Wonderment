@@ -1,0 +1,45 @@
+{% extends "teacher_list.html" %}
+{% load wonderment %}
+
+{% block title %}{{ teacher.name }} | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: {{ teacher.name }}{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li><a href="{% if session.id %}{% url 'teacher_detail' session_id=session.id teacher_id=teacher.id %}{% else %}{% url 'teacher_detail' teacher_id=teacher.id %}{% endif %}">{{ teacher.name }}</a></li>
+{% endblock %}
+
+{% block main %}
+<article class="panel panel-primary">
+  <div class="panel-heading">
+    <h2 class="panel-title">
+      <strong>{{ teacher }}</strong> -
+      <a href="mailto:{{ teacher.email }}">{{ teacher.email }}</a> -
+      {{ teacher.phone }}
+      {% if teacher.phone_type %}({{ teacher.phone_type }}){% endif %}
+    </h2>
+  </div>
+  <div class="panel-body">
+    {% if teacher.bio %}
+    <p class="alert alert-info" role="alert">
+      {{ teacher.bio }}
+    </p>
+    {% endif %}
+    {% if teacher.class_ideas %}
+    <p class="alert alert-info" role="alert">
+      Class ideas: {{ teacher.class_ideas }}
+    </p>
+    {% endif %}
+    {% if classes %}
+    <ul class="list-group">
+      {% for class in classes %}
+      <li class="list-group-item">
+        <strong>{% if not session.id %}({{ class.session }}) {% endif %}{{ class.name }}</strong>{% if class.description %}: {{ class.description }}{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</article>
+{% endblock %}

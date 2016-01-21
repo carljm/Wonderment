@@ -1,0 +1,20 @@
+{% extends extends %}
+
+{% block title %}Teachers | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: Teachers{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li><a href="{% if session.id %}{% url 'teachers' session_id=session.id %}{% else %}{% url 'teachers' %}{% endif %}">Teachers</a></li>
+{% endblock %}
+
+{% block main %}
+<div class="list-group">
+  {% for t in people %}
+  <a class="list-group-item" href="{% if session.id %}{% url 'teacher_detail' session_id=session.id teacher_id=t.id %}{% else %}{% url 'teacher_detail' teacher_id=t.id %}{% endif %}">
+    {% include "_contact.html" with person=t link_email=False %}
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

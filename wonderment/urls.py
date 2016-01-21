@@ -25,18 +25,10 @@ session_urls = [
         name='age_groups_with_parents',
     ),
     url(r'^monthly/$', views.monthly, name='monthly'),
-    url(r'^parents/$', views.parents, name='parents'),
     url(
         r'^parent_emails/$',
-        views.parents,
-        {'emails_only': True},
+        views.parent_emails,
         name='parent_emails',
-    ),
-    url(
-        r'^weekly_parent_emails/$',
-        views.parents,
-        {'emails_only': True, 'weekly_only': True},
-        name='weekly_parent_emails',
     ),
     url(
         r'^parents_by_contribution/$',
@@ -58,12 +50,21 @@ session_urls = [
         views.paid_participants_csv,
         name='paid_participants_csv',
     ),
-    url(r'^teachers/$', views.teachers, name='teachers'),
     url(
         r'^teacher_emails/$',
         views.teachers,
         {'emails_only': True},
         name='teacher_emails',
+    ),
+    url(
+        r'^teachers/$',
+        views.teachers,
+        name='teachers',
+    ),
+    url(
+        r'^teachers/(?P<teacher_id>\d+)/$',
+        views.teacher_detail,
+        name='teacher_detail',
     ),
 ]
 
@@ -106,4 +107,9 @@ urlpatterns = [
     url(r'^spring2015survey/', include('wonderment.spring2015survey.urls')),
     url(r'^fall2015eval/', include('wonderment.fall2015eval.urls')),
     url(r'^teachers/$', views.teachers, name='teachers'),
+    url(
+        r'^teachers/(?P<teacher_id>\d+)/$',
+        views.teacher_detail,
+        name='teacher_detail',
+    ),
 ]

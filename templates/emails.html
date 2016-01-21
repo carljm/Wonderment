@@ -1,23 +1,18 @@
 {% extends extends %}
 
-{% block title %}{% if weekly_only %}Weekly {% endif %}{{ type|capfirst }} Emails | {{ block.super }}{% endblock %}
+{% block title %}{{ type|capfirst }} Emails | {{ block.super }}{% endblock %}
 
-{% block header %}{{ session }}: {% if weekly_only %}Weekly {% endif %}{{ type|capfirst }} Emails{% endblock %}
+{% block header %}{{ session }}: {{ type|capfirst }} Emails{% endblock %}
 
 {% block breadcrumb %}
 {{ block.super }}
-<li><a href="{% if session.id %}{% url urlname session_id=session.id %}{% else %}{% url urlname %}{% endif %}">{% if weekly_only %}Weekly {% endif %}{{ type|capfirst }} Emails</a></li>
+<li><a href="{% if session.id %}{% url urlname session_id=session.id %}{% else %}{% url urlname %}{% endif %}">{{ type|capfirst }} Emails</a></li>
 {% endblock %}
 
 {% block main %}
 {% if type == 'parent' %}
 <p class="alert alert-info" role="alert">
   Includes only parents who have paid for the session.
-</p>
-{% endif %}
-{% if weekly_only %}
-<p class="alert alert-info" role="alert">
-  Includes only parents who are signed up for weekly classes.
 </p>
 {% endif %}
 <ul class="list-group">

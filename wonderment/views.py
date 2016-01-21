@@ -154,22 +154,19 @@ def monthly(request, session_id):
 
 
 @login_required
-def parents(request, session_id, emails_only=False, weekly_only=False):
+def parent_emails(request, session_id):
     session = get_object_or_404(models.Session, pk=session_id)
     participants = models.Participant.objects.filter(
         paid__gt=0, session=session).select_related('parent')
-    if weekly_only:
-        participants = participants.filter(level='weekly')
     return render(
         request,
-        'emails.html' if emails_only else 'contact.html',
+        'emails.html',
         {
             'people': [p.parent for p in participants],
             'session': session,
-            'weekly_only': weekly_only,
             'type': 'parent',
-            'urlname': 'parent_emails' if emails_only else 'parents',
-            'extends': "session.html" if session_id else "top.html",
+            'urlname': 'parent_emails',
+            'extends': "session.html",
         },
     )
 
@@ -191,14 +188,39 @@ def teachers(request, session_id=None, emails_only=False):
         teachers = models.Teacher.objects.all()
     return render(
         request,
-        'emails.html' if emails_only else 'contact.html',
+        'emails.html' if emails_only else 'teacher_list.html',
         {
             'people': teachers,
             'session': session,
-            'weekly_only': False,
             'type': 'teacher',
             'urlname': 'teacher_emails' if emails_only else 'teachers',
             'extends': "session.html" if session_id else "top.html",
+        },
+    )
+
+
+@login_required
+def teacher_detail(request, teacher_id, session_id=None):
+    if session_id is not None:
+        session = get_object_or_404(models.Session, pk=session_id)
+        teacher = get_object_or_404(
+            models.Teacher.objects.filter(
+                classes__session=session),
+            pk=teacher_id,
+        )
+        classes = teacher.classes.filter(session=session)
+    else:
+        session = AllSessions()
+        teacher = get_object_or_404(models.Teacher, pk=teacher_id)
+        classes = teacher.classes.all()
+    return render(
+        request,
+        'teacher_detail.html',
+        {
+            'teacher': teacher,
+            'session': session,
+            'extends': "session.html" if session_id else "top.html",
+            'classes': classes,
         },
     )
 
