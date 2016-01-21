@@ -1,4 +1,4 @@
-Django==1.7.2
+Django==1.8.8
 pytz==2014.7
 
 psycopg2==2.5.4
@@ -7,7 +7,7 @@ python-dateutil==2.2
 six==1.8.0
 
 django-bootstrap3==5.0.3
-django-floppyforms==1.2
+django-floppyforms==1.6.0
 django-secure==1.0
 
 djorm-pgarray==1.2
