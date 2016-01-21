@@ -58,6 +58,22 @@ session_urls = [
         views.teacher_detail,
         name='teacher_detail',
     ),
+    url(
+        r'^classes/$',
+        views.class_list,
+        name='class_list',
+    ),
+    url(
+        r'^classes/(?P<class_id>\d+)/$',
+        views.class_detail,
+        name='class_detail',
+    ),
+    url(
+        r'^classes/(?P<class_id>\d+)/parents/$',
+        views.class_detail,
+        {'include_parents': True},
+        name='class_detail_parents',
+    ),
 ]
 
 

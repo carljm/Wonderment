@@ -1,0 +1,63 @@
+{% extends "class_list.html" %}
+{% load wonderment %}
+
+{% block title %}{{ class.name }} | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: {{ class.name }}{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li><a href="{% url 'class_detail' session_id=session.id class_id=class.id %}">{{ class.name }}</a></li>
+{% endblock %}
+
+{% block main %}
+{% with class.students.all as students %}
+<article class="panel panel-primary">
+  <div class="panel-heading">
+    <h2 class="panel-title">
+      <strong>{{ class }} (age {{ class.min_age }}-{{ class.max_age }})</strong>
+      -- {{ class.teacher.name }}
+      -- {{ students|length }}/{{ class.max_students }} signed up
+    </h2>
+  </div>
+  <div class="panel-body">
+    {% if class.description %}
+    <p class="alert alert-info" role="alert">
+      {{ class.description }}
+    </p>
+    {% endif %}
+    {% if students %}
+    <ul class="list-group">
+      {% for student_link in students %}
+      {% with student_link.child as student %}
+      <li class="list-group-item">
+        <strong>{{ student.name }}</strong> -
+        <em>{{ student.gender }}</em> -
+        {{ student.real_age }} ({{ student.birthdate|date:"m/d/Y" }})
+        {% if student.special_needs %}: {{ student.special_needs }}{% endif %}
+        {% if include_parents %}
+        <ul>
+          <li>
+            Parent:
+            {% include "_contact.html" with person=student.parent link_email=True %}
+          </li>
+          <li>
+            Spouse: {{ student.parent.spouse }} - {{ student.parent.spouse_contact }}
+          </li>
+          <li>
+            Emergencies: {{ student.parent.emergency }} - {{ student.parent.emergency_contact }}
+          </li>
+          <li>
+            Can pickup: {{ student.parent.pick_up_names|newlineslash }}
+          </li>
+        </ul>
+        {% endif %}
+      </li>
+      {% endwith %}
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</article>
+{% endwith %}
+{% endblock %}

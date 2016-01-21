@@ -2,6 +2,7 @@ import csv
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.db import transaction
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -47,12 +48,13 @@ def participant_form(request, parent_id=None, id_hash=None):
         form_kwargs['instance'] = parent_form.instance
         children_formset = forms.ChildFormSet(request.POST, **form_kwargs)
         if parent_form.is_valid() and children_formset.is_valid():
-            parent = parent_form.save()
-            children_formset.save()
-            participant = participant_form.save(commit=False)
-            participant.parent = parent
-            participant.session = session
-            participant.save()
+            with transaction.atomic():
+                parent = parent_form.save()
+                children_formset.save()
+                participant = participant_form.save(commit=False)
+                participant.parent = parent
+                participant.session = session
+                participant.save()
             return redirect(
                 'select_classes',
                 parent_id=parent.id,
@@ -85,7 +87,8 @@ def select_classes(request, parent_id, id_hash):
     if request.method == 'POST':
         formset = forms.SelectClassesFormSet(request.POST, **formkw)
         if formset.is_valid():
-            formset.save()
+            with transaction.atomic():
+                formset.save()
             return redirect(
                 'participant_thanks',
                 parent_id=parent_id,
@@ -149,6 +152,31 @@ def home(request):
 def session(request, session_id):
     session = get_object_or_404(models.Session, pk=session_id)
     return render(request, 'session.html', {'session': session})
+
+
+@login_required
+def class_list(request, session_id):
+    session = get_object_or_404(models.Session, pk=session_id)
+    classes = session.classes.annotate(
+        num_students=Count('students')
+    ).select_related('teacher')
+    return render(
+        request, 'class_list.html', {'session': session, 'classes': classes})
+
+
+@login_required
+def class_detail(request, session_id, class_id, include_parents=False):
+    session = get_object_or_404(models.Session, pk=session_id)
+    klass = get_object_or_404(models.Class, pk=class_id, session=session)
+    return render(
+        request,
+        'class_detail.html',
+        {
+            'session': session,
+            'class': klass,
+            'include_parents': include_parents,
+        },
+    )
 
 
 @login_required

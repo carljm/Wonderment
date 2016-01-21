@@ -1,0 +1,24 @@
+{% extends "session.html" %}
+
+{% block title %}Classes | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: Classes{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li><a href="{% url 'class_list' session_id=session.id %}">Classes</a></li>
+{% endblock %}
+
+{% block main %}
+<div class="list-group">
+  {% for class in classes %}
+  <div class="list-group-item">
+    {{ class.name }} (age {{ class.min_age }}-{{ class.max_age }})
+    -- {{ class.teacher.name }}
+    -- {{ class.num_students }}/{{ class.max_students }} signed up
+    -- <a href="{% url 'class_detail' session_id=session.id class_id=class.id %}">Roster</a>
+    -- <a href="{% url 'class_detail_parents' session_id=session.id class_id=class.id %}">Roster/parents</a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
