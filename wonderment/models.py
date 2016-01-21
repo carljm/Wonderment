@@ -23,7 +23,8 @@ GROUPS = [
 
 
 PARTICIPATION_TYPES = [
-    ('teaching', "teaching a class"),
+    ('coordination', "join the planning team (future session)"),
+    ('teaching', "teaching a class (future session)"),
     ('assisting', "assisting another teacher"),
     ('sub', "available as a substitute for teachers who are ill"),
     ('cleaning', "cleaning"),
