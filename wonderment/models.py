@@ -23,25 +23,10 @@ GROUPS = [
 
 
 PARTICIPATION_TYPES = [
-    (
-        'coordination',
-        (
-            "coordination "
-            "(greetings, nametags, attendance, "
-            "arranging subs, supervising cleanup)"
-        )
-    ),
     ('teaching', "teaching a class"),
     ('assisting', "assisting another teacher"),
     ('sub', "available as a substitute for teachers who are ill"),
-    ('sensory', "facilitate sensory activity for toddlers"),
     ('cleaning', "cleaning"),
-    # ('policy', "review policy handbook and guidelines"),
-    # ('recruit', "publicity/recruitment"),
-    # ('feedback', "collecting feedback from participants"),
-    # ('volunteers', "thank yous / volunteer follow-up"),
-    # ('legal', "legal consultation"),
-    # ('conflict', "conflict management"),
 ]
 
 
@@ -131,8 +116,8 @@ class Parent(models.Model):
     )
     could_assist = models.TextField(
         (
-            "What types of classes (and which age groups) "
-            "are you comfortable assisting with?"
+            "If interested in assisting, "
+            "any preferences or considerations we should know about?"
         ),
         blank=True,
     )
@@ -350,7 +335,7 @@ class Participant(models.Model):
                 'ready',
                 (
                     "My family is ready to commit "
-                    "to participation in Wonderment. "
+                    "to participation in Wonderment winter/spring 2016. "
                     "We understand that registration fees "
                     "are non-refundable."
                 ),
@@ -363,7 +348,7 @@ class Participant(models.Model):
                     "if I will be assigned to a role "
                     "that would help off-set my tuition fees. "
                     "My family is otherwise committed "
-                    "to participation in Wonderment this fall 2015."
+                    "to participation in Wonderment this winter/spring 2016."
                 ),
             ),
             (
@@ -372,7 +357,7 @@ class Participant(models.Model):
                     "I am not yet ready to make my payment. "
                     "I understand that class space "
                     "may be limited and that Wonderment "
-                    "enrollment fees will increase after August 28th, 2015. "
+                    "enrollment fees will increase after Feb 5, 2016. "
                 ),
             ),
         ],

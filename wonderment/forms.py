@@ -132,8 +132,6 @@ class ParentForm(forms.ModelForm):
             'participate_by',
             'could_teach',
             'could_assist',
-            'other_contributions',
-            'classes_desired',
         ]
         widgets = {
             'participate_by': forms.CheckboxSelectMultiple,
