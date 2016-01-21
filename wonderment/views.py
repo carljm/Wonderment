@@ -169,14 +169,26 @@ def parents(request, session_id, emails_only=False, weekly_only=False):
             'weekly_only': weekly_only,
             'type': 'parent',
             'urlname': 'parent_emails' if emails_only else 'parents',
+            'extends': "session.html" if session_id else "top.html",
         },
     )
 
 
+class AllSessions:
+    id = None
+
+    def __str__(self):
+        return "All Sessions"
+
+
 @login_required
 def teachers(request, session_id=None, emails_only=False):
-    session = get_object_or_404(models.Session, pk=session_id)
-    teachers = models.Teacher.objects.filter(classes__session=session)
+    if session_id is not None:
+        session = get_object_or_404(models.Session, pk=session_id)
+        teachers = models.Teacher.objects.filter(classes__session=session)
+    else:
+        session = AllSessions()
+        teachers = models.Teacher.objects.all()
     return render(
         request,
         'emails.html' if emails_only else 'contact.html',
@@ -186,6 +198,7 @@ def teachers(request, session_id=None, emails_only=False):
             'weekly_only': False,
             'type': 'teacher',
             'urlname': 'teacher_emails' if emails_only else 'teachers',
+            'extends': "session.html" if session_id else "top.html",
         },
     )
 

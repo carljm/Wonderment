@@ -8,5 +8,6 @@
   {% for session in sessions %}
   <a class="list-group-item" href="{% url 'session' session_id=session.id %}">{{ session }}</a>
   {% endfor %}
+  <a class="list-group-item" href="{% url 'teachers' %}">All Teachers</a>
 </div>
 {% endblock %}

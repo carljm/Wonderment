@@ -1,4 +1,4 @@
-{% extends "session.html" %}
+{% extends extends %}
 
 {% block title %}{% if weekly_only %}Weekly {% endif %}{{ type|capfirst }} Emails | {{ block.super }}{% endblock %}
 
@@ -6,7 +6,7 @@
 
 {% block breadcrumb %}
 {{ block.super }}
-<li><a href="{% url urlname session_id=session.id %}">{% if weekly_only %}Weekly {% endif %}{{ type|capfirst }} Emails</a></li>
+<li><a href="{% if session.id %}{% url urlname session_id=session.id %}{% else %}{% url urlname %}{% endif %}">{% if weekly_only %}Weekly {% endif %}{{ type|capfirst }} Emails</a></li>
 {% endblock %}
 
 {% block main %}

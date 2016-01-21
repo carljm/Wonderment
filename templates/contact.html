@@ -1,4 +1,4 @@
-{% extends "session.html" %}
+{% extends extends %}
 
 {% block title %}{{ type|capfirst }}s Contact Info | {{ block.super }}{% endblock %}
 
@@ -6,7 +6,7 @@
 
 {% block breadcrumb %}
 {{ block.super }}
-<li><a href="{% url urlname session_id=session.id %}">{{ type|capfirst }}s Contact Info</a></li>
+<li><a href="{% if session.id %}{% url urlname session_id=session.id %}{% else %}{% url urlname %}{% endif %}">{{ type|capfirst }}s Contact Info</a></li>
 {% endblock %}
 
 {% block main %}
