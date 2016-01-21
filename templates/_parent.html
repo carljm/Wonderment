@@ -1,4 +1,0 @@
-<strong>{{ parent }}</strong>
-{% if parent.email %} - {% if link_email %}<a href="mailto:{{ parent.email }}">{% endif %}{{ parent.email }}{% if link_email %}</a>{% endif %}{% endif %}
-{% if parent.phone %} - {{ parent.phone }}{% if parent.phone_type %} ({{ parent.phone_type }}){% endif %}{% endif %}
-{% if parent.preferred %} - <em>prefers {{ parent.preferred }}</em>{% endif %}

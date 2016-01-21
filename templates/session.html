@@ -26,6 +26,8 @@
   <a class="list-group-item" href="{% url 'parents_by_contribution' session_id=session.id %}">Parents by Contribution</a>
   <a class="list-group-item" href="{% url 'participant_list' session_id=session.id %}">All Parents</a>
   <a class="list-group-item" href="{% url 'paid_participants_csv' session_id=session.id %}">Paid Parents CSV</a>
+  <a class="list-group-item" href="{% url 'teachers' session_id=session.id %}">Teacher Contact Info</a>
+  <a class="list-group-item" href="{% url 'teacher_emails' session_id=session.id %}">Teacher Emails</a>
   {% if session.name == "Spring 2015" %}
   <a class="list-group-item" href="{% url 'spring2015survey_results' %}">Evaluation Summary</a>
   {% elif session.name == "Fall 2015" %}

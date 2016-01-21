@@ -162,11 +162,30 @@ def parents(request, session_id, emails_only=False, weekly_only=False):
         participants = participants.filter(level='weekly')
     return render(
         request,
-        'emails.html' if emails_only else 'parents.html',
+        'emails.html' if emails_only else 'contact.html',
         {
-            'participants': participants,
+            'people': [p.parent for p in participants],
             'session': session,
             'weekly_only': weekly_only,
+            'type': 'parent',
+            'urlname': 'parent_emails' if emails_only else 'parents',
+        },
+    )
+
+
+@login_required
+def teachers(request, session_id=None, emails_only=False):
+    session = get_object_or_404(models.Session, pk=session_id)
+    teachers = models.Teacher.objects.filter(classes__session=session)
+    return render(
+        request,
+        'emails.html' if emails_only else 'contact.html',
+        {
+            'people': teachers,
+            'session': session,
+            'weekly_only': False,
+            'type': 'teacher',
+            'urlname': 'teacher_emails' if emails_only else 'teachers',
         },
     )
 

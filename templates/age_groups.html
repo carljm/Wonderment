@@ -24,7 +24,7 @@
     <ul>
       <li>
         Parent:
-        {% include "_parent.html" with parent=student.parent link_email=True %}
+        {% include "_contact.html" with person=student.parent link_email=True %}
       </li>
       <li>
         Spouse: {{ student.parent.spouse }} - {{ student.parent.spouse_contact }}

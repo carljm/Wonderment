@@ -58,6 +58,13 @@ session_urls = [
         views.paid_participants_csv,
         name='paid_participants_csv',
     ),
+    url(r'^teachers/$', views.teachers, name='teachers'),
+    url(
+        r'^teacher_emails/$',
+        views.teachers,
+        {'emails_only': True},
+        name='teacher_emails',
+    ),
 ]
 
 

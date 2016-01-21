@@ -21,7 +21,7 @@
   <a class="list-group-item" href="{% url 'participant_detail' session_id=session.id participant_id=p.id %}">
     {% if p.paid %}${% endif %}
     {% if p.level == 'monthly' %}*{% endif %}
-    {% include "_parent.html" with parent=p.parent link_email=False %}
+    {% include "_contact.html" with person=p.parent link_email=False %}
     {% if p.assigned_job_descs %}
     {% endif %}
     {% if p.job_notes or p.assigned_job_descs %}

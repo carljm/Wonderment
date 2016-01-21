@@ -1,26 +1,28 @@
 {% extends "session.html" %}
 
-{% block title %}{% if weekly_only %}Weekly {% endif %}Parent Emails | {{ block.super }}{% endblock %}
+{% block title %}{% if weekly_only %}Weekly {% endif %}{{ type|capfirst }} Emails | {{ block.super }}{% endblock %}
 
-{% block header %}{{ session }}: {% if weekly_only %}Weekly {% endif %}Parent Emails{% endblock %}
+{% block header %}{{ session }}: {% if weekly_only %}Weekly {% endif %}{{ type|capfirst }} Emails{% endblock %}
 
 {% block breadcrumb %}
 {{ block.super }}
-<li><a href="{% url 'parent_emails' session_id=session.id %}">{% if weekly_only %}Weekly {% endif %}Parent Emails</a></li>
+<li><a href="{% url urlname session_id=session.id %}">{% if weekly_only %}Weekly {% endif %}{{ type|capfirst }} Emails</a></li>
 {% endblock %}
 
 {% block main %}
+{% if type == 'parent' %}
 <p class="alert alert-info" role="alert">
   Includes only parents who have paid for the session.
 </p>
+{% endif %}
 {% if weekly_only %}
 <p class="alert alert-info" role="alert">
   Includes only parents who are signed up for weekly classes.
 </p>
 {% endif %}
 <ul class="list-group">
-  {% for p in participants %}
-  <li class="list-group-item">{{ p.parent.email }}</li>
+  {% for p in people %}
+  <li class="list-group-item">{{ p.email }}</li>
   {% endfor %}
 </ul>
 {% endblock %}

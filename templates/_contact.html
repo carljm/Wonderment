@@ -1,0 +1,4 @@
+<strong>{{ person }}</strong>
+{% if person.email %} - {% if link_email %}<a href="mailto:{{ person.email }}">{% endif %}{{ person.email }}{% if link_email %}</a>{% endif %}{% endif %}
+{% if person.phone %} - {{ person.phone }}{% if person.phone_type %} ({{ person.phone_type }}){% endif %}{% endif %}
+{% if person.preferred %} - <em>prefers {{ person.preferred }}</em>{% endif %}
