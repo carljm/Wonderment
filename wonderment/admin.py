@@ -25,6 +25,11 @@ class ParentAttendanceInline(admin.TabularInline):
     extra = 0
 
 
+class ClassInline(admin.TabularInline):
+    model = models.Class
+    extra = 0
+
+
 class ParentAdmin(admin.ModelAdmin):
     list_display = [
         '__str__',
@@ -44,8 +49,12 @@ class ParentAdmin(admin.ModelAdmin):
         return mark_safe('<a href="%s">%s</a>' % (url, url))
 
 
+class TeacherAdmin(admin.ModelAdmin):
+    inlines = [ClassInline]
+
+
 class SessionAdmin(admin.ModelAdmin):
-    inlines = [ParticipantInline]
+    inlines = [ParticipantInline, ClassInline]
 
 
 class ClassDayAdmin(admin.ModelAdmin):
@@ -53,5 +62,6 @@ class ClassDayAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.Parent, ParentAdmin)
+admin.site.register(models.Teacher, TeacherAdmin)
 admin.site.register(models.Session, SessionAdmin)
 admin.site.register(models.ClassDay, ClassDayAdmin)

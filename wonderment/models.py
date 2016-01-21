@@ -248,6 +248,40 @@ class Child(models.Model):
         verbose_name_plural = "children"
 
 
+class Teacher(models.Model):
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=25)
+    phone_type = models.CharField(
+        max_length=20,
+        choices=[
+            ('cell', 'cell'),
+            ('home', 'home'),
+            ('work', 'work'),
+        ],
+        blank=True,
+    )
+    email = models.EmailField()
+    address = models.CharField(max_length=300, blank=True)
+    preferred = models.CharField(
+        max_length=20,
+        choices=[
+            ('email', 'email'),
+            ('phone', 'phone'),
+            ('text', 'text'),
+            ('facebook', 'facebook'),
+        ],
+        blank=True,
+        )
+    bio = models.TextField(blank=True)
+    class_ideas = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
+
 class Session(models.Model):
     name = models.CharField(max_length=100)
     start_date = models.DateField()
@@ -281,6 +315,20 @@ class Session(models.Model):
             'students': students,
             'grouped': age_groups,
         }
+
+
+class Class(models.Model):
+    teacher = models.ForeignKey(Teacher, related_name='classes')
+    session = models.ForeignKey(Session, related_name='classes')
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['session', 'name']
+        verbose_name_plural = 'classes'
 
 
 class Participant(models.Model):
