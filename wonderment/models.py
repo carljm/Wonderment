@@ -12,16 +12,6 @@ def today():
     return date.today()
 
 
-GROUPS = [
-    ("Nursery", (0, (1, 5))),
-    ("Toddler", ((1, 6), 2)),
-    ("3-5", (3, (5, 5))),
-    ("5-7", ((5, 6), 7)),
-    ("8-11", (8, 11)),
-    ("12+", (12, 18)),
-]
-
-
 PARTICIPATION_TYPES = [
     ('coordination', "join the planning team (future session)"),
     ('teaching', "teaching a class (future session)"),
@@ -205,27 +195,6 @@ class Child(models.Model):
             return "%syr" % age.years
         return "?"
 
-    def age_group(self, as_of):
-        """Return name of age group this child is in."""
-        age = self.age_delta(as_of, pretend=True)
-        if age is not None:
-            for group_name, (low, high) in GROUPS:
-                low_months = 0
-                high_months = 12
-                if isinstance(low, tuple):
-                    low, low_months = low
-                if isinstance(high, tuple):
-                    high, high_months = high
-                if (
-                        (age.years > low or (
-                            age.years == low and age.months >= low_months))
-                        and
-                        (age.years < high or (
-                            age.years == high and age.months <= high_months))
-                ):
-                    return group_name
-        return None
-
     def __str__(self):
         return self.name
 
@@ -285,22 +254,11 @@ class Session(models.Model):
             paid__gt=0, **filters).select_related('parent')
         parents = [p.parent for p in participants]
         students = Child.objects.filter(parent__in=parents)
-        age_groups_dict = {}
         for student in students:
             student.real_age = student.age_display(today())
-            group = student.age_group(self.start_date)
-            age_groups_dict.setdefault(group, []).append(student)
-        age_groups = [
-            (name, age_groups_dict[name])
-            for name, ages in GROUPS
-            if name in age_groups_dict
-        ]
-        if None in age_groups_dict:
-            age_groups.append(("Unknown", age_groups_dict[None]))
         return {
             'parents': parents,
             'students': students,
-            'grouped': age_groups,
         }
 
 
@@ -308,6 +266,8 @@ class Class(models.Model):
     teacher = models.ForeignKey(Teacher, related_name='classes')
     session = models.ForeignKey(Session, related_name='classes')
     name = models.CharField(max_length=100)
+    min_age = models.IntegerField()
+    max_age = models.IntegerField()
     description = models.TextField(blank=True)
 
     def __str__(self):
@@ -370,7 +330,7 @@ class Participant(models.Model):
     job_notes = models.TextField(blank=True)
 
     def __str__(self):
-        return "%s is %s for %s" % (self.parent, self.level, self.session)
+        return "%s is signed up for %s" % (self.parent, self.session)
 
     class Meta:
         ordering = ['parent__name']

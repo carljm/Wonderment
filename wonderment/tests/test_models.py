@@ -62,34 +62,6 @@ class TestChild(object):
 
         assert c.age_display(date(2014, 10, 1)) == "?"
 
-    def test_age_group(self):
-        c = f.ChildFactory.build(birthdate=date(2006, 9, 5))
-
-        assert c.age_group(date(2014, 9, 6)) == "8-11"
-
-    def test_age_group_months(self):
-        one = f.ChildFactory.build(birthdate=date(2013, 6, 1))
-        two = f.ChildFactory.build(birthdate=date(2013, 1, 1))
-
-        today = date(2014, 9, 6)
-        assert one.age_group(today) == "Nursery"
-        assert two.age_group(today) == "Toddler"
-
-    def test_age_group_none(self):
-        c = f.ChildFactory.build(birthdate=None)
-
-        assert c.age_group(date(2014, 9, 6)) is None
-
-    def test_age_group_no_match(self):
-        c = f.ChildFactory.build(birthdate=date(2015, 1, 1))
-
-        assert c.age_group(date(2014, 9, 6)) is None
-
-    def test_age_group_pretend(self):
-        c = f.ChildFactory.build(pretend_birthdate=date(2006, 9, 5))
-
-        assert c.age_group(date(2014, 9, 6)) == "8-11"
-
 
 class TestSession(object):
     def test_str(self):
@@ -116,20 +88,11 @@ class TestSession(object):
         assert list(families['students']) == [s1b, s2a, s1a]  # ordered by age
         assert [st.real_age for st in families['students']] == [
             "2yr", "4yr", "6yr"]
-        assert families['grouped'] == [
-            ("Toddler", [s1b]), ("3-5", [s2a]), ("5-7", [s1a])]
-
-    def test_families_unknown_group(self, db):
-        s = f.SessionFactory.create(start_date=date(2014, 9, 12))
-        p = f.ParticipantFactory.create(session=s, paid=30)
-        st = f.ChildFactory.create(parent=p.parent, birthdate=None)
-
-        assert s.families()['grouped'] == [("Unknown", [st])]
 
     def test_families_pretend_birthdate(self, db):
         s = f.SessionFactory.create(start_date=date(2014, 9, 12))
         p = f.ParticipantFactory.create(session=s, paid=30)
-        st = f.ChildFactory.create(
+        f.ChildFactory.create(
             parent=p.parent,
             birthdate=date(2011, 10, 1),
             pretend_birthdate=date(2011, 9, 1),
@@ -139,7 +102,6 @@ class TestSession(object):
             mock_today.return_value = date(2014, 9, 15)
             families = s.families()
 
-        assert families['grouped'] == [("3-5", [st])]
         assert families['students'][0].real_age == "2yr"
 
     def test_families_filtered(self, db):
@@ -155,9 +117,9 @@ class TestSession(object):
 class TestParticipant(object):
     def test_str(self):
         p = f.ParticipantFactory.build(
-            parent__name="Parent", level='weekly', session__name="Session")
+            parent__name="Parent", session__name="Session")
 
-        assert str(p) == "Parent is weekly for Session"
+        assert str(p) == "Parent is signed up for Session"
 
 
 class TestClassDay(object):

@@ -123,37 +123,6 @@ def session(request, session_id):
 
 
 @login_required
-def age_groups(request, session_id, include_parents=False):
-    session = get_object_or_404(models.Session, pk=session_id)
-    age_groups = session.families(level='weekly')['grouped']
-    return render(
-        request,
-        'age_groups.html',
-        {
-            'age_groups': age_groups,
-            'session': session,
-            'include_parents': include_parents,
-        },
-    )
-
-
-@login_required
-def monthly(request, session_id):
-    session = get_object_or_404(models.Session, pk=session_id)
-    families = session.families()
-    return render(
-        request,
-        'monthly.html',
-        {
-            'age_groups': families['grouped'],
-            'students': families['students'],
-            'parents': families['parents'],
-            'session': session,
-        },
-    )
-
-
-@login_required
 def parent_emails(request, session_id):
     session = get_object_or_404(models.Session, pk=session_id)
     participants = models.Participant.objects.filter(
@@ -235,7 +204,8 @@ def parents_by_contribution(request, session_id):
         all_contributions = set(participant.parent.participate_by)
         all_contributions.update(participant.assigned_jobs)
         for contribution in all_contributions:
-            desc = models.PARTICIPATION_TYPE_MAP[contribution]
+            desc = models.PARTICIPATION_TYPE_MAP.get(
+                contribution, contribution)
             assigned = (contribution in participant.assigned_jobs)
             existing = participants_by_contribution.setdefault(desc, [])
             if assigned:
