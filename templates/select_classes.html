@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+
+{% block title %}Class-selection for {{ parent.name }} | {{ session.name }} | Wonderment{% endblock %}
+
+{% block body %}
+<h1>Wonderment {{ session.name }} class selection for {{ parent.name }}</h1>
+
+{% if formset.errors %}
+<p class="alert alert-danger" role="alert">
+  Please correct the errors below:
+</p>
+{% endif %}
+
+<form method="POST" id="select-classes-form">
+  {% csrf_token %}
+
+  <fieldset>
+    {% bootstrap_formset_errors formset %}
+    {{ formset.management_form }}
+    {% for form in formset.forms %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{ form.instance.name }}</h3>
+      </div>
+      <div class="panel-body">
+        {% bootstrap_form form %}
+      </div>
+    </div>
+    {% endfor %}
+  </fieldset>
+
+  {% buttons %}
+    <button type="submit">Submit</button>
+  {% endbuttons %}
+</form>
+{% endblock %}

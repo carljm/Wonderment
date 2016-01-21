@@ -15,7 +15,7 @@ CURRENT_SESSION_END = date(2016, 4, 12)
 
 
 def current_session():
-    session, created = models.Session.objects.get_or_create(
+    session, created = models.Session.objects.update_or_create(
         name=CURRENT_SESSION_NAME, defaults={
             'start_date': CURRENT_SESSION_START,
             'end_date': CURRENT_SESSION_END,
@@ -54,7 +54,7 @@ def participant_form(request, parent_id=None, id_hash=None):
             participant.session = session
             participant.save()
             return redirect(
-                'participant_thanks',
+                'select_classes',
                 parent_id=parent.id,
                 id_hash=utils.idhash(parent.id),
             )
@@ -72,6 +72,35 @@ def participant_form(request, parent_id=None, id_hash=None):
             'participant_form': participant_form,
             'parent_form': parent_form,
             'children_formset': children_formset,
+        },
+    )
+
+
+def select_classes(request, parent_id, id_hash):
+    session = current_session()
+    parent = get_object_or_404(models.Parent, pk=parent_id)
+    if utils.idhash(parent.id) != id_hash:
+        raise Http404()
+    formkw = {'session': session, 'instance': parent}
+    if request.method == 'POST':
+        formset = forms.SelectClassesFormSet(request.POST, **formkw)
+        if formset.is_valid():
+            formset.save()
+            return redirect(
+                'participant_thanks',
+                parent_id=parent_id,
+                id_hash=id_hash,
+            )
+    else:
+        formset = forms.SelectClassesFormSet(**formkw)
+
+    return render(
+        request,
+        'select_classes.html',
+        {
+            'session': session,
+            'parent': parent,
+            'formset': formset,
         },
     )
 

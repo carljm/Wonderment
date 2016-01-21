@@ -129,6 +129,13 @@ class Parent(models.Model):
         )
 
     @cached_property
+    def select_classes_url(self):
+        return reverse(
+            'select_classes',
+            kwargs={'parent_id': self.id, 'id_hash': utils.idhash(self.id)},
+        )
+
+    @cached_property
     def spring2015survey_url(self):
         return reverse(
             'spring2015survey',

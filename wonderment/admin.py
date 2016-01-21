@@ -41,7 +41,7 @@ class ParentAdmin(admin.ModelAdmin):
         'phone',
         'email',
         'registration_link',
-        'fall2015eval_link',
+        'classes_link',
     ]
     inlines = [ParticipantInline, ChildInline]
 
@@ -49,8 +49,8 @@ class ParentAdmin(admin.ModelAdmin):
         url = settings.BASE_URL + obj.participant_url
         return mark_safe('<a href="%s">%s</a>' % (url, url))
 
-    def fall2015eval_link(self, obj):
-        url = settings.BASE_URL + obj.fall2015eval_url
+    def classes_link(self, obj):
+        url = settings.BASE_URL + obj.select_classes_url
         return mark_safe('<a href="%s">%s</a>' % (url, url))
 
 

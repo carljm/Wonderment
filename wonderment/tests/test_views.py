@@ -16,9 +16,8 @@ class TestParticipantForm(object):
         form['participate_by'] = ['teaching']
         form['children-0-name'] = "Kid"
         form['payment'] = 'ready'
-        resp = form.submit().follow()
+        form.submit().follow()
 
-        resp.mustcontain("http://wondermentblackhills.com/register/")
         participant = models.Participant.objects.get()
         parent = participant.parent
         child = parent.children.get()
@@ -51,9 +50,8 @@ class TestParticipantForm(object):
         form['children-1-DELETE'] = True
         form['children-2-name'] = "Hey"
         form['payment'] = 'ready'
-        resp = form.submit().follow()
+        form.submit().follow()
 
-        resp.mustcontain("http://wondermentblackhills.com/register/")
         participant = models.Participant.objects.get()
         parent = participant.parent
         child_names = {c.name for c in parent.children.all()}

@@ -73,6 +73,11 @@ registration_urls = [
         name='edit_participant_form',
     ),
     url(
+        r'^(?P<parent_id>\d+)-(?P<id_hash>[a-z0-9]+)/classes/$',
+        views.select_classes,
+        name='select_classes',
+    ),
+    url(
         r'^(?P<parent_id>\d+)-(?P<id_hash>[a-z0-9]+)/done/$',
         views.participant_thanks,
         name='participant_thanks',

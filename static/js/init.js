@@ -1,10 +1,10 @@
 jQuery(function($) {
-  $('.formlist').superformset({
+  $('#participant-form .formlist').superformset({
     prefix: 'children',
     containerSel: '.container',
     addTriggerSel: '.add-child',
   });
-  $('.formlist').on('click', '.remove-child', function (e) {
+  $('#participant-form .formlist').on('click', '.remove-child', function (e) {
     var form = $(this).closest('.dynamic-form').animate({
       height: 'toggle', opacity: 'toggle'}, function () {
         if (form.hasClass('new-row')) { form.remove(); }

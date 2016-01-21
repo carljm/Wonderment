@@ -4,6 +4,9 @@
 #participant-form ul { list-style-type: none; margin-left: -2.5em; }
 #participant-form [for="id_payment"] { display: none; }
 
+#select-classes-form [for$='-classes'] { display: none; }
+#select-classes-form ul { list-style-type: none; margin-left: -2.5em; }
+
 .alert a { text-decoration: underline; }
 .parent-attendance-label {
     margin-left: 1em;

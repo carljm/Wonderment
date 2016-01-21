@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db.models import Q
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.template.loader import render_to_string
 import floppyforms.__future__ as forms
@@ -210,3 +211,73 @@ class ParticipantUrlRequestForm(forms.Form):
 
             send_mail(
                 subject, body, settings.DEFAULT_FROM_EMAIL, [parent.email])
+
+
+class ClassSelectField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return "%s (age %s-%s), %s: %s" % (
+            obj.name,
+            obj.min_age,
+            obj.max_age,
+            obj.teacher.name,
+            obj.description,
+        )
+
+
+class SelectClassesForm(forms.ModelForm):
+    """Form for a parent to select classes for a kid."""
+    classes = ClassSelectField(
+        queryset=models.Class.objects.none(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+    )
+
+    class Meta:
+        model = models.Child
+        fields = ['parent']
+
+    def __init__(self, *a, **kw):
+        self.session = kw.pop('session')
+        super(SelectClassesForm, self).__init__(*a, **kw)
+        age = self.instance.age_years(as_of=self.session.start_date)
+        in_classes = models.Class.objects.filter(
+            students__child=self.instance, session=self.session)
+        filters = Q(session=self.session)
+        if age is not None:
+            age_match = Q(min_age__lte=age, max_age__gte=age)
+            already_in = Q(pk__in=in_classes)
+            filters = filters & (age_match | already_in)
+        valid_classes = models.Class.objects.filter(filters).select_related(
+            'teacher')
+        self.fields['classes'].queryset = valid_classes
+        self.fields['classes'].initial = [c.pk for c in in_classes]
+
+    def save(self, commit=True):
+        models.Student.objects.filter(
+            child=self.instance, klass__session=self.session).delete()
+        for klass in self.cleaned_data['classes']:
+            models.Student.objects.get_or_create(
+                child=self.instance, klass=klass)
+        return self.instance
+
+
+class SelectClassesBaseFormSet(BaseInlineFormSet):
+    """Inline formset that adds one extra form if no initial forms."""
+    def __init__(self, *a, **kw):
+        self.session = kw.pop('session')
+        super(SelectClassesBaseFormSet, self).__init__(*a, **kw)
+
+    def _construct_form(self, *args, **kwargs):
+        kwargs.setdefault('session', self.session)
+        return super(SelectClassesBaseFormSet, self)._construct_form(
+            *args, **kwargs)
+
+
+SelectClassesFormSet = inlineformset_factory(
+    models.Parent,
+    models.Child,
+    form=SelectClassesForm,
+    formset=SelectClassesBaseFormSet,
+    extra=0,
+    can_delete=False,
+)
