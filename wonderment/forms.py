@@ -137,6 +137,22 @@ class ParentForm(forms.ModelForm):
             'participate_by': forms.CheckboxSelectMultiple,
         }
 
+    def save(self):
+        parent = super(ParentForm, self).save()
+        if 'teaching' in parent.participate_by:
+            models.Teacher.objects.update_or_create(
+                parent=parent,
+                defaults={
+                    'name': parent.name,
+                    'phone': parent.phone,
+                    'phone_type': parent.phone_type,
+                    'email': parent.email,
+                    'address': parent.address,
+                    'preferred': parent.preferred,
+                },
+            )
+        return parent
+
 
 class ChildForm(forms.ModelForm):
     class Meta:

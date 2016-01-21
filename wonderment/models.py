@@ -236,6 +236,7 @@ class Child(models.Model):
 
 class Teacher(models.Model):
     name = models.CharField(max_length=100)
+    parent = models.OneToOneField(Parent, blank=True, null=True)
     phone = models.CharField(max_length=25)
     phone_type = models.CharField(
         max_length=20,
