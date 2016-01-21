@@ -8,7 +8,8 @@ from wonderment.models import (
 
 class ModelFactory(factory.DjangoModelFactory):
     """We don't want to go to the database to get the next sequence value."""
-    ABSTRACT_FACTORY = True
+    class Meta:
+        abstract = True
 
     @classmethod
     def _setup_next_sequence(cls):
@@ -17,20 +18,23 @@ class ModelFactory(factory.DjangoModelFactory):
 
 
 class ParentFactory(ModelFactory):
-    FACTORY_FOR = Parent
+    class Meta:
+        model = Parent
 
     name = "Test Parent"
 
 
 class ChildFactory(ModelFactory):
-    FACTORY_FOR = Child
+    class Meta:
+        model = Child
 
     parent = factory.SubFactory(ParentFactory)
     name = "Test Child"
 
 
 class SessionFactory(ModelFactory):
-    FACTORY_FOR = Session
+    class Meta:
+        model = Session
 
     name = "Test Session"
     start_date = datetime.date(2014, 9, 12)
@@ -38,7 +42,8 @@ class SessionFactory(ModelFactory):
 
 
 class ParticipantFactory(ModelFactory):
-    FACTORY_FOR = Participant
+    class Meta:
+        model = Participant
 
     parent = factory.SubFactory(ParentFactory)
     session = factory.SubFactory(SessionFactory)
@@ -46,7 +51,8 @@ class ParticipantFactory(ModelFactory):
 
 
 class ClassDayFactory(ModelFactory):
-    FACTORY_FOR = ClassDay
+    class Meta:
+        model = ClassDay
 
     session = factory.SubFactory(SessionFactory)
     date = datetime.date(2014, 9, 12)
