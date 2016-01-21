@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.mail import send_mail
-from django.db.models import Q
+from django.db.models import Count, F, Q
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.template.loader import render_to_string
 import floppyforms.__future__ as forms
@@ -242,13 +242,20 @@ class SelectClassesForm(forms.ModelForm):
         age = self.instance.age_years(as_of=self.session.start_date)
         in_classes = models.Class.objects.filter(
             students__child=self.instance, session=self.session)
-        filters = Q(session=self.session)
+        right_session = Q(session=self.session)
+        already_in = Q(pk__in=in_classes)
+        has_room = Q(num_students__lt=F('max_students'))
+        requirements = has_room
         if age is not None:
             age_match = Q(min_age__lte=age, max_age__gte=age)
-            already_in = Q(pk__in=in_classes)
-            filters = filters & (age_match | already_in)
-        valid_classes = models.Class.objects.filter(filters).select_related(
-            'teacher')
+            requirements = requirements & age_match
+        valid_classes = models.Class.objects.annotate(
+            num_students=Count('students'),
+        ).filter(
+            right_session & (requirements | already_in)
+        ).select_related(
+            'teacher'
+        )
         self.fields['classes'].queryset = valid_classes
         self.fields['classes'].initial = [c.pk for c in in_classes]
 
