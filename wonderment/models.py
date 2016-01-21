@@ -268,14 +268,23 @@ class Class(models.Model):
     name = models.CharField(max_length=100)
     min_age = models.IntegerField()
     max_age = models.IntegerField()
+    max_students = models.IntegerField()
     description = models.TextField(blank=True)
 
     def __str__(self):
-        return self.name
+        return "%s - %s" % (self.session, self.name)
 
     class Meta:
         ordering = ['session', 'name']
         verbose_name_plural = 'classes'
+
+
+class Student(models.Model):
+    child = models.ForeignKey(Child, related_name='studies')
+    klass = models.ForeignKey(Class, related_name='students')
+
+    def __str__(self):
+        return "%s in %s" % (self.child, self.klass)
 
 
 class Participant(models.Model):

@@ -30,6 +30,11 @@ class ClassInline(admin.TabularInline):
     extra = 0
 
 
+class StudentInline(admin.TabularInline):
+    model = models.Student
+    extra = 0
+
+
 class ParentAdmin(admin.ModelAdmin):
     list_display = [
         '__str__',
@@ -57,6 +62,14 @@ class SessionAdmin(admin.ModelAdmin):
     inlines = [ParticipantInline, ClassInline]
 
 
+class ClassAdmin(admin.ModelAdmin):
+    inlines = [StudentInline]
+
+
+class ChildAdmin(admin.ModelAdmin):
+    inlines = [StudentInline]
+
+
 class ClassDayAdmin(admin.ModelAdmin):
     inlines = [ChildAttendanceInline, ParentAttendanceInline]
 
@@ -65,3 +78,5 @@ admin.site.register(models.Parent, ParentAdmin)
 admin.site.register(models.Teacher, TeacherAdmin)
 admin.site.register(models.Session, SessionAdmin)
 admin.site.register(models.ClassDay, ClassDayAdmin)
+admin.site.register(models.Class, ClassAdmin)
+admin.site.register(models.Child, ChildAdmin)
