@@ -111,7 +111,13 @@ jQuery(function($) {
         } else {
           if (aClass.hasClass('waitlist-dupe')) {
             aClass.removeClass('waitlist-dupe');
-            aClass.prop('checked', false);
+            var aDay = aClass.data('weekday');
+            var conflictingClasses = aClass.closest('ul').find(
+              '.class-item-input[data-weekday="' + aDay + '"]'
+            ).not(aClass).not('waitlist');
+            conflictingClasses.each(function () {
+              $(this).prop('checked', false);
+            });
           }
           aClass.removeClass('waitlist');
           label.removeClass('waitlist');
