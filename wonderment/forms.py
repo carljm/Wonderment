@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Count, F, Q
-from django.forms.models import inlineformset_factory, BaseInlineFormSet
+from django.forms.models import (
+    inlineformset_factory, BaseInlineFormSet, ModelChoiceIterator)
 from django.template.loader import render_to_string
 import floppyforms.__future__ as forms
 
@@ -213,9 +214,70 @@ class ParticipantUrlRequestForm(forms.Form):
                 subject, body, settings.DEFAULT_FROM_EMAIL, [parent.email])
 
 
+class SmartLabelModelChoiceIterator(ModelChoiceIterator):
+    def choice(self, obj):
+        """Return the choice tuple for the given object."""
+        return (
+            self.field.prepare_value(obj),
+            SmartLabel(
+                obj, self.field.label_from_instance, self.field.choice_attrs
+                )
+            )
+
+
+class SmartLabel:
+    """
+    A select-widget option label with smarts: also stores option attributes.
+
+    Allows us to squeeze more data into the "label" half of the label-value
+    pair of a multiple-select choice. Behaves like a simple text label if
+    coerced to unicode, but also has "attrs" and "obj" attributes to access
+    attributes for the choice/option, and the object itself. Useful for
+    advanced multi-select widgets.
+
+    """
+    def __init__(self, obj, label_from_instance, choice_attrs):
+        self.obj = obj
+        self.label_from_instance = label_from_instance
+        self.choice_attrs = choice_attrs
+
+    def __str__(self):
+        return self.label_from_instance(self.obj)
+
+    @property
+    def attrs(self):
+        return self.choice_attrs(self.obj)
+
+
+class SelectClassesCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
+    template_name = 'class_select_widget.html'
+
+
 class ClassSelectField(forms.ModelMultipleChoiceField):
+    widget = SelectClassesCheckboxSelectMultiple
+
     def label_from_instance(self, obj):
-        return "%s (age %s-%s), %s: %s" % (
+        start_ap = obj.start.strftime('%p').lower()
+        end_ap = obj.end.strftime('%p').lower()
+        if start_ap == end_ap:
+            start_ap = ''
+        start_mins = obj.start.strftime('%M')
+        if start_mins == '00':
+            start_mins = ''
+        else:
+            start_mins = ':' + start_mins
+        end_mins = obj.end.strftime('%M')
+        if end_mins == '00':
+            end_mins = ''
+        else:
+            end_mins = ':' + end_mins
+        return "%s%s%s-%s%s%s: %s (age %s-%s), %s: %s" % (
+            obj.start.strftime('%-I'),
+            start_mins,
+            start_ap,
+            obj.end.strftime('%-I'),
+            end_mins,
+            end_ap,
             obj.name,
             obj.min_age,
             obj.max_age,
@@ -223,12 +285,26 @@ class ClassSelectField(forms.ModelMultipleChoiceField):
             obj.description,
         )
 
+    def choice_attrs(self, obj):
+        return {
+            'start': obj.start,
+            'end': obj.end,
+        }
+
+    def _get_choices(self):
+        """Use MTModelChoiceIterator."""
+        if hasattr(self, "_choices"):
+            return self._choices
+
+        return SmartLabelModelChoiceIterator(self)
+
+    choices = property(_get_choices, forms.ChoiceField._set_choices)
+
 
 class SelectClassesForm(forms.ModelForm):
     """Form for a parent to select classes for a kid."""
     classes = ClassSelectField(
         queryset=models.Class.objects.none(),
-        widget=forms.CheckboxSelectMultiple,
         required=False,
     )
 

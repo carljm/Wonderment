@@ -14,7 +14,7 @@
   {% for class in classes %}
   <div class="list-group-item">
     {{ class.name }} (age {{ class.min_age }}-{{ class.max_age }})
-    -- {{ class.start|date:"fA" }}-{{ class.end|date:"fA" }}
+    -- {{ class.start|date:"P" }} - {{ class.end|date:"P" }}
     -- {{ class.teacher.name }}
     -- {{ class.num_students }}/{{ class.max_students }} signed up
     -- <a href="{% url 'class_detail' session_id=session.id class_id=class.id %}">Roster</a>

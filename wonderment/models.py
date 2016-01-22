@@ -284,7 +284,7 @@ class Class(models.Model):
         return "%s - %s" % (self.session, self.name)
 
     class Meta:
-        ordering = ['session', 'name']
+        ordering = ['start']
         verbose_name_plural = 'classes'
 
 

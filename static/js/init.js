@@ -69,4 +69,25 @@ jQuery(function($) {
     };
     initDependentField('drop_off', 'pick_up_names');
   }
+
+  var classSelectForm = $('#select-classes-form');
+  if (classSelectForm.length) {
+    var classInputs = classSelectForm.find('.class-item-input');
+    classInputs.on('change', function () {
+      var thisClass = $(this);
+      if (thisClass.prop('checked')) {
+        var thisStart = parseInt(thisClass.data('start'));
+        var thisEnd = parseInt(thisClass.data('end'));
+        var otherClasses = thisClass.closest('ul').find('.class-item-input').not(thisClass);
+        $.each(otherClasses, function (idx, aClassEl) {
+          var aClass = $(aClassEl);
+          var aStart = parseInt(aClass.data('start'));
+          var aEnd = parseInt(aClass.data('end'));
+          if ((aEnd > thisStart) && (aStart < thisEnd)) {
+            aClass.prop('checked', false);
+          }
+        });
+      }
+    });
+  }
 });
