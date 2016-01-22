@@ -3,7 +3,7 @@ pytz==2014.7
 
 psycopg2==2.5.4
 
-python-dateutil==2.2
+python-dateutil==2.4.2
 six==1.10.0
 
 django-bootstrap3==5.0.3
