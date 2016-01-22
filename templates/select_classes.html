@@ -13,6 +13,12 @@
 </p>
 {% endif %}
 
+<p class="alert alert-warning" role="alert">
+  Classes listed in red are full; if you select one of those classes, you will
+  be placed on the waitlist. If you select a waitlist class, please also select
+  a second-choice class in the same time-slot.
+</p>
+
 <form method="POST" id="select-classes-form">
   {% csrf_token %}
 

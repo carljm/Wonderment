@@ -6,6 +6,7 @@
 
 #select-classes-form [for$='-classes'] { display: none; }
 #select-classes-form ul { list-style-type: none; margin-left: -2.5em; }
+#select-classes-form .waitlist { color: red; }
 
 .alert a { text-decoration: underline; }
 .parent-attendance-label {

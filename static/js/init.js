@@ -72,25 +72,93 @@ jQuery(function($) {
 
   var classSelectForm = $('#select-classes-form');
   if (classSelectForm.length) {
+    // shim Date.now() for IE8 and earlier
+    if (!Date.now) {
+      Date.now = function() { return new Date().getTime(); }
+    }
     var classInputs = classSelectForm.find('.class-item-input');
+    var updateWaitlist = function () {
+      var numStudentsByClassId = {};
+      var lastCheckedByWhenId = {};
+      classInputs.sort(function (a, b) {
+        var $a = $(a);
+        var $b = $(b);
+        var aChecked = $a.prop('checked');
+        var bChecked = $b.prop('checked');
+        var aLastChecked = $a.data('last-checked');
+        var bLastChecked = $b.data('last-checked');
+        if (!aChecked || !aLastChecked) { return 1; }
+        if (!bChecked || !bLastChecked) { return -1; }
+        return aLastChecked - bLastChecked;
+      }).each(function () {
+        var aClass = $(this);
+        var whenField = aClass.closest('.panel-body').find('[name$="-when"]');
+        var whenFieldId = whenField.attr('id');
+        var value = aClass.attr('value');
+        var lastChecked = aClass.data('last-checked');
+        var label = aClass.closest('label');
+        var classId = aClass.data('class-id');
+        var numStudents = numStudentsByClassId[classId] || 0;
+        var maxStudents = aClass.data('max-students');
+        var lastCheckedByValue = lastCheckedByWhenId[whenFieldId] || {};
+        if (aClass.prop('checked') && lastChecked) {
+          lastCheckedByValue[value] = lastChecked;
+        }
+        lastCheckedByWhenId[whenFieldId] = lastCheckedByValue;
+        if (numStudents >= maxStudents) {
+          aClass.addClass('waitlist');
+          label.addClass('waitlist');
+        } else {
+          if (aClass.hasClass('waitlist-dupe')) {
+            aClass.removeClass('waitlist-dupe');
+            aClass.prop('checked', false);
+          }
+          aClass.removeClass('waitlist');
+          label.removeClass('waitlist');
+        }
+        if (aClass.prop('checked')) {
+          numStudentsByClassId[classId] = numStudents + 1;
+        }
+      });
+      $.each(lastCheckedByWhenId, function (whenId, byVal) {
+        var hiddenInput = classSelectForm.find('#' + whenId);
+        hiddenInput.val(JSON.stringify(byVal));
+      });
+    }
+    updateWaitlist();
     classInputs.on('change', function () {
       var thisClass = $(this);
       if (thisClass.prop('checked')) {
+        thisClass.data('last-checked', Date.now());
         var thisDay = thisClass.data('weekday');
-        var thisStart = parseInt(thisClass.data('start'));
-        var thisEnd = parseInt(thisClass.data('end'));
+        var thisStart = thisClass.data('start');
+        var thisEnd = thisClass.data('end');
         var sameDayClasses = thisClass.closest('ul').find(
           '.class-item-input[data-weekday="' + thisDay + '"]'
         ).not(thisClass);
-        $.each(sameDayClasses, function (idx, aClassEl) {
-          var aClass = $(aClassEl);
-          var aStart = parseInt(aClass.data('start'));
-          var aEnd = parseInt(aClass.data('end'));
-          if ((aEnd > thisStart) && (aStart < thisEnd)) {
-            aClass.prop('checked', false);
+        sameDayClasses.each(function () {
+          var aClass = $(this);
+          var aStart = aClass.data('start');
+          var aEnd = aClass.data('end');
+          if (aClass.prop('checked') && (aEnd > thisStart) && (aStart < thisEnd)) {
+            var thisWait = thisClass.hasClass('waitlist');
+            var aWait = aClass.hasClass('waitlist');
+            if (thisWait) {
+              thisClass.addClass('waitlist-dupe');
+            }
+            if (aWait) {
+              aClass.addClass('waitlist-dupe');
+            }
+            if (!thisWait && !aWait) {
+              aClass.prop('checked', false);
+              aClass.removeClass('waitlist-dupe');
+            }
           }
         });
+      } else {
+        thisClass.removeClass('waitlist-dupe');
       }
+      updateWaitlist();
     });
   }
 });

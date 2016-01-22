@@ -1,9 +1,13 @@
+from datetime import datetime
+import json
+
 from django.conf import settings
 from django.core.mail import send_mail
-from django.db.models import Count, F, Q
+from django.db.models import Count, Q
 from django.forms.models import (
     inlineformset_factory, BaseInlineFormSet, ModelChoiceIterator)
 from django.template.loader import render_to_string
+from django.utils import timezone
 import floppyforms.__future__ as forms
 
 from . import models
@@ -284,8 +288,23 @@ class ClassSelectField(forms.ModelMultipleChoiceField):
     choices = property(_get_choices, forms.ChoiceField._set_choices)
 
 
+class JSONField(forms.CharField):
+    def prepare_value(self, value):
+        try:
+            return json.dumps(value)
+        except ValueError:
+            return '{}'
+
+    def to_python(self, value):
+        try:
+            return json.loads(value)
+        except ValueError:
+            return {}
+
+
 class SelectClassesForm(forms.ModelForm):
     """Form for a parent to select classes for a kid."""
+    when = JSONField(widget=forms.HiddenInput, required=False)
     classes = ClassSelectField(
         queryset=models.Class.objects.none(),
         required=False,
@@ -303,15 +322,14 @@ class SelectClassesForm(forms.ModelForm):
             students__child=self.instance, session=self.session)
         right_session = Q(session=self.session)
         already_in = Q(pk__in=in_classes)
-        has_room = Q(num_students__lt=F('max_students'))
-        requirements = has_room
+        valid = already_in
         if age is not None:
             age_match = Q(min_age__lte=age, max_age__gte=age)
-            requirements = requirements & age_match
+            valid = valid | age_match
         valid_classes = models.Class.objects.annotate(
             num_students=Count('students'),
         ).filter(
-            right_session & (requirements | already_in)
+            right_session & valid
         ).select_related(
             'teacher'
         )
@@ -321,9 +339,17 @@ class SelectClassesForm(forms.ModelForm):
     def save(self, commit=True):
         models.Student.objects.filter(
             child=self.instance, klass__session=self.session).delete()
+        when = self.cleaned_data['when']
         for klass in self.cleaned_data['classes']:
+            timestamp = when.get(str(klass.id))
+            if timestamp is None:
+                signed_up = timezone.now()
+            else:
+                signed_up = datetime.fromtimestamp(
+                    timestamp / 1000
+                ).replace(tzinfo=timezone.get_current_timezone())
             models.Student.objects.get_or_create(
-                child=self.instance, klass=klass)
+                child=self.instance, klass=klass, signed_up=signed_up)
         return self.instance
 
 

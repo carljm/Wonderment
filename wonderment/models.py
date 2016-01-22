@@ -313,9 +313,13 @@ class Class(models.Model):
 class Student(models.Model):
     child = models.ForeignKey(Child, related_name='studies')
     klass = models.ForeignKey(Class, related_name='students')
+    signed_up = models.DateTimeField()
 
     def __str__(self):
         return "%s in %s" % (self.child, self.klass)
+
+    class Meta:
+        ordering = ['signed_up']
 
 
 class Participant(models.Model):
