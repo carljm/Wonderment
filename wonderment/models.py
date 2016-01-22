@@ -211,9 +211,9 @@ class Child(models.Model):
 
 
 class Teacher(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, blank=True)
     parent = models.OneToOneField(Parent, blank=True, null=True)
-    phone = models.CharField(max_length=25)
+    phone = models.CharField(max_length=25, blank=True)
     phone_type = models.CharField(
         max_length=20,
         choices=[
@@ -223,7 +223,7 @@ class Teacher(models.Model):
         ],
         blank=True,
     )
-    email = models.EmailField()
+    email = models.EmailField(blank=True)
     address = models.CharField(max_length=300, blank=True)
     preferred = models.CharField(
         max_length=20,
@@ -240,6 +240,16 @@ class Teacher(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *a, **kw):
+        if self.parent:
+            self.name = self.parent.name
+            self.phone = self.parent.phone
+            self.phone_type = self.parent.phone_type
+            self.email = self.parent.email
+            self.address = self.parent.address
+            self.preferred = self.parent.preferred
+        return super(Teacher, self).save(*a, **kw)
 
     class Meta:
         ordering = ['name']
