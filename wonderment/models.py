@@ -276,6 +276,8 @@ class Class(models.Model):
     min_age = models.IntegerField()
     max_age = models.IntegerField()
     max_students = models.IntegerField()
+    start = models.TimeField()
+    end = models.TimeField()
     description = models.TextField(blank=True)
 
     def __str__(self):

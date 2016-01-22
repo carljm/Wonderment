@@ -16,6 +16,7 @@
   <div class="panel-heading">
     <h2 class="panel-title">
       <strong>{{ class }} (age {{ class.min_age }}-{{ class.max_age }})</strong>
+      -- {{ class.start|date:"fA" }}-{{ class.end|date:"fA" }}
       -- {{ class.teacher.name }}
       -- {{ students|length }}/{{ class.max_students }} signed up
     </h2>
