@@ -1,6 +1,7 @@
 from datetime import date
 
 from dateutil.relativedelta import relativedelta
+from dateutil import rrule
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.functional import cached_property
@@ -280,21 +281,32 @@ class Session(models.Model):
 
 
 class Class(models.Model):
+    WEEKDAYS = [
+        (rrule.SU.weekday, "Sun"),
+        (rrule.MO.weekday, "Mon"),
+        (rrule.TU.weekday, "Tue"),
+        (rrule.WE.weekday, "Wed"),
+        (rrule.TH.weekday, "Thu"),
+        (rrule.FR.weekday, "Fri"),
+        (rrule.SA.weekday, "Sat"),
+    ]
+
     teacher = models.ForeignKey(Teacher, related_name='classes')
     session = models.ForeignKey(Session, related_name='classes')
     name = models.CharField(max_length=100)
     min_age = models.IntegerField()
     max_age = models.IntegerField()
     max_students = models.IntegerField()
+    weekday = models.IntegerField(choices=WEEKDAYS)
     start = models.TimeField()
     end = models.TimeField()
     description = models.TextField(blank=True)
 
     def __str__(self):
-        return "%s - %s" % (self.session, self.name)
+        return self.name
 
     class Meta:
-        ordering = ['start']
+        ordering = ['session', 'weekday', 'start']
         verbose_name_plural = 'classes'
 
 

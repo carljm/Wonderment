@@ -63,6 +63,17 @@ class SessionAdmin(admin.ModelAdmin):
 
 
 class ClassAdmin(admin.ModelAdmin):
+    list_display = [
+        '__str__',
+        'session',
+        'weekday',
+        'start',
+        'end',
+        'min_age',
+        'max_age',
+        'max_students',
+    ]
+    list_filter = ['session']
     inlines = [StudentInline]
 
 

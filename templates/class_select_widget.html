@@ -1,3 +1,10 @@
-<ul>{% for group_name, choices in optgroups %}{% for choice in choices %}
-<li><label for="{{ attrs.id }}_{{ forloop.counter }}"><input {% if choice.0 in value %}checked="checked" {% endif %}type="checkbox" id="{{ attrs.id }}_{{ forloop.counter }}" name="{{ name }}" value="{{ choice.0 }}" data-start="{{ choice.1.attrs.start|date:"Hi" }}" data-end="{{ choice.1.attrs.end|date:"Hi" }}" class="class-item-input"> {{ choice.1 }}</label></li>
+<ul>
+  {% for group_name, choices in optgroups %}
+  {% for choice in choices %}
+  <li>
+    <label for="{{ attrs.id }}_{{ forloop.counter }}">
+      <input {% if choice.0 in value %}checked="checked" {% endif %}type="checkbox" id="{{ attrs.id }}_{{ forloop.counter }}" name="{{ name }}" value="{{ choice.0 }}" data-start="{{ choice.1.obj.start|date:"Hi" }}" data-end="{{ choice.1.obj.end|date:"Hi" }}" data-weekday="{{ choice.1.obj.weekday }}" class="class-item-input">
+      {{ choice.1 }}
+  </label>
+  </li>
 {% endfor %}{% endfor %}</ul>

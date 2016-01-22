@@ -209,9 +209,7 @@ class SmartLabelModelChoiceIterator(ModelChoiceIterator):
         """Return the choice tuple for the given object."""
         return (
             self.field.prepare_value(obj),
-            SmartLabel(
-                obj, self.field.label_from_instance, self.field.choice_attrs
-                )
+            SmartLabel(obj, self.field),
             )
 
 
@@ -226,17 +224,12 @@ class SmartLabel:
     advanced multi-select widgets.
 
     """
-    def __init__(self, obj, label_from_instance, choice_attrs):
+    def __init__(self, obj, field):
+        self.field = field
         self.obj = obj
-        self.label_from_instance = label_from_instance
-        self.choice_attrs = choice_attrs
 
     def __str__(self):
-        return self.label_from_instance(self.obj)
-
-    @property
-    def attrs(self):
-        return self.choice_attrs(self.obj)
+        return self.field.label_from_instance(self.obj)
 
 
 class SelectClassesCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
@@ -246,7 +239,7 @@ class SelectClassesCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
 class ClassSelectField(forms.ModelMultipleChoiceField):
     widget = SelectClassesCheckboxSelectMultiple
 
-    def label_from_instance(self, obj):
+    def when(self, obj):
         start_ap = obj.start.strftime('%p').lower()
         end_ap = obj.end.strftime('%p').lower()
         if start_ap == end_ap:
@@ -261,25 +254,25 @@ class ClassSelectField(forms.ModelMultipleChoiceField):
             end_mins = ''
         else:
             end_mins = ':' + end_mins
-        return "%s%s%s-%s%s%s: %s (age %s-%s), %s: %s" % (
+        return "%s %s%s%s-%s%s%s" % (
+            obj.get_weekday_display(),
             obj.start.strftime('%-I'),
             start_mins,
             start_ap,
             obj.end.strftime('%-I'),
             end_mins,
             end_ap,
+        )
+
+    def label_from_instance(self, obj):
+        return "%s: %s (age %s-%s), %s: %s" % (
+            self.when(obj),
             obj.name,
             obj.min_age,
             obj.max_age,
             obj.teacher.name,
             obj.description,
         )
-
-    def choice_attrs(self, obj):
-        return {
-            'start': obj.start,
-            'end': obj.end,
-        }
 
     def _get_choices(self):
         """Use MTModelChoiceIterator."""

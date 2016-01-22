@@ -76,10 +76,13 @@ jQuery(function($) {
     classInputs.on('change', function () {
       var thisClass = $(this);
       if (thisClass.prop('checked')) {
+        var thisDay = thisClass.data('weekday');
         var thisStart = parseInt(thisClass.data('start'));
         var thisEnd = parseInt(thisClass.data('end'));
-        var otherClasses = thisClass.closest('ul').find('.class-item-input').not(thisClass);
-        $.each(otherClasses, function (idx, aClassEl) {
+        var sameDayClasses = thisClass.closest('ul').find(
+          '.class-item-input[data-weekday="' + thisDay + '"]'
+        ).not(thisClass);
+        $.each(sameDayClasses, function (idx, aClassEl) {
           var aClass = $(aClassEl);
           var aStart = parseInt(aClass.data('start'));
           var aEnd = parseInt(aClass.data('end'));
