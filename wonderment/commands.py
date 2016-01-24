@@ -21,7 +21,7 @@ payment, you can visit %(payment_url)s at any time to do so.
 PAY_BODY = """
 We've received your Wonderment registration payment of $%(amount)s!
 
-Thanks for confirming your registration.
+Thanks for confirming your registration for %(session)s.
 
 """
 
@@ -48,7 +48,7 @@ def send_registration_confirmation_email(parent, session):
 
 def get_children_classes(parent, session):
     """Return a string listing all children and classes for each."""
-    ret = []
+    ret = ["Wonderment %s" % session, '']
     for child in parent.children.prefetch_related(
             Prefetch(
                 'studies',
@@ -89,7 +89,8 @@ def send_payment_confirmation_email(participant):
 
     body = "%s,\n\n%s\n\n%s" % (
         participant.parent.name,
-        PAY_BODY % {'amount': participant.paid},
+        PAY_BODY % {
+            'amount': participant.paid, 'session': participant.session},
         Chunk.get('payment-confirmation-email-extra')
     )
 
