@@ -1,6 +1,7 @@
 import csv
 from datetime import date
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.db import transaction
@@ -8,7 +9,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.text import slugify
 
-from . import commands, forms, models, utils
+from . import commands, forms, queries, models, utils
 
 CURRENT_SESSION_NAME = "Winter/Spring 2016"
 CURRENT_SESSION_START = date(2016, 2, 22)
@@ -91,7 +92,7 @@ def select_classes(request, parent_id, id_hash):
                 formset.save()
             commands.send_registration_confirmation_email(parent, session)
             return redirect(
-                'participant_thanks',
+                'payment',
                 parent_id=parent_id,
                 id_hash=id_hash,
             )
@@ -105,6 +106,64 @@ def select_classes(request, parent_id, id_hash):
             'session': session,
             'parent': parent,
             'formset': formset,
+        },
+    )
+
+
+def payment(request, parent_id, id_hash):
+    session = current_session()
+    parent = get_object_or_404(models.Parent, pk=parent_id)
+    if utils.idhash(parent.id) != id_hash:
+        raise Http404()
+    amount = queries.get_cost(parent, session)
+    request.session['parent_id'] = parent_id
+    request.session['id_hash'] = id_hash
+    request.session['amount'] = amount
+    return render(
+        request,
+        'paypal.html',
+        {'session': session, 'parent': parent, 'amount': amount},
+    )
+
+
+def payment_cancel(request):
+    parent_id = request.session.pop('parent_id', 0)
+    id_hash = request.session.pop('id_hash', 0)
+    request.session.pop('amount', 0)
+    parent = get_object_or_404(models.Parent, pk=parent_id)
+    if utils.idhash(parent.id) != id_hash:
+        raise Http404()
+    return redirect('participant_cancel', parent_id=parent_id, id_hash=id_hash)
+
+
+def payment_success(request):
+    parent_id = request.session.pop('parent_id', 0)
+    id_hash = request.session.pop('id_hash', 0)
+    amount = request.session.pop('amount', 0)
+    parent = get_object_or_404(models.Parent, pk=parent_id)
+    if utils.idhash(parent.id) != id_hash:
+        raise Http404()
+    session = current_session()
+    participant = models.Participant.objects.get(
+        parent=parent, session=session)
+    participant.paid = amount
+    participant.save()
+    commands.send_payment_confirmation_email(participant)
+    return redirect('participant_thanks', parent_id=parent_id, id_hash=id_hash)
+
+
+def participant_cancel(request, parent_id, id_hash):
+    session = current_session()
+    parent = get_object_or_404(models.Parent, pk=parent_id)
+    if utils.idhash(parent.id) != id_hash:
+        raise Http404()
+    return render(
+        request,
+        'participant_cancel.html',
+        {
+            'BASE_URL': settings.BASE_URL,
+            'session': session,
+            'parent': parent,
         },
     )
 

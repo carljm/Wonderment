@@ -138,6 +138,13 @@ class Parent(models.Model):
         )
 
     @cached_property
+    def payment_url(self):
+        return reverse(
+            'payment',
+            kwargs={'parent_id': self.id, 'id_hash': utils.idhash(self.id)},
+        )
+
+    @cached_property
     def spring2015survey_url(self):
         return reverse(
             'spring2015survey',

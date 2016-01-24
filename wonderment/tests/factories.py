@@ -2,8 +2,7 @@ import datetime
 
 import factory
 
-from wonderment.models import (
-    Parent, Child, Session, Participant, ClassDay)
+from wonderment import models
 
 
 class ModelFactory(factory.DjangoModelFactory):
@@ -19,14 +18,14 @@ class ModelFactory(factory.DjangoModelFactory):
 
 class ParentFactory(ModelFactory):
     class Meta:
-        model = Parent
+        model = models.Parent
 
     name = "Test Parent"
 
 
 class ChildFactory(ModelFactory):
     class Meta:
-        model = Child
+        model = models.Child
 
     parent = factory.SubFactory(ParentFactory)
     name = "Test Child"
@@ -34,7 +33,7 @@ class ChildFactory(ModelFactory):
 
 class SessionFactory(ModelFactory):
     class Meta:
-        model = Session
+        model = models.Session
 
     name = "Test Session"
     start_date = datetime.date(2014, 9, 12)
@@ -43,16 +42,47 @@ class SessionFactory(ModelFactory):
 
 class ParticipantFactory(ModelFactory):
     class Meta:
-        model = Participant
+        model = models.Participant
 
     parent = factory.SubFactory(ParentFactory)
     session = factory.SubFactory(SessionFactory)
     level = 'weekly'
 
 
+class TeacherFactory(ModelFactory):
+    class Meta:
+        model = models.Teacher
+
+    name = "Test Teacher"
+
+
+class ClassFactory(ModelFactory):
+    class Meta:
+        model = models.Class
+
+    teacher = factory.SubFactory(TeacherFactory)
+    session = factory.SubFactory(SessionFactory)
+    name = "Test Class"
+    min_age = 1
+    max_age = 5
+    max_students = 10
+    weekday = 1
+    start = datetime.time(9, 15)
+    end = datetime.time(10, 15)
+
+
+class StudentFactory(ModelFactory):
+    class Meta:
+        model = models.Student
+
+    child = factory.SubFactory(ChildFactory)
+    klass = factory.SubFactory(ClassFactory)
+    signed_up = datetime.datetime(2016, 1, 22, 20, 15)
+
+
 class ClassDayFactory(ModelFactory):
     class Meta:
-        model = ClassDay
+        model = models.ClassDay
 
     session = factory.SubFactory(SessionFactory)
     date = datetime.date(2014, 9, 12)

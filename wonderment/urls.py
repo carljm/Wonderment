@@ -77,6 +77,35 @@ session_urls = [
 ]
 
 
+idhash_urls = [
+    url(
+        r'^$',
+        views.participant_form,
+        name='edit_participant_form',
+    ),
+    url(
+        r'^classes/$',
+        views.select_classes,
+        name='select_classes',
+    ),
+    url(
+        r'^pay/$',
+        views.payment,
+        name='payment',
+    ),
+    url(
+        r'^done/$',
+        views.participant_thanks,
+        name='participant_thanks',
+    ),
+    url(
+        r'^cancel/$',
+        views.participant_cancel,
+        name='participant_cancel',
+    ),
+]
+
+
 registration_urls = [
     url(
         r'^$',
@@ -84,19 +113,8 @@ registration_urls = [
         name='new_participant_form',
     ),
     url(
-        r'^(?P<parent_id>\d+)-(?P<id_hash>[a-z0-9]+)/$',
-        views.participant_form,
-        name='edit_participant_form',
-    ),
-    url(
-        r'^(?P<parent_id>\d+)-(?P<id_hash>[a-z0-9]+)/classes/$',
-        views.select_classes,
-        name='select_classes',
-    ),
-    url(
-        r'^(?P<parent_id>\d+)-(?P<id_hash>[a-z0-9]+)/done/$',
-        views.participant_thanks,
-        name='participant_thanks',
+        r'^(?P<parent_id>\d+)-(?P<id_hash>[a-z0-9]+)/',
+        include(idhash_urls),
     ),
     url(
         r'^request/$',
@@ -107,6 +125,16 @@ registration_urls = [
         r'^request/done/$',
         views.participant_url_request_thanks,
         name='participant_url_request_thanks',
+    ),
+    url(
+        r'^payment-cancel/$',
+        views.payment_cancel,
+        name='payment_cancel',
+    ),
+    url(
+        r'^payment-success/$',
+        views.payment_success,
+        name='payment_success',
     ),
 ]
 

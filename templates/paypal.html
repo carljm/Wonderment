@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Registration payment | {{ session.name }} | Wonderment{% endblock %}
+
+{% block body %}
+<h2>Complete your registration for Wonderment {{ session.name }}</h2>
+
+<p class="alert alert-success" role="alert">
+  <strong>To complete your registration</strong>, please click the <strong>Pay
+  Now</strong> button below to pay <strong>${{ amount }}</strong> via
+  PayPal. If you choose not to pay now, you can bookmark this page and return
+  to it later to complete your payment; <strong>your class selections will not
+  be confirmed until you complete your payment</strong>.
+</p>
+
+<p class="alert alert-warning" role="alert">
+ <strong>Early registration ends Feb 5, 2016</strong>; the cost will
+ increase after that date.
+</p>
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_xclick">
+<input type="hidden" name="business" value="PZNVGPYGZFUTG">
+<input type="hidden" name="lc" value="US">
+<input type="hidden" name="item_name" value="Wonderment">
+<input type="hidden" name="amount" value="{{ amount }}.00">
+<input type="hidden" name="currency_code" value="USD">
+<input type="hidden" name="button_subtype" value="services">
+<input type="hidden" name="no_note" value="1">
+<input type="hidden" name="no_shipping" value="1">
+<input type="hidden" name="rm" value="1">
+<input type="hidden" name="return" value="https://registration.wondermentblackhills.com/payment-success/">
+<input type="hidden" name="cancel_return" value="https://registration.wondermentblackhills.com/payment-cancel/">
+<input type="hidden" name="bn" value="PP-BuyNowBF:btn_paynowCC_LG.gif:NonHosted">
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+
+{% endblock %}

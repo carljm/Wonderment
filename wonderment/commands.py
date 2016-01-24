@@ -5,19 +5,42 @@ from django.db.models import Prefetch
 from .models import Student, Chunk
 
 
-DEFAULT_BODY_INTRO = """
+DEFAULT_REG_BODY_INTRO = """
 We've received your Wonderment registration!
 
 Your children are registered for the following classes:
+"""
+
+DEFAULT_REG_BODY_FINAL = """
+
+If you haven't already confirmed these class selections by submitting your
+payment, you can visit %(payment_url)s at any time to do so.
+
+"""
+
+PAY_BODY = """
+We've received your Wonderment registration payment of $%(amount)s!
+
+Thanks for confirming your registration.
+
 """
 
 
 def send_registration_confirmation_email(parent, session):
     subject = "You are registered for Wonderment!"
     body_intro = (
-        Chunk.get('registration-confirmation-email') or DEFAULT_BODY_INTRO)
+        Chunk.get('registration-confirmation-email') or DEFAULT_REG_BODY_INTRO)
+    body_final = (
+        Chunk.get('registration.confirmation-email-end')
+        or DEFAULT_REG_BODY_FINAL
+    ) % {'payment_url': settings.BASE_URL + parent.payment_url}
 
-    body = "%s\n\n%s" % (body_intro, get_children_classes(parent, session))
+    body = "%s,\n\n%s\n\n%s\n\n%s" % (
+        parent.name,
+        body_intro,
+        get_children_classes(parent, session),
+        body_final,
+    )
 
     send_mail(
         subject, body, settings.DEFAULT_FROM_EMAIL, [parent.email])
@@ -59,3 +82,20 @@ def get_classes(studies):
             line += " [WAITLIST]"
         ret.append(line)
     return ret
+
+
+def send_payment_confirmation_email(participant):
+    subject = "Your Wonderment registration is paid and confirmed!"
+
+    body = "%s,\n\n%s\n\n%s" % (
+        participant.parent.name,
+        PAY_BODY % {'amount': participant.paid},
+        Chunk.get('payment-confirmation-email-extra')
+    )
+
+    send_mail(
+        subject,
+        body,
+        settings.DEFAULT_FROM_EMAIL,
+        [participant.parent.email],
+    )
