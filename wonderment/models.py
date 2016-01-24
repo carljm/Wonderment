@@ -5,6 +5,7 @@ from dateutil import rrule
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.functional import cached_property
+from functools import lru_cache
 
 from . import fields, utils
 
@@ -309,6 +310,32 @@ class Class(models.Model):
         ordering = ['session', 'weekday', 'start']
         verbose_name_plural = 'classes'
 
+    @cached_property
+    def when(self):
+        start_ap = self.start.strftime('%p').lower()
+        end_ap = self.end.strftime('%p').lower()
+        if start_ap == end_ap:
+            start_ap = ''
+        start_mins = self.start.strftime('%M')
+        if start_mins == '00':
+            start_mins = ''
+        else:
+            start_mins = ':' + start_mins
+        end_mins = self.end.strftime('%M')
+        if end_mins == '00':
+            end_mins = ''
+        else:
+            end_mins = ':' + end_mins
+        return "%s %s%s%s-%s%s%s" % (
+            self.get_weekday_display(),
+            self.start.strftime('%-I'),
+            start_mins,
+            start_ap,
+            self.end.strftime('%-I'),
+            end_mins,
+            end_ap,
+        )
+
 
 class Student(models.Model):
     child = models.ForeignKey(Child, related_name='studies')
@@ -416,3 +443,24 @@ class ChildAttendance(models.Model):
     child = models.ForeignKey(Child)
     attendance = models.CharField(
         max_length=20, choices=ATTENDANCE, blank=True, null=True)
+
+
+class Chunk(models.Model):
+    name = models.CharField(max_length=100)
+    text = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
+    @classmethod
+    @lru_cache(maxsize=32)
+    def get(cls, name):
+        """Get chunk text by name, or empty string."""
+        try:
+            chunk = cls.objects.get(name=name)
+        except cls.DoesNotExist:
+            return ''
+        return chunk.text

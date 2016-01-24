@@ -8,7 +8,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.text import slugify
 
-from . import forms, models, utils
+from . import commands, forms, models, utils
 
 CURRENT_SESSION_NAME = "Winter/Spring 2016"
 CURRENT_SESSION_START = date(2016, 2, 22)
@@ -89,6 +89,7 @@ def select_classes(request, parent_id, id_hash):
         if formset.is_valid():
             with transaction.atomic():
                 formset.save()
+            commands.send_registration_confirmation_email(parent, session)
             return redirect(
                 'participant_thanks',
                 parent_id=parent_id,

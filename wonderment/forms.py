@@ -243,34 +243,9 @@ class SelectClassesCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
 class ClassSelectField(forms.ModelMultipleChoiceField):
     widget = SelectClassesCheckboxSelectMultiple
 
-    def when(self, obj):
-        start_ap = obj.start.strftime('%p').lower()
-        end_ap = obj.end.strftime('%p').lower()
-        if start_ap == end_ap:
-            start_ap = ''
-        start_mins = obj.start.strftime('%M')
-        if start_mins == '00':
-            start_mins = ''
-        else:
-            start_mins = ':' + start_mins
-        end_mins = obj.end.strftime('%M')
-        if end_mins == '00':
-            end_mins = ''
-        else:
-            end_mins = ':' + end_mins
-        return "%s %s%s%s-%s%s%s" % (
-            obj.get_weekday_display(),
-            obj.start.strftime('%-I'),
-            start_mins,
-            start_ap,
-            obj.end.strftime('%-I'),
-            end_mins,
-            end_ap,
-        )
-
     def label_from_instance(self, obj):
         return "%s: %s (age %s-%s), %s: %s" % (
-            self.when(obj),
+            obj.when,
             obj.name,
             obj.min_age,
             obj.max_age,
