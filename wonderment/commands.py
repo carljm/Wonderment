@@ -19,7 +19,7 @@ payment, you can visit %(payment_url)s at any time to do so.
 """
 
 PAY_BODY = """
-We've received your Wonderment registration payment of $%(amount)s!
+We've received your Wonderment registration payment of $%(just_paid)s!
 
 Thanks for confirming your registration for %(session)s.
 
@@ -84,13 +84,13 @@ def get_classes(studies):
     return ret
 
 
-def send_payment_confirmation_email(participant):
+def send_payment_confirmation_email(participant, just_paid):
     subject = "Your Wonderment registration is paid and confirmed!"
 
     body = "%s,\n\n%s\n\n%s" % (
         participant.parent.name,
         PAY_BODY % {
-            'amount': participant.paid, 'session': participant.session},
+            'just_paid': just_paid, 'session': participant.session},
         Chunk.get('payment-confirmation-email-extra')
     )
 

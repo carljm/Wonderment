@@ -115,21 +115,30 @@ def payment(request, parent_id, id_hash):
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
+    participant = models.Participant.objects.get(
+        parent=parent, session=session)
     amount = queries.get_cost(parent, session)
+    owed = max(0, amount - participant.paid)
     request.session['parent_id'] = parent_id
     request.session['id_hash'] = id_hash
-    request.session['amount'] = amount
+    request.session['owed'] = owed
     return render(
         request,
         'paypal.html',
-        {'session': session, 'parent': parent, 'amount': amount},
+        {
+            'session': session,
+            'parent': parent,
+            'amount': amount,
+            'owed': owed,
+            'paid': participant.paid,
+        },
     )
 
 
 def payment_cancel(request):
     parent_id = request.session.pop('parent_id', 0)
     id_hash = request.session.pop('id_hash', 0)
-    request.session.pop('amount', 0)
+    request.session.pop('owed', 0)
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
@@ -139,16 +148,17 @@ def payment_cancel(request):
 def payment_success(request):
     parent_id = request.session.pop('parent_id', 0)
     id_hash = request.session.pop('id_hash', 0)
-    amount = request.session.pop('amount', 0)
+    owed = request.session.pop('owed', 0)
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
     session = current_session()
     participant = models.Participant.objects.get(
         parent=parent, session=session)
-    participant.paid = amount
-    participant.save()
-    commands.send_payment_confirmation_email(participant)
+    if owed:
+        participant.paid += owed
+        participant.save()
+        commands.send_payment_confirmation_email(participant, owed)
     return redirect('participant_thanks', parent_id=parent_id, id_hash=id_hash)
 
 
