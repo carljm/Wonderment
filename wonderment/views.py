@@ -302,7 +302,7 @@ def teacher_detail(request, teacher_id, session_id=None):
         session = get_object_or_404(models.Session, pk=session_id)
         teacher = get_object_or_404(
             models.Teacher.objects.filter(
-                classes__session=session),
+                classes__session=session).distinct(),
             pk=teacher_id,
         )
         classes = teacher.classes.filter(session=session)
