@@ -122,6 +122,7 @@ def payment(request, parent_id, id_hash):
     request.session['parent_id'] = parent_id
     request.session['id_hash'] = id_hash
     request.session['owed'] = owed
+    payment_extra_info = models.Chunk.get('payment-extra-info')
     return render(
         request,
         'paypal.html',
@@ -131,6 +132,7 @@ def payment(request, parent_id, id_hash):
             'amount': amount,
             'owed': owed,
             'paid': participant.paid,
+            'payment_extra_info': payment_extra_info,
         },
     )
 

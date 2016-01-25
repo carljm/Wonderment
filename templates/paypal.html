@@ -40,6 +40,10 @@
   <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
   </form>
 
+  <p class="alert alert-warning" role="alert">
+    {{ payment_extra_info|linebreaksbr }}
+  </p>
+
 {% else %}
   <p class="alert alert-success" role="alert">
     Our records show that you have already paid in full the
