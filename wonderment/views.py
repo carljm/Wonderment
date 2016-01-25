@@ -278,7 +278,8 @@ class AllSessions:
 def teachers(request, session_id=None, emails_only=False):
     if session_id is not None:
         session = get_object_or_404(models.Session, pk=session_id)
-        teachers = models.Teacher.objects.filter(classes__session=session)
+        teachers = models.Teacher.objects.filter(
+            classes__session=session).distinct()
     else:
         session = AllSessions()
         teachers = models.Teacher.objects.all()
