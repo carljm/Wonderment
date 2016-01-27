@@ -3,7 +3,7 @@ from datetime import date
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 from django.db import transaction
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -369,7 +369,24 @@ def participant_detail(request, session_id, participant_id):
     session = get_object_or_404(models.Session, pk=session_id)
     participant = get_object_or_404(
         models.Participant.objects.filter(
-            session=session).select_related('parent'),
+            session=session
+        ).select_related(
+            'parent'
+        ).prefetch_related(
+            Prefetch(
+                'parent__children',
+                queryset=models.Child.objects.prefetch_related(
+                    Prefetch(
+                        'studies',
+                        queryset=models.Student.objects.filter(
+                            klass__session=session
+                        ).select_related('klass__teacher'),
+                        to_attr='studies_this_session',
+                    ),
+                ),
+                to_attr='kids',
+            ),
+        ),
         pk=participant_id,
     )
     return render(

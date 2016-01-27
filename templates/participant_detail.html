@@ -74,17 +74,22 @@
       <dd>{{ parent.classes_desired|linebreaksbr }}</dd>
       {% endif %}
     </dl>
-    {% with parent.children.all as children %}
-      {% if children %}
-        <ul class="list-group">
-          {% for child in children %}
-          <li class="list-group-item">
-            {{ child.name }} ({{ child|age }})
-          </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+    {% if parent.kids %}
+    <ul class="list-group">
+      {% for child in parent.kids %}
+      <li class="list-group-item">
+        {{ child.name }} ({{ child|age }})
+        {% if child.studies_this_session %}
+        :
+        {% for student in child.studies_this_session %}
+        <a href="{% url 'class_detail' session_id=session.id class_id=student.klass_id %}">{{ student.klass.name }}</a> ({{ student.klass.when }})
+        {% if not forloop.last %},{% endif %}
+        {% endfor %}
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
   </div>
 </article>
 {% endwith %}
