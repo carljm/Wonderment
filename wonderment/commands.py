@@ -25,6 +25,8 @@ Thanks for confirming your registration for %(session)s.
 
 """
 
+REGISTRAR_EMAIL = 'registrar@wondermentblackhills.com'
+
 
 def send_registration_confirmation_email(parent, session):
     subject = "You are registered for Wonderment!"
@@ -43,7 +45,11 @@ def send_registration_confirmation_email(parent, session):
     )
 
     send_mail(
-        subject, body, settings.DEFAULT_FROM_EMAIL, [parent.email])
+        subject,
+        body,
+        settings.DEFAULT_FROM_EMAIL,
+        [parent.email, REGISTRAR_EMAIL],
+    )
 
 
 def get_children_classes(parent, session):
