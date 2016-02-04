@@ -7,6 +7,7 @@ EXTRA_KID_DISCOUNT = 15
 # This means that there's no additional discount for fifth, sixth, etc kids,
 # they all pay the fourth-kid rate.
 MAX_DISCOUNTED_KIDS = 4
+FREE_AFTER = 2  # All kids after the second are free
 
 
 def get_cost(parent, session):
@@ -25,6 +26,7 @@ def get_cost(parent, session):
             day_counts[i + 1] = day_counts.get(i + 1, 0) + 1
     cost = 0
     for num_days, kid_count in day_counts.items():
+        kid_count = min(kid_count, FREE_AFTER)
         base_cost = BASE_COST - (EXTRA_DAY_DISCOUNT * (num_days - 1))
         dkids = min(kid_count, MAX_DISCOUNTED_KIDS)
         kid_discount = (
