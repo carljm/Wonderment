@@ -252,6 +252,24 @@ def class_detail(request, session_id, class_id, include_parents=False):
 
 
 @login_required
+def all_students(request, session_id):
+    session = get_object_or_404(models.Session, pk=session_id)
+    participants = models.Participant.objects.filter(
+        paid__gt=0, session=session).select_related('parent')
+    students = models.Child.objects.filter(
+        parent__in=[p.parent for p in participants]
+    ).order_by('-birthdate')
+    return render(
+        request,
+        'all_students.html',
+        {
+            'session': session,
+            'students': students,
+        },
+    )
+
+
+@login_required
 def parent_emails(request, session_id):
     session = get_object_or_404(models.Session, pk=session_id)
     participants = models.Participant.objects.filter(

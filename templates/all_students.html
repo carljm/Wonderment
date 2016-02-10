@@ -1,0 +1,30 @@
+{% extends "session.html" %}
+{% load wonderment %}
+
+{% block title %}All Paid Students | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: All Paid Students{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li><a href="{% url 'all_students' session_id=session.id %}">All Paid Students</a></li>
+{% endblock %}
+
+{% block main %}
+<article class="panel panel-primary">
+  <div class="panel-heading">
+    <h2 class="panel-title">
+      {{ students|length }} paid students
+    </h2>
+  </div>
+  <div class="panel-body">
+    <ul class="list-group">
+      {% for student in students %}
+      <li class="list-group-item">
+        {% include "_student.html" %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</article>
+{% endblock %}
