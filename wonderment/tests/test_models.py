@@ -89,7 +89,9 @@ class TestSession(object):
         assert [st.real_age for st in families['students']] == [
             "2yr", "4yr", "6yr"]
 
-    def test_families_pretend_birthdate(self, db):
+    def test_families_pretend_birthdate(self, db, monkeypatch):
+        monkeypatch.setattr(
+            'wonderment.models.today', lambda: date(2014, 9, 15))
         s = f.SessionFactory.create(start_date=date(2014, 9, 12))
         p = f.ParticipantFactory.create(session=s, paid=30)
         f.ChildFactory.create(
@@ -98,9 +100,7 @@ class TestSession(object):
             pretend_birthdate=date(2011, 9, 1),
         )
 
-        with mock.patch('wonderment.models.today') as mock_today:
-            mock_today.return_value = date(2014, 9, 15)
-            families = s.families()
+        families = s.families()
 
         assert families['students'][0].real_age == "2yr"
 

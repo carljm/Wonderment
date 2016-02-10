@@ -185,6 +185,10 @@ class Child(models.Model):
         blank=True,
     )
 
+    @property
+    def real_age(self):
+        return self.age_display(today())
+
     def age_delta(self, as_of, pretend=False):
         """Return age as relativedelta."""
         bd = self.birthdate
@@ -280,8 +284,6 @@ class Session(models.Model):
             paid__gt=0, **filters).select_related('parent')
         parents = [p.parent for p in participants]
         students = Child.objects.filter(parent__in=parents)
-        for student in students:
-            student.real_age = student.age_display(today())
         return {
             'parents': parents,
             'students': students,
