@@ -1,0 +1,22 @@
+{% load wonderment %}
+<strong>{{ student.name }}</strong> -
+<em>{{ student.gender }}</em> -
+{{ student.real_age }} ({{ student.birthdate|date:"m/d/Y" }})
+{% if student.special_needs %}: {{ student.special_needs }}{% endif %}
+{% if include_parents %}
+<ul>
+  <li>
+    Parent:
+    {% include "_contact.html" with person=student.parent link_email=True %}
+  </li>
+  <li>
+    Spouse: {{ student.parent.spouse }} - {{ student.parent.spouse_contact }}
+  </li>
+  <li>
+    Emergencies: {{ student.parent.emergency }} - {{ student.parent.emergency_contact }}
+  </li>
+  <li>
+    Can pickup: {{ student.parent.pick_up_names|newlineslash }}
+  </li>
+</ul>
+{% endif %}
