@@ -1,7 +1,7 @@
 from . import models
 
 
-BASE_COST = 115
+BASE_COST = 125
 EXTRA_DAY_DISCOUNT = 10
 EXTRA_KID_DISCOUNT = 15
 # This means that there's no additional discount for fifth, sixth, etc kids,
