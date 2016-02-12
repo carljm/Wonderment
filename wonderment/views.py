@@ -257,8 +257,9 @@ def all_students(request, session_id):
     participants = models.Participant.objects.filter(
         paid__gt=0, session=session).select_related('parent')
     students = models.Child.objects.filter(
-        parent__in=[p.parent for p in participants]
-    ).order_by('-birthdate')
+        parent__in=[p.parent for p in participants],
+        studies__klass__session=session,
+    ).distinct().order_by('-birthdate')
     return render(
         request,
         'all_students.html',
