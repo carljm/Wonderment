@@ -42,6 +42,7 @@ class ParentAdmin(admin.ModelAdmin):
         'email',
         'registration_link',
         'classes_link',
+        'spring2016eval_link',
     ]
     inlines = [ParticipantInline, ChildInline]
 
@@ -51,6 +52,10 @@ class ParentAdmin(admin.ModelAdmin):
 
     def classes_link(self, obj):
         url = settings.BASE_URL + obj.select_classes_url
+        return mark_safe('<a href="%s">%s</a>' % (url, url))
+
+    def spring2016eval_link(self, obj):
+        url = settings.BASE_URL + obj.spring2016eval_url
         return mark_safe('<a href="%s">%s</a>' % (url, url))
 
 

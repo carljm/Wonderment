@@ -50,6 +50,11 @@ jQuery(function($) {
     };
     initOtherField('hear_about');
     initOtherField('intention');
+    initOtherField('contributing');
+    initOtherField('class_ideas_3_5');
+    initOtherField('class_ideas_5_7');
+    initOtherField('class_ideas_8_11');
+    initOtherField('class_ideas_teen');
   }
 
   var regForm = $('#participant-form');

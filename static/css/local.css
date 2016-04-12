@@ -30,5 +30,9 @@
 #fall2015eval-form [for="id_time_commitment"] { display: none; }
 #fall2015eval-form [for="id_overall_worthwhile"] { display: none; }
 
+#spring2016eval-form [for$="_other"] { display: none; }
+#spring2016eval-form [for="id_time_commitment"] { display: none; }
+#spring2016eval-form [for="id_overall_worthwhile"] { display: none; }
+
 .rating-widget .desc { display: inline-block; width: 8em; }
 .rating-widget .opt { padding: 1em; }

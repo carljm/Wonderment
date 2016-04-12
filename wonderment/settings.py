@@ -97,6 +97,7 @@ INSTALLED_APPS = (
     'wonderment',
     'wonderment.spring2015survey',
     'wonderment.fall2015eval',
+    'wonderment.spring2016eval',
 )
 
 MIDDLEWARE_CLASSES = (
