@@ -11,9 +11,9 @@ from django.utils.text import slugify
 
 from . import commands, forms, queries, models, utils
 
-CURRENT_SESSION_NAME = "Winter/Spring 2016"
-CURRENT_SESSION_START = date(2016, 2, 22)
-CURRENT_SESSION_END = date(2016, 4, 12)
+CURRENT_SESSION_NAME = "Fall 2016"
+CURRENT_SESSION_START = date(2016, 9, 20)
+CURRENT_SESSION_END = date(2016, 11, 15)
 
 
 def current_session():
