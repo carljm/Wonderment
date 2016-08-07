@@ -5,30 +5,19 @@ from wonderment.tests import factories as f
 
 
 @pytest.mark.parametrize(
-    'one_day_kids,two_day_kids,cost',
+    'num_kids,cost',
     [
-        (1, 0, 125),
-        (2, 0, 125 + 110),
-        (3, 0, 125 + 110),
-        (4, 0, 125 + 110),
-        (5, 0, 125 + 110),
-        (0, 1, 125 + 115),
-        (0, 2, (125 + 115) + (110 + 100)),
-        (0, 3, (125 + 115) + (110 + 100)),
-        (0, 4, (125 + 115) + (110 + 100)),
-        (0, 5, (125 + 115) + (110 + 100)),
-        (1, 1, (125 + 115) + 110),
-        (1, 2, (125 + 115) + (110 + 100)),
+        (1, 125),
+        (2, 125 + 90),
+        (3, 125 + 90 + 50),
+        (4, 125 + 90 + 50 + 20),
+        (5, 125 + 90 + 50 + 20 + 20),
     ],
 )
-def test_get_cost(db, one_day_kids, two_day_kids, cost):
+def test_get_cost(db, num_kids, cost):
     p = f.ParticipantFactory.create()
-    c1 = f.ClassFactory.create(weekday=0, session=p.session)
-    c2 = f.ClassFactory.create(weekday=1, session=p.session)
-    for i in range(one_day_kids):
-        f.StudentFactory.create(klass=c1, child__parent=p.parent)
-    for i in range(two_day_kids):
-        student = f.StudentFactory.create(klass=c1, child__parent=p.parent)
-        f.StudentFactory.create(klass=c2, child=student.child)
+    c = f.ClassFactory.create(session=p.session)
+    for i in range(num_kids):
+        f.StudentFactory.create(klass=c, child__parent=p.parent)
 
     assert queries.get_cost(p.parent, p.session) == cost
