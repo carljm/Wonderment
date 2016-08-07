@@ -16,8 +16,11 @@ from wonderment.tests import factories as f
 )
 def test_get_cost(db, num_kids, cost):
     p = f.ParticipantFactory.create()
-    c = f.ClassFactory.create(session=p.session)
+    c1 = f.ClassFactory.create(session=p.session)
+    c2 = f.ClassFactory.create(session=p.session)
     for i in range(num_kids):
-        f.StudentFactory.create(klass=c, child__parent=p.parent)
+        child = f.ChildFactory.create(parent=p.parent)
+        f.StudentFactory.create(klass=c1, child=child)
+        f.StudentFactory.create(klass=c2, child=child)
 
     assert queries.get_cost(p.parent, p.session) == cost

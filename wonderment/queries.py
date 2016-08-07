@@ -7,9 +7,9 @@ COSTS = [125, 90, 50, 20]
 
 def get_cost(parent, session):
     """Return the amount owed by this parent for this session."""
-    num_students = models.Student.objects.filter(
-        child__in=parent.children.all(), klass__session=session
-    ).count()
+    num_students = parent.children.filter(
+        studies__klass__session=session
+    ).distinct().count()
     extra = []
     if num_students > len(COSTS):
         needed = num_students - len(COSTS)
