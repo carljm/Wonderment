@@ -384,7 +384,7 @@ class Participant(models.Model):
                 'ready',
                 (
                     "My family is ready to commit "
-                    "to participation in Wonderment winter/spring 2016. "
+                    "to participation in Wonderment fall 2016. "
                     "We understand that registration fees "
                     "are non-refundable."
                 ),
@@ -397,7 +397,7 @@ class Participant(models.Model):
                     "if I will be assigned to a role "
                     "that would help off-set my tuition fees. "
                     "My family is otherwise committed "
-                    "to participation in Wonderment this winter/spring 2016."
+                    "to participation in Wonderment this fall 2016."
                 ),
             ),
             (
@@ -406,7 +406,7 @@ class Participant(models.Model):
                     "I am not yet ready to make my payment. "
                     "I understand that class space "
                     "may be limited and that Wonderment "
-                    "enrollment fees will increase after Feb 5, 2016. "
+                    "enrollment fees will increase after Aug 18, 2016. "
                 ),
             ),
         ],
