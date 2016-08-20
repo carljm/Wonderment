@@ -7,11 +7,11 @@ from wonderment.tests import factories as f
 @pytest.mark.parametrize(
     'num_kids,cost',
     [
-        (1, 125),
-        (2, 125 + 90),
-        (3, 125 + 90 + 50),
-        (4, 125 + 90 + 50 + 20),
-        (5, 125 + 90 + 50 + 20 + 20),
+        (1, 135),
+        (2, 135 + 95),
+        (3, 135 + 95 + 55),
+        (4, 135 + 95 + 55 + 25),
+        (5, 135 + 95 + 55 + 25 + 25),
     ],
 )
 def test_get_cost(db, num_kids, cost):

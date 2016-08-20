@@ -405,8 +405,7 @@ class Participant(models.Model):
                 (
                     "I am not yet ready to make my payment. "
                     "I understand that class space "
-                    "may be limited and that Wonderment "
-                    "enrollment fees will increase after Aug 18, 2016. "
+                    "may be limited."
                 ),
             ),
         ],

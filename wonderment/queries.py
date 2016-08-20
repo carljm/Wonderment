@@ -1,8 +1,8 @@
 from . import models
 
 
-# $125 for first kid, $90 for second, $50 for third, $20 for all others
-COSTS = [125, 90, 50, 20]
+# $135 for first kid, $95 for second, $55 for third, $25 for all others
+COSTS = [135, 95, 55, 25]
 
 
 def get_cost(parent, session):
