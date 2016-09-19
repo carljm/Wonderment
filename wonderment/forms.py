@@ -109,14 +109,24 @@ ChildAttendanceFormset = inlineformset_factory(
 class ParticipantForm(forms.ModelForm):
     class Meta:
         model = models.Participant
-        fields = ['payment']
-        widgets = {'payment': forms.RadioSelect}
+        fields = [
+            'drop_off',
+            'help_how',
+            'ideas',
+            'payment_amount',
+            'absences',
+            'part_time',
+        ]
+        widgets = {
+            # 'payment': forms.RadioSelect,
+            'help_how': forms.CheckboxSelectMultiple,
+        }
 
     def __init__(self, *a, **kw):
         super(ParticipantForm, self).__init__(*a, **kw)
-        formfield = self.fields['payment']
-        modelfield = models.Participant._meta.get_field_by_name('payment')[0]
-        formfield.choices = modelfield.get_choices(include_blank=False)
+        # formfield = self.fields['payment']
+        # modelfield = models.Participant._meta.get_field_by_name('payment')[0]
+        # formfield.choices = modelfield.get_choices(include_blank=False)
 
 
 class ParentForm(forms.ModelForm):
@@ -132,12 +142,6 @@ class ParentForm(forms.ModelForm):
             'spouse_contact',
             'emergency',
             'emergency_contact',
-            'drop_off',
-            'pick_up_names',
-            'on_site',
-            'participate_by',
-            'could_teach',
-            'could_assist',
         ]
         widgets = {
             'participate_by': forms.CheckboxSelectMultiple,

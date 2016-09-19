@@ -26,6 +26,21 @@ PARTICIPATION_TYPES = [
 PARTICIPATION_TYPE_MAP = dict(PARTICIPATION_TYPES)
 
 
+EXTENSION_HELP = [
+    ('wed-class', "helping out during class as needed each Wed"),
+    ('thu-class', "helping out during class as needed each Thu"),
+    ('fri-class', "helping out during class as needed each Fri"),
+    ('wed-clean', "staying late and helping clean up each Wed"),
+    ('thu-clean', "staying late and helping clean up each Thu"),
+    ('fri-clean', "staying late and helping clean up each Fri"),
+    ('younger-sub', "substitute teaching for the Outdoor Immersion Program"),
+    ('older-sub', "substitute teaching for the Project-Based Teamwork Class"),
+]
+
+
+EXTENSION_HELP_MAP = dict(EXTENSION_HELP)
+
+
 class Parent(models.Model):
     name = models.CharField(max_length=200)
     phone = models.CharField(max_length=25)
@@ -306,6 +321,7 @@ class Class(models.Model):
         (rrule.TH.weekday, "Thu"),
         (rrule.FR.weekday, "Fri"),
         (rrule.SA.weekday, "Sat"),
+        (99, "Wed/Thu/Fri"),
     ]
 
     teacher = models.ForeignKey(Teacher, related_name='classes')
@@ -368,6 +384,52 @@ class Student(models.Model):
 class Participant(models.Model):
     parent = models.ForeignKey(Parent, related_name='participations')
     session = models.ForeignKey(Session, related_name='participants')
+    drop_off = models.BooleanField(
+        (
+            "I would like to drop off my children for Wonderment "
+            "Extension classes.  I understand that I may be asked "
+            "to remain on-site if behavioral issues, potty-training, "
+            "or separation anxiety are a problem. I understand that I "
+            "may lose the drop-off option if I fail to pick my child up "
+            "on time from class and will also be charged a late "
+            "pick-up fee. I understand that if my child is under four, "
+            "I should be prepared to remain on-site for their first "
+            "Wonderment Extension class to make sure there are no issues with "
+            "potty-training or separation anxiety."
+        ),
+        default=False,
+    )
+    help_how = fields.ArrayField(
+        verbose_name=(
+            "I am able to help out during Wonderment Extension by:"
+        ),
+        dbtype='text',
+        choices=EXTENSION_HELP,
+    )
+    ideas = models.TextField("Questions, concerns, ideas:", blank=True)
+    payment_amount = models.IntegerField(
+        (
+            "At this time, Wonderment Extension is running on a sliding "
+            "scale per family monthly donation. Please fill in the amount "
+            "you are able to pay monthly to Wonderment Extension ($20-200 "
+            "per month per family):"
+        ),
+    )
+    absences = models.TextField(
+        (
+            "Please list dates of any planned absences. Fall session begins "
+            "Thu Sept 22 (first week is Thu only), with regular classes 9am-12pm "
+            "W/Th/F Sept 28 - Dec 9, with a break Nov 23-25."
+        ),
+        blank=True,
+    )
+    part_time = models.TextField(
+        (
+            "If you will not be attending all three days of the week (W/Th/F), "
+            "please note which weekday(s) you will attend."
+        ),
+        blank=True,
+    )
     level = models.CharField(
         "I am signing my children up for:",
         max_length=20,

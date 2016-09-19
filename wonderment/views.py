@@ -11,9 +11,9 @@ from django.utils.text import slugify
 
 from . import commands, forms, queries, models, utils
 
-CURRENT_SESSION_NAME = "Fall 2016"
-CURRENT_SESSION_START = date(2016, 9, 20)
-CURRENT_SESSION_END = date(2016, 11, 15)
+CURRENT_SESSION_NAME = "Extension Fall 2016"
+CURRENT_SESSION_START = date(2016, 9, 22)
+CURRENT_SESSION_END = date(2016, 12, 9)
 
 
 def current_session():
@@ -90,9 +90,9 @@ def select_classes(request, parent_id, id_hash):
         if formset.is_valid():
             with transaction.atomic():
                 formset.save()
-            commands.send_registration_confirmation_email(parent, session)
+            # commands.send_registration_confirmation_email(parent, session)
             return redirect(
-                'payment',
+                'participant_thanks',  # 'payment',
                 parent_id=parent_id,
                 id_hash=id_hash,
             )
