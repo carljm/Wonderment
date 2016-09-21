@@ -84,7 +84,7 @@ DATABASES = {
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -98,7 +98,7 @@ INSTALLED_APPS = (
     'wonderment.spring2015survey',
     'wonderment.fall2015eval',
     'wonderment.spring2016eval',
-)
+]
 
 MIDDLEWARE_CLASSES = (
     'djangosecure.middleware.SecurityMiddleware',
@@ -169,3 +169,12 @@ DEFAULT_FROM_EMAIL = env(
     'WM_DEFAULT_FROM_EMAIL',
     default={'dev': "Wonderment Registration <noreply@localhost>"},
 )
+
+SENTRY_DSN = env('SENTRY_DSN', default=None)
+if SENTRY_DSN:
+    INSTALLED_APPS += ['raven.contrib.django.raven_compat']
+    RAVEN_CONFIG = {
+        'dsn': SENTRY_DSN,
+    }
+
+ADMINS = ['carl@oddbird.net']

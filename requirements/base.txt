@@ -14,3 +14,6 @@ djorm-pgarray==1.2
 
 dj-static==0.0.6
 static3==0.5.1
+
+raven==5.27.1
+contextlib2==0.5.4

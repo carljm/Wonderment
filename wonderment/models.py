@@ -411,8 +411,8 @@ class Participant(models.Model):
         (
             "At this time, Wonderment Extension is running on a sliding "
             "scale per family monthly donation. Please fill in the amount "
-            "you are able to pay monthly to Wonderment Extension ($20-200 "
-            "per month per family):"
+            "you are able to pay monthly to Wonderment Extension, $20-200 "
+            "per month per family (enter number only):"
         ),
     )
     absences = models.TextField(

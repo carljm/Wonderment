@@ -27,6 +27,10 @@ def current_session():
     return session
 
 
+def active_paid_session():
+    return models.Session.objects.get(name="Fall 2016")
+
+
 def participant_form(request, parent_id=None, id_hash=None):
     session = current_session()
     if parent_id is None:
@@ -48,7 +52,7 @@ def participant_form(request, parent_id=None, id_hash=None):
         parent_form = forms.ParentForm(request.POST, **form_kwargs)
         form_kwargs['instance'] = parent_form.instance
         children_formset = forms.ChildFormSet(request.POST, **form_kwargs)
-        if parent_form.is_valid() and children_formset.is_valid():
+        if parent_form.is_valid() and children_formset.is_valid() and participant_form.is_valid():
             with transaction.atomic():
                 parent = parent_form.save()
                 children_formset.save()
@@ -111,7 +115,7 @@ def select_classes(request, parent_id, id_hash):
 
 
 def payment(request, parent_id, id_hash):
-    session = current_session()
+    session = active_paid_session()
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
@@ -154,7 +158,7 @@ def payment_success(request):
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
-    session = current_session()
+    session = active_paid_session()
     participant = models.Participant.objects.get(
         parent=parent, session=session)
     if owed:
@@ -165,7 +169,7 @@ def payment_success(request):
 
 
 def participant_cancel(request, parent_id, id_hash):
-    session = current_session()
+    session = active_paid_session()
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
@@ -181,7 +185,7 @@ def participant_cancel(request, parent_id, id_hash):
 
 
 def participant_thanks(request, parent_id, id_hash):
-    session = current_session()
+    session = active_paid_session()
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()

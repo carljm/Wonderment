@@ -13,9 +13,8 @@ class TestParticipantForm(object):
         form['name'] = "someone"
         form['email'] = 'someone@example.com'
         form['phone'] = '321-6543-9876'
-        form['participate_by'] = ['teaching']
         form['children-0-name'] = "Kid"
-        form['payment'] = 'ready'
+        form['payment_amount'] = 100
         form.submit().follow()
 
         participant = models.Participant.objects.get()
@@ -25,9 +24,9 @@ class TestParticipantForm(object):
         assert parent.name == "someone"
         assert parent.email == 'someone@example.com'
         assert parent.phone == '321-6543-9876'
-        assert parent.participate_by == ['teaching']
         assert child.name == "Kid"
         assert participant.session.name == views.CURRENT_SESSION_NAME
+        assert participant.payment_amount == 100
 
     def test_edit(self, app, monkeypatch):
         monkeypatch.setattr('wonderment.forms.ChildFormSet.extra', 1)
@@ -45,11 +44,9 @@ class TestParticipantForm(object):
 
         form = app.get(parent.participant_url).forms['participant-form']
         form['name'] = "someone"
-        form['participate_by'] = ['assisting']
         form['children-0-name'] = "Kid"
         form['children-1-DELETE'] = True
         form['children-2-name'] = "Hey"
-        form['payment'] = 'ready'
         form.submit().follow()
 
         participant = models.Participant.objects.get()
