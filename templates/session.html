@@ -31,6 +31,8 @@
   <a class="list-group-item" href="{% url 'fall2015eval_results' %}">Evaluation Summary</a>
   {% elif session.name == "Winter/Spring 2016" %}
   <a class="list-group-item" href="{% url 'spring2016eval_results' %}">Evaluation Summary</a>
+  {% elif session.name == "Fall 2016" %}
+  <a class="list-group-item" href="{% url 'fall2016eval_results' %}">Evaluation Summary</a>
   {% endif %}
 </div>
 {% endblock %}

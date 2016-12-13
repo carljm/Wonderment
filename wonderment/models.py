@@ -181,6 +181,13 @@ class Parent(models.Model):
         )
 
     @cached_property
+    def fall2016eval_url(self):
+        return reverse(
+            'fall2016eval',
+            kwargs={'parent_id': self.id, 'id_hash': utils.idhash(self.id)},
+        )
+
+    @cached_property
     def participate_by_display(self):
         return [PARTICIPATION_TYPE_MAP[c] for c in self.participate_by]
 

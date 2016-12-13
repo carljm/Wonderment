@@ -145,14 +145,15 @@ registration_urls = [
 
 
 urlpatterns = [
-    # url(r'^$', views.registration_closed, name='registration_closed'),
-    url(r'', include(registration_urls)),
+    url(r'^$', views.registration_closed, name='registration_closed'),
+    url(r'^register/', include(registration_urls)),
     url(r'^browse/$', views.home, name='home'),
     url(r'^session/(?P<session_id>\d+)/', include(session_urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^spring2015survey/', include('wonderment.spring2015survey.urls')),
     url(r'^fall2015eval/', include('wonderment.fall2015eval.urls')),
     url(r'^spring2016eval/', include('wonderment.spring2016eval.urls')),
+    url(r'^fall2016eval/', include('wonderment.fall2016eval.urls')),
     url(r'^teachers/$', views.teachers, name='teachers'),
     url(
         r'^teachers/(?P<teacher_id>\d+)/$',
