@@ -1,81 +1,30 @@
-"""
-Django settings for wonderment project.
+import os
 
-For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
+import fern
 
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
-"""
+env = fern.Env('WM_MODE')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-
-# set the mode for this instance
-valid_modes = {'dev', 'prod'}
-MODE = str(os.environ.get('WM_MODE', 'dev'))
-if MODE not in valid_modes:
-    raise ValueError("WM_MODE must be one of %s" % valid_modes)
-
-# utility for getting settings from the environment
-NOT_PROVIDED = object()
-
-
-def env(key, coerce=str, default=NOT_PROVIDED):
-    try:
-        default = default.get(MODE, NOT_PROVIDED)
-    except AttributeError:
-        pass
-
-    if default is NOT_PROVIDED:
-        val = os.environ.get(key)
-        if val is None:
-            raise ValueError("Environment variable %s is required." % key)
-    else:
-        val = os.environ.get(key, default)
-    return coerce(val) if val is not None else val
-
-
-from urllib.parse import urlparse
-
-
-# utility for parsing a database url
-def parse_database_url(url):
-    url_parts = urlparse(url)
-    return {
-        'NAME': url_parts.path[1:],
-        'USER': url_parts.username,
-        'PASSWORD': url_parts.password,
-        'HOST': url_parts.hostname,
-        'PORT': url_parts.port,
-        'ENGINE': {
-            'postgres': 'django.db.backends.postgresql_psycopg2',
-            'mysql': 'django.db.backends.mysql',
-            'sqlite': 'django.db.backends.sqlite3',
-        }[url_parts.scheme],
-    }
 
 # Deployment config
 
-SECRET_KEY = env('WM_SECRET_KEY', default={'dev': 'development-secret-key'})
-DEBUG = env('WM_DEBUG', bool, default={'dev': True, 'prod': False})
+SECRET_KEY = env(
+    'WM_SECRET_KEY', mode_defaults={'dev': 'development-secret-key'})
+DEBUG = env.boolean('WM_DEBUG', mode_defaults={'dev': 't', 'prod': 'f'})
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = env(
-    'WM_ALLOWED_HOSTS',
-    lambda s: [b.strip() for b in s.split(',')],
-    default={'dev': '*'},
-)
+ALLOWED_HOSTS = env.comma_list(
+    'WM_ALLOWED_HOSTS', mode_defaults={'dev': '*'})
 
-BASE_URL = env('WM_BASE_URL', default={'dev': 'http://wonderment.hexxie.com:8000'})
+BASE_URL = env(
+    'WM_BASE_URL', mode_defaults={'dev': 'http://wonderment.hexxie.com:8000'})
 
 DATABASES = {
     'default': env(
         'DATABASE_URL',
-        parse_database_url,
-        default={
+        coerce=fern.parse_dj_database_url,
+        mode_defaults={
             'dev': 'postgres:///wonderment',
         },
     )
@@ -144,7 +93,7 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 
-USE_SSL = env('WM_USE_SSL', bool, default={'dev': False, 'prod': True})
+USE_SSL = env.boolean('WM_USE_SSL', mode_defaults={'dev': 'f', 'prod': 't'})
 
 SESSION_COOKIE_SECURE = USE_SSL
 SECURE_SSL_REDIRECT = USE_SSL
@@ -156,9 +105,9 @@ if USE_SSL:
 EMAIL_BACKEND = {
     'prod': 'django.core.mail.backends.smtp.EmailBackend',
     'dev': 'django.core.mail.backends.console.EmailBackend',
-}[MODE]
+}[env.mode]
 
-if MODE == 'prod':
+if env.mode == 'prod':
     EMAIL_HOST = env('MAILGUN_SMTP_SERVER')
     EMAIL_PORT = env('MAILGUN_SMTP_PORT')
     EMAIL_USE_TLS = True
@@ -167,7 +116,7 @@ if MODE == 'prod':
 
 DEFAULT_FROM_EMAIL = env(
     'WM_DEFAULT_FROM_EMAIL',
-    default={'dev': "Wonderment Registration <noreply@localhost>"},
+    mode_defaults={'dev': "Wonderment Registration <noreply@localhost>"},
 )
 
 SENTRY_DSN = env('SENTRY_DSN', default=None)
