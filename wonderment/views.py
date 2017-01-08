@@ -3,13 +3,29 @@ from datetime import date
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Prefetch
 from django.db import transaction
-from django.http import Http404, HttpResponse
-from django.shortcuts import get_object_or_404, render, redirect
+from django.db.models import (
+    Count,
+    Prefetch,
+)
+from django.http import (
+    Http404,
+    HttpResponse,
+)
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
 from django.utils.text import slugify
 
-from . import commands, forms, queries, models, utils
+from . import (
+    commands,
+    forms,
+    models,
+    queries,
+    utils,
+)
 
 CURRENT_SESSION_NAME = "Extension Fall 2016"
 CURRENT_SESSION_START = date(2016, 9, 22)

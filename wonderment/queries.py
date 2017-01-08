@@ -1,6 +1,5 @@
 from . import models
 
-
 # $125 for first kid, $90 for second, $50 for third, $20 for all others
 COSTS = [125, 90, 50, 20]
 

@@ -1,6 +1,9 @@
 import floppyforms.__future__ as forms
 
-from . import models, widgets
+from . import (
+    models,
+    widgets,
+)
 
 
 class ResponseForm(forms.ModelForm):

@@ -1,6 +1,9 @@
 from django.core.urlresolvers import reverse
 
-from wonderment import models, views
+from wonderment import (
+    models,
+    views,
+)
 from wonderment.tests import factories as f
 
 

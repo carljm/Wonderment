@@ -1,13 +1,16 @@
 from datetime import date
+from functools import lru_cache
 
-from dateutil.relativedelta import relativedelta
 from dateutil import rrule
+from dateutil.relativedelta import relativedelta
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.functional import cached_property
-from functools import lru_cache
 
-from . import fields, utils
+from . import (
+    fields,
+    utils,
+)
 
 
 def today():

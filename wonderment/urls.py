@@ -1,8 +1,10 @@
-from django.conf.urls import include, url
+from django.conf.urls import (
+    include,
+    url,
+)
 from django.contrib import admin
 
 from . import views
-
 
 session_urls = [
     url(r'^$', views.session, name='session'),

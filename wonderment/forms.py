@@ -1,14 +1,20 @@
-from datetime import datetime
 import json
+from datetime import datetime
 
+import floppyforms.__future__ as forms
 from django.conf import settings
 from django.core.mail import send_mail
-from django.db.models import Count, Q
+from django.db.models import (
+    Count,
+    Q,
+)
 from django.forms.models import (
-    inlineformset_factory, BaseInlineFormSet, ModelChoiceIterator)
+    BaseInlineFormSet,
+    ModelChoiceIterator,
+    inlineformset_factory,
+)
 from django.template.loader import render_to_string
 from django.utils import timezone
-import floppyforms.__future__ as forms
 
 from . import models
 

@@ -1,10 +1,17 @@
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
 
-from ..models import Parent
+from . import (
+    forms,
+    models,
+)
 from .. import utils
-from . import forms, models
+from ..models import Parent
 from .viewmodels import ResponseSummary
 
 

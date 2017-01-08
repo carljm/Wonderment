@@ -1,8 +1,10 @@
 from collections import Counter
-from django.utils.functional import cached_property
 from itertools import chain
 
+from django.utils.functional import cached_property
+
 from wonderment.fields import ArrayField
+
 from . import models
 
 

@@ -2,8 +2,10 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Prefetch
 
-from .models import Student, Chunk
-
+from .models import (
+    Chunk,
+    Student,
+)
 
 DEFAULT_REG_BODY_INTRO = """
 We've received your Wonderment registration!

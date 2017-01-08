@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
-import wonderment.fields
+from django.db import (
+    migrations,
+    models,
+)
+
 import wonderment.fall2016eval.models
+import wonderment.fields
 
 
 class Migration(migrations.Migration):

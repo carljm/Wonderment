@@ -4,7 +4,6 @@ from django.template import Library
 
 from wonderment.models import today
 
-
 register = Library()
 
 
