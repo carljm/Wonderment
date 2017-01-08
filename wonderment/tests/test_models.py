@@ -1,5 +1,4 @@
 from datetime import date
-from unittest import mock
 
 from dateutil.relativedelta import relativedelta
 

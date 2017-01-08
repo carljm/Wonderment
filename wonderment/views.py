@@ -68,7 +68,11 @@ def participant_form(request, parent_id=None, id_hash=None):
         parent_form = forms.ParentForm(request.POST, **form_kwargs)
         form_kwargs['instance'] = parent_form.instance
         children_formset = forms.ChildFormSet(request.POST, **form_kwargs)
-        if parent_form.is_valid() and children_formset.is_valid() and participant_form.is_valid():
+        if (
+                parent_form.is_valid() and
+                children_formset.is_valid() and
+                participant_form.is_valid()
+        ):
             with transaction.atomic():
                 parent = parent_form.save()
                 children_formset.save()
