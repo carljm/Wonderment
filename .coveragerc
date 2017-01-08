@@ -5,6 +5,14 @@ omit =
   wonderment/settings.py
   wonderment/wsgi.py
   wonderment/tests/*
+  wonderment/spring2015survey/*
+  wonderment/fall2015eval/*
+  wonderment/spring2016eval/*
+  wonderment/fall2016eval/*
+
+[report]
+show_missing = True
+skip_covered = True
 
 [html]
 directory = pycov

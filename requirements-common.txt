@@ -1,20 +1,20 @@
-Django==1.8.14
-pytz==2016.6.1
+Django==1.8.17
+pytz==2016.10
 
 fern==0.2
 
 psycopg2==2.6.2
 
-python-dateutil==2.4.2
+python-dateutil==2.6.0
 six==1.10.0
 
-django-bootstrap3==5.0.3
-django-floppyforms==1.6.0
+django-bootstrap3==8.0.0
+django-floppyforms==1.7.0
 
 djorm-pgarray==1.2
 
 dj-static==0.0.6
-static3==0.5.1
+static3==0.7.0
 
-raven==5.27.1
+raven==5.32.0
 contextlib2==0.5.4
