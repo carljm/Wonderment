@@ -1,8 +1,6 @@
 Wonderment TODO
 ===============
 
-- remove fall 2015 eval url from parents CSV
-
 - per-session registration questions
 
 - make signup automatically grant assistant discount to anyone who volunteered
