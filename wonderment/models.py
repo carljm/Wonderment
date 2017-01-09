@@ -215,6 +215,7 @@ class Session(models.Model):
     )
     registrar_email_address = models.EmailField(
         default='registrar@wondermentblackhills.com')
+    online_payment = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name

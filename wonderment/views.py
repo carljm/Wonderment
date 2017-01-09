@@ -68,7 +68,7 @@ def participant_form(request, session_id, parent_id=None, id_hash=None):
             with transaction.atomic():
                 parent = parent_form.save()
                 children_formset.save()
-                participant = participant_form.save()
+                participant = participant_form.save(parent)
             return redirect(
                 'select_classes',
                 session_id=session.id,
@@ -105,7 +105,7 @@ def select_classes(request, session_id, parent_id, id_hash):
             with transaction.atomic():
                 formset.save()
             return redirect(
-                'payment',
+                'payment' if session.online_payment else 'participant_thanks',
                 session_id=session_id,
                 parent_id=parent_id,
                 id_hash=id_hash,
@@ -207,22 +207,28 @@ def participant_thanks(request, session_id, parent_id, id_hash):
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
-    participant = models.Participant.objects.get(
-        parent=parent, session=session)
-    amount = queries.get_cost(parent, session)
-    owed = max(0, amount - participant.paid)
-    url = queries.get_idhash_url('payment', parent, session)
-    return render(
-        request,
-        'participant_thanks.html',
-        {
-            'session': session,
-            'parent': parent,
+    ctx = {
+        'session': session,
+        'parent': parent,
+    },
+
+    if session.online_payment:
+        participant = models.Participant.objects.get(
+            parent=parent, session=session)
+        amount = queries.get_cost(parent, session)
+        owed = max(0, amount - participant.paid)
+        url = queries.get_idhash_url('payment', parent, session)
+        ctx.update({
             'paid': participant.paid,
             'owed': owed,
             'cost': amount,
             'payment_url': settings.BASE_URL + url,
-        },
+        })
+
+    return render(
+        request,
+        'participant_thanks.html',
+        ctx,
     )
 
 

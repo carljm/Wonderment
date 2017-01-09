@@ -124,22 +124,23 @@ class ParticipantForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.session = kwargs.pop('session')
-        self.parent = kwargs.pop('parent')
+        parent = kwargs.pop('parent')
         super(ParticipantForm, self).__init__(*args, **kwargs)
         for name, question in self.get_session_question_fields():
             self.fields[name] = question.formfield()
-            answer = question.answers.filter(parent=self.parent).first()
-            if answer:
-                response = answer.response
-                if question.question_type == 'checkbox':
-                    response = True if response == 'True' else False
-                self.initial[name] = response
+            if parent:
+                answer = question.answers.filter(parent=parent).first()
+                if answer:
+                    response = answer.response
+                    if question.question_type == 'checkbox':
+                        response = True if response == 'True' else False
+                    self.initial[name] = response
 
-    def save(self):
+    def save(self, parent):
         participant = super(ParticipantForm, self).save(commit=False)
-        participant.parent = self.parent
+        participant.parent = parent
         participant.session = self.session
-        self.save_session_question_answers()
+        self.save_session_question_answers(parent)
         participant.save()
         return participant
 
@@ -150,12 +151,12 @@ class ParticipantForm(forms.ModelForm):
             for q in questions
         ]
 
-    def save_session_question_answers(self):
+    def save_session_question_answers(self, parent):
         for name, question in self.get_session_question_fields():
             response = self.cleaned_data.get(name)
             models.SessionQuestionAnswer.objects.update_or_create(
                 question=question,
-                parent=self.parent,
+                parent=parent,
                 defaults={'response': response},
             )
 

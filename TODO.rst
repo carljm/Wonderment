@@ -1,10 +1,6 @@
 Wonderment TODO
 ===============
 
-- per-session registration questions (text, boolean, ideally multiple choice too)
-
-- per-session registration costs
-
 - make signup automatically grant assistant discount to anyone who volunteered
   as an assistant
 
@@ -38,6 +34,10 @@ Wonderment TODO
   any other classes taking attendance that day
 
 - being able to assign jobs via browse/
+
+- support multiple-choice per-session registration questions
+
+- handle monthly instead of all-at-once payment
 
 - let them create/set the per-session eval questions
 
