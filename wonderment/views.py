@@ -210,12 +210,21 @@ def participant_thanks(request, session_id, parent_id, id_hash):
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
+    participant = models.Participant.objects.get(
+        parent=parent, session=session)
+    amount = queries.get_cost(parent, session)
+    owed = max(0, amount - participant.paid)
+    url = queries.get_idhash_url('payment', parent, session)
     return render(
         request,
         'participant_thanks.html',
         {
             'session': session,
             'parent': parent,
+            'paid': participant.paid,
+            'owed': owed,
+            'cost': amount,
+            'payment_url': settings.BASE_URL + url,
         },
     )
 
