@@ -183,6 +183,37 @@ class Session(models.Model):
     registration_closes = models.DateTimeField()
     start_date = models.DateField()
     end_date = models.DateField()
+    confirm_email = models.TextField(
+        help_text=(
+            "Full text of confirmation email sent after payment is completed. "
+            "Use {{ parent }} for the parent's name, "
+            "{{ session }} for the name of the session, {{ payment_url }} "
+            "for the payment URL to visit if more payment is needed, "
+            "{{ paid }} for the amount they have already paid, "
+            "{{ total_cost }} for the total amount they owe, {{ still_owed }} "
+            "for any remaining amount owed, and "
+            "{{ children_and_classes }} for a full list of children/classes."
+        ),
+        default=(
+            "{{ parent }},\n\n"
+            "We've received your registration "
+            "for Wonderment {{ session }}!\n\n"
+            "{% if paid %}Thanks for your payment of ${{ paid }}.\n{% endif %}"
+            "{% if still_owed %}\n"
+            "Your registration and class selections "
+            "will not be confirmed until you pay the remaining amount "
+            "of ${{ still_owed }}. Please visit {{ payment_url }} to complete "
+            "your registration as soon as possible.\n"
+            "{% else %}\n"
+            "Your registration is fully paid and confirmed, thank you!\n"
+            "Your children are signed up for the following classes:\n\n"
+            "{{ children_and_classes }}\n\n"
+            "{% endif %}\n"
+            "-- Wonderment Team"
+        ),
+    )
+    registrar_email_address = models.EmailField(
+        default='registrar@wondermentblackhills.com')
 
     def __str__(self):
         return self.name

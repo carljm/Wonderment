@@ -1,60 +1,37 @@
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Prefetch
+from django.template import Template
 
-from .models import (
-    Chunk,
-    Student,
+from .models import Student
+from .queries import (
+    get_cost,
+    get_idhash_url,
 )
-from .queries import get_idhash_url
-
-DEFAULT_REG_BODY_INTRO = """
-We've received your Wonderment registration!
-
-Your children are registered for the following classes:
-"""
-
-DEFAULT_REG_BODY_FINAL = """
-
-If you haven't already confirmed these class selections by submitting your
-payment, you can visit %(payment_url)s at any time to do so.
-
-"""
-
-PAY_BODY = """
-We've received your Wonderment registration payment of $%(just_paid)s!
-
-Thanks for confirming your registration for %(session)s.
-
-"""
-
-REGISTRAR_EMAIL = 'registrar@wondermentblackhills.com'
 
 
-def send_registration_confirmation_email(parent, session):
-    subject = "You are registered for Wonderment!"
-    body_intro = (
-        Chunk.get('registration-confirmation-email') or DEFAULT_REG_BODY_INTRO)
-    body_final = (
-        Chunk.get('registration.confirmation-email-end')
-        or DEFAULT_REG_BODY_FINAL
-    ) % {
+def send_payment_confirmation_email(participant):
+    parent = participant.parent
+    session = participant.session
+    total_cost = get_cost(parent, session)
+    subject = "You registered for Wonderment!"
+    ctx = {
         'payment_url': settings.BASE_URL + get_idhash_url(
-            'payment', parent, session)
+            'payment', parent, session),
+        'parent': parent,
+        'session': session,
+        'just_paid': participant.paid,
+        'total_cost': total_cost,
+        'still_owed': max(0, total_cost - participant.paid),
+        'children_and_classes': get_children_classes(parent, session),
     }
-
-    body = "%s,\n\n%s\n\n%s\n\n%s" % (
-        parent.name,
-        body_intro,
-        get_children_classes(parent, session),
-        body_final,
-    )
+    tpl = Template(session.confirm_email)
 
     send_mail(
         subject,
-        body,
+        tpl.render(ctx),
         settings.DEFAULT_FROM_EMAIL,
-        [parent.email, REGISTRAR_EMAIL],
+        [parent.email, session.registrar_email],
     )
 
 
@@ -94,21 +71,3 @@ def get_classes(studies):
             line += " [WAITLIST]"
         ret.append(line)
     return ret
-
-
-def send_payment_confirmation_email(participant, just_paid):
-    subject = "Your Wonderment registration is paid and confirmed!"
-
-    body = "%s,\n\n%s\n\n%s" % (
-        participant.parent.name,
-        PAY_BODY % {
-            'just_paid': just_paid, 'session': participant.session},
-        Chunk.get('payment-confirmation-email-extra')
-    )
-
-    send_mail(
-        subject,
-        body,
-        settings.DEFAULT_FROM_EMAIL,
-        [participant.parent.email],
-    )

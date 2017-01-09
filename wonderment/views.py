@@ -106,7 +106,6 @@ def select_classes(request, session_id, parent_id, id_hash):
         if formset.is_valid():
             with transaction.atomic():
                 formset.save()
-            commands.send_registration_confirmation_email(parent, session)
             return redirect(
                 'payment',
                 session_id=session_id,
@@ -185,7 +184,7 @@ def payment_success(request):
     if owed:
         participant.paid += owed
         participant.save()
-        commands.send_payment_confirmation_email(participant, owed)
+        commands.send_payment_confirmation_email(participant)
     return redirect(
         'participant_thanks',
         session_id=session_id,
