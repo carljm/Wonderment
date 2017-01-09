@@ -18,12 +18,13 @@ def get_cost(parent, session):
     return sum(COSTS[:num_students] + extra)
 
 
-def get_idhash_url(urlname, parent, session=None):
-    kwargs = {
+def get_idhash_url(urlname, parent, session=None, **kwargs):
+    reverse_kwargs = {
         'parent_id': parent.id,
         'id_hash': utils.idhash(parent.id),
     }
     if session is not None:
-        kwargs['session_id'] = session.id
+        reverse_kwargs['session_id'] = session.id
+    reverse_kwargs.update(kwargs)
 
-    return reverse(urlname, kwargs=kwargs)
+    return reverse(urlname, kwargs=reverse_kwargs)

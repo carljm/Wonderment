@@ -192,6 +192,7 @@ class ParticipantUrlRequestForm(forms.Form):
                 'edit_participant_form', parent, session)
             context = {
                 'parent': parent,
+                'session': session,
                 'edit_participant_url': settings.BASE_URL + url,
             }
             subject = "Wonderment registration link for %s" % parent.name

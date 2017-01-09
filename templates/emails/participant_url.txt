@@ -1,9 +1,9 @@
 Hi {{ parent.name }},
 
 Someone (hopefully you) requested that we send you a link to update your
-Wonderment registration information and register for the upcoming session. (If
-you didn't request this email, please ignore it and we apologize for the
-inconvenience). Here's your link:
+Wonderment registration information and register for the upcoming {{ session }}
+session. (If you didn't request this email, please ignore it and we apologize
+for the inconvenience). Here's your link:
 
 {{ edit_participant_url }}
 

@@ -32,6 +32,16 @@ idhash_urls = [
         views.participant_cancel,
         name='participant_cancel',
     ),
+    url(
+        r'^payment-cancel/$',
+        views.payment_cancel,
+        name='payment_cancel',
+    ),
+    url(
+        r'^payment-success/(?P<paid>\d+)/$',
+        views.payment_success,
+        name='payment_success',
+    ),
 ]
 
 
@@ -54,16 +64,6 @@ registration_urls = [
         r'^request/done/$',
         views.participant_url_request_thanks,
         name='participant_url_request_thanks',
-    ),
-    url(
-        r'^payment-cancel/$',
-        views.payment_cancel,
-        name='payment_cancel',
-    ),
-    url(
-        r'^payment-success/$',
-        views.payment_success,
-        name='payment_success',
     ),
 ]
 

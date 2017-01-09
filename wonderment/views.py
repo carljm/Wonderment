@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import (
     Count,
+    F,
     Prefetch,
 )
 from django.http import (
@@ -135,11 +136,11 @@ def payment(request, session_id, parent_id, id_hash):
         parent=parent, session=session)
     amount = queries.get_cost(parent, session)
     owed = max(0, amount - participant.paid)
-    request.session['session_id'] = session_id
-    request.session['parent_id'] = parent_id
-    request.session['id_hash'] = id_hash
-    request.session['owed'] = owed
     payment_extra_info = models.Chunk.get('payment-extra-info')
+    pay_success_url = queries.get_idhash_url(
+        'payment_success', parent, session, paid=owed)
+    pay_cancel_url = queries.get_idhash_url(
+        'payment_cancel', parent, session)
     return render(
         request,
         'paypal.html',
@@ -150,15 +151,13 @@ def payment(request, session_id, parent_id, id_hash):
             'owed': owed,
             'paid': participant.paid,
             'payment_extra_info': payment_extra_info,
+            'payment_success_url': settings.BASE_URL + pay_success_url,
+            'payment_cancel_url': settings.BASE_URL + pay_cancel_url,
         },
     )
 
 
-def payment_cancel(request):
-    session_id = request.session.pop('session_id', 0)
-    parent_id = request.session.pop('parent_id', 0)
-    id_hash = request.session.pop('id_hash', 0)
-    request.session.pop('owed', 0)
+def payment_cancel(request, session_id, parent_id, id_hash):
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
@@ -170,21 +169,17 @@ def payment_cancel(request):
     )
 
 
-def payment_success(request):
-    session_id = request.session.pop('session_id', 0)
-    parent_id = request.session.pop('parent_id', 0)
-    id_hash = request.session.pop('id_hash', 0)
-    owed = request.session.pop('owed', 0)
+def payment_success(request, session_id, parent_id, id_hash, paid):
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
     session = get_object_or_404(models.Session, pk=session_id)
+    models.Participant.objects.filter(
+        parent=parent, session=session
+    ).update(paid=F('paid') + int(paid))
     participant = models.Participant.objects.get(
         parent=parent, session=session)
-    if owed:
-        participant.paid += owed
-        participant.save()
-        commands.send_payment_confirmation_email(participant)
+    commands.send_payment_confirmation_email(participant)
     return redirect(
         'participant_thanks',
         session_id=session_id,

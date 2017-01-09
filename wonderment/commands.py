@@ -1,7 +1,10 @@
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Prefetch
-from django.template import Template
+from django.template import (
+    Context,
+    Template,
+)
 
 from .models import Student
 from .queries import (
@@ -29,9 +32,9 @@ def send_payment_confirmation_email(participant):
 
     send_mail(
         subject,
-        tpl.render(ctx),
+        tpl.render(Context(ctx)),
         settings.DEFAULT_FROM_EMAIL,
-        [parent.email, session.registrar_email],
+        [parent.email, session.registrar_email_address],
     )
 
 
