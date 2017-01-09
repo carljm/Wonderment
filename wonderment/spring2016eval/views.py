@@ -15,6 +15,14 @@ from ..models import Parent
 from .viewmodels import ResponseSummary
 
 
+def redirect_to_fall_2016(request, parent_id, id_hash):
+    return redirect(
+        'fall2016eval',
+        parent_id=parent_id,
+        id_hash=id_hash,
+    )
+
+
 def survey(request, parent_id, id_hash):
     parent = get_object_or_404(Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
