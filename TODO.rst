@@ -1,7 +1,9 @@
 Wonderment TODO
 ===============
 
-- per-session registration questions
+- per-session registration questions (text, boolean, ideally multiple choice too)
+
+- per-session registration costs
 
 - make signup automatically grant assistant discount to anyone who volunteered
   as an assistant
@@ -13,8 +15,6 @@ Wonderment TODO
 - auto-generate teacher and class eval rating questions
 
 - per-session eval questions
-
-- debug payment not being recorded
 
 - printable per-class sign-in/out sheet, with sign/in/out columns per class
   day, approved pickup names on the sheet

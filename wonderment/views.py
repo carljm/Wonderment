@@ -54,7 +54,7 @@ def participant_form(request, session_id, parent_id=None, id_hash=None):
         except models.Participant.DoesNotExist:
             participant = None
     form_kwargs = {'instance': parent}
-    part_kw = {'instance': participant}
+    part_kw = {'instance': participant, 'session': session, 'parent': parent}
     if request.method == 'POST':
         participant_form = forms.ParticipantForm(request.POST, **part_kw)
         parent_form = forms.ParentForm(request.POST, **form_kwargs)
@@ -68,10 +68,7 @@ def participant_form(request, session_id, parent_id=None, id_hash=None):
             with transaction.atomic():
                 parent = parent_form.save()
                 children_formset.save()
-                participant = participant_form.save(commit=False)
-                participant.parent = parent
-                participant.session = session
-                participant.save()
+                participant = participant_form.save()
             return redirect(
                 'select_classes',
                 session_id=session.id,

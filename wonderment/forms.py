@@ -122,6 +122,43 @@ class ParticipantForm(forms.ModelForm):
             'volunteer',
         ]
 
+    def __init__(self, *args, **kwargs):
+        self.session = kwargs.pop('session')
+        self.parent = kwargs.pop('parent')
+        super(ParticipantForm, self).__init__(*args, **kwargs)
+        for name, question in self.get_session_question_fields():
+            self.fields[name] = question.formfield()
+            answer = question.answers.filter(parent=self.parent).first()
+            if answer:
+                response = answer.response
+                if question.question_type == 'checkbox':
+                    response = True if response == 'True' else False
+                self.initial[name] = response
+
+    def save(self):
+        participant = super(ParticipantForm, self).save(commit=False)
+        participant.parent = self.parent
+        participant.session = self.session
+        self.save_session_question_answers()
+        participant.save()
+        return participant
+
+    def get_session_question_fields(self):
+        questions = models.SessionQuestion.objects.filter(session=self.session)
+        return [
+            ('session-question-%s' % q.id, q)
+            for q in questions
+        ]
+
+    def save_session_question_answers(self):
+        for name, question in self.get_session_question_fields():
+            response = self.cleaned_data.get(name)
+            models.SessionQuestionAnswer.objects.update_or_create(
+                question=question,
+                parent=self.parent,
+                defaults={'response': response},
+            )
+
 
 class ParentForm(forms.ModelForm):
     class Meta:

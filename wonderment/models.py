@@ -1,6 +1,7 @@
 from datetime import date
 from functools import lru_cache
 
+import floppyforms.__future__ as forms
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 from django.db import models
@@ -231,6 +232,48 @@ class Session(models.Model):
             'parents': parents,
             'students': students,
         }
+
+
+class SessionQuestion(models.Model):
+    session = models.ForeignKey(Session, related_name='questions')
+    question_type = models.CharField(
+        max_length=20,
+        choices=[
+            ('checkbox', 'checkbox'),
+            ('line', 'line'),
+            ('paragraph', 'paragraph'),
+        ],
+    )
+    text = models.TextField()
+    required = models.BooleanField(default=False)
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['session', 'order']
+
+    def __str__(self):
+        return "(%s) %s" % (self.session, self.text)
+
+    def formfield(self):
+        field_class, widget_class = {
+            'checkbox': (forms.BooleanField, forms.CheckboxInput),
+            'line': (forms.CharField, forms.TextInput),
+            'paragraph': (forms.CharField, forms.Textarea),
+        }[self.question_type]
+        return field_class(
+            label=self.text, widget=widget_class(), required=self.required)
+
+
+class SessionQuestionAnswer(models.Model):
+    question = models.ForeignKey(SessionQuestion, related_name='answers')
+    parent = models.ForeignKey(Parent)
+    response = models.TextField()
+
+    class Meta:
+        unique_together = [('question', 'parent')]
+
+    def __str__(self):
+        return self.response
 
 
 class Class(models.Model):

@@ -38,6 +38,16 @@ class StudentInline(admin.TabularInline):
     extra = 0
 
 
+class SessionQuestionInline(admin.TabularInline):
+    model = models.SessionQuestion
+    extra = 0
+
+
+class SessionQuestionAnswerInline(admin.TabularInline):
+    model = models.SessionQuestionAnswer
+    extra = 0
+
+
 class ParentAdmin(admin.ModelAdmin):
     list_display = [
         '__str__',
@@ -45,7 +55,7 @@ class ParentAdmin(admin.ModelAdmin):
         'email',
         'fall2016eval_link',
     ]
-    inlines = [ParticipantInline, ChildInline]
+    inlines = [ChildInline, ParticipantInline, SessionQuestionAnswerInline]
 
     def fall2016eval_link(self, obj):
         url = settings.BASE_URL + queries.get_idhash_url('fall2016eval', obj)
@@ -55,9 +65,12 @@ class ParentAdmin(admin.ModelAdmin):
 class TeacherAdmin(admin.ModelAdmin):
     inlines = [ClassInline]
 
+class SessionQuestionAdmin(admin.ModelAdmin):
+    inlines = [SessionQuestionAnswerInline]
+
 
 class SessionAdmin(admin.ModelAdmin):
-    inlines = [ParticipantInline, ClassInline]
+    inlines = [ParticipantInline, ClassInline, SessionQuestionInline]
 
 
 class ClassAdmin(admin.ModelAdmin):
@@ -92,3 +105,4 @@ admin.site.register(models.Child, ChildAdmin)
 admin.site.register(models.Chunk)
 admin.site.register(models.ParentArchive)
 admin.site.register(models.ParticipantArchive)
+admin.site.register(models.SessionQuestion, SessionQuestionAdmin)
