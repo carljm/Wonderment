@@ -6,8 +6,70 @@ from django.contrib import admin
 
 from . import views
 
+idhash_urls = [
+    url(
+        r'^$',
+        views.participant_form,
+        name='edit_participant_form',
+    ),
+    url(
+        r'^classes/$',
+        views.select_classes,
+        name='select_classes',
+    ),
+    url(
+        r'^pay/$',
+        views.payment,
+        name='payment',
+    ),
+    url(
+        r'^done/$',
+        views.participant_thanks,
+        name='participant_thanks',
+    ),
+    url(
+        r'^cancel/$',
+        views.participant_cancel,
+        name='participant_cancel',
+    ),
+]
+
+
+registration_urls = [
+    url(
+        r'^$',
+        views.participant_form,
+        name='new_participant_form',
+    ),
+    url(
+        r'^(?P<parent_id>\d+)-(?P<id_hash>[a-z0-9]+)/',
+        include(idhash_urls),
+    ),
+    url(
+        r'^request/$',
+        views.participant_url_request,
+        name='participant_url_request',
+    ),
+    url(
+        r'^request/done/$',
+        views.participant_url_request_thanks,
+        name='participant_url_request_thanks',
+    ),
+    url(
+        r'^payment-cancel/$',
+        views.payment_cancel,
+        name='payment_cancel',
+    ),
+    url(
+        r'^payment-success/$',
+        views.payment_success,
+        name='payment_success',
+    ),
+]
+
 session_urls = [
-    url(r'^$', views.session, name='session'),
+    url(r'^register/', include(registration_urls)),
+    url(r'^browse/$', views.session, name='session'),
     url(r'^attendance/$', views.classdays, name='classdays'),
     url(
         r'^attendance/new/$',
@@ -79,72 +141,9 @@ session_urls = [
 ]
 
 
-idhash_urls = [
-    url(
-        r'^$',
-        views.participant_form,
-        name='edit_participant_form',
-    ),
-    url(
-        r'^classes/$',
-        views.select_classes,
-        name='select_classes',
-    ),
-    url(
-        r'^pay/$',
-        views.payment,
-        name='payment',
-    ),
-    url(
-        r'^done/$',
-        views.participant_thanks,
-        name='participant_thanks',
-    ),
-    url(
-        r'^cancel/$',
-        views.participant_cancel,
-        name='participant_cancel',
-    ),
-]
-
-
-registration_urls = [
-    url(
-        r'^$',
-        views.participant_form,
-        name='new_participant_form',
-    ),
-    url(
-        r'^(?P<parent_id>\d+)-(?P<id_hash>[a-z0-9]+)/',
-        include(idhash_urls),
-    ),
-    url(
-        r'^request/$',
-        views.participant_url_request,
-        name='participant_url_request',
-    ),
-    url(
-        r'^request/done/$',
-        views.participant_url_request_thanks,
-        name='participant_url_request_thanks',
-    ),
-    url(
-        r'^payment-cancel/$',
-        views.payment_cancel,
-        name='payment_cancel',
-    ),
-    url(
-        r'^payment-success/$',
-        views.payment_success,
-        name='payment_success',
-    ),
-]
-
-
 urlpatterns = [
-    url(r'^$', views.registration_closed, name='registration_closed'),
-    url(r'^register/', include(registration_urls)),
-    url(r'^browse/$', views.home, name='home'),
+    url(r'^$', views.home, name='home'),
+    url(r'^browse/$', views.browse_home, name='browse_home'),
     url(r'^session/(?P<session_id>\d+)/', include(session_urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^spring2015survey/', include('wonderment.spring2015survey.urls')),

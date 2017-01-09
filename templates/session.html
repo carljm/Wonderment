@@ -9,7 +9,7 @@
 
 <ol class="breadcrumb">
   {% block breadcrumb %}
-  <li><a href="{% url 'home' %}">All sessions</a></li>
+  <li><a href="{% url 'browse_home' %}">All sessions</a></li>
   <li><a href="{% url 'session' session_id=session.id %}">{{ session }}</a></li>
   {% endblock %}
 </ol>

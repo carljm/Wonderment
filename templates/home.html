@@ -2,12 +2,24 @@
 
 {% block body %}
 <div class="page-header">
-  <h1>Sessions</h1>
+  <h1>Wonderment Registration</h1>
 </div>
-<div class="list-group">
-  {% for session in sessions %}
-  <a class="list-group-item" href="{% url 'session' session_id=session.id %}">{{ session }}</a>
-  {% endfor %}
-  <a class="list-group-item" href="{% url 'teachers' %}">All Teachers</a>
+
+{% if sessions %}
+<div class="panel panel-default">
+  <div class="panel-heading">Sessions open for registration</div>
+  <div class="list-group">
+    {% for session in sessions %}
+    <a class="list-group-item" href="{% url 'new_participant_form' session_id=session.id %}">{{ session }}</a>
+    {% endfor %}
+  </div>
+</div>
+{% else %}
+<p class="alert alert-warning" role="alert">
+  Wonderment registration is not currently open. Please
+  see <a href="http://www.wondermentblackhills.com">wondermentblackhills.com</a>
+  for information on upcoming Wonderment sessions.
+</p>
+{% endif %}
 </div>
 {% endblock %}

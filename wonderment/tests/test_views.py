@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 
 from wonderment import (
     models,
-    views,
+    queries,
 )
 from wonderment.tests import factories as f
 
@@ -11,7 +11,12 @@ class TestParticipantForm(object):
     def test_new(self, app, monkeypatch):
         monkeypatch.setattr('wonderment.forms.ChildFormSet.extra', 1)
 
-        url = reverse('new_participant_form')
+        session = f.SessionFactory.create()
+
+        url = reverse(
+            'new_participant_form',
+            kwargs={'session_id': session.id},
+        )
         form = app.get(url).forms['participant-form']
         form['name'] = "someone"
         form['email'] = 'someone@example.com'
@@ -26,12 +31,12 @@ class TestParticipantForm(object):
         assert parent.email == 'someone@example.com'
         assert parent.phone == '321-6543-9876'
         assert child.name == "Kid"
-        assert participant.session.name == views.CURRENT_SESSION_NAME
+        assert participant.session == session
 
     def test_edit(self, app, monkeypatch):
         monkeypatch.setattr('wonderment.forms.ChildFormSet.extra', 1)
 
-        session = views.current_session()
+        session = f.SessionFactory.create()
         participant = f.ParticipantFactory.create(
             session=session,
             parent__name='old',
@@ -42,7 +47,10 @@ class TestParticipantForm(object):
         f.ChildFactory.create(parent=parent, name='old')
         f.ChildFactory.create(parent=parent, name='old')
 
-        form = app.get(parent.participant_url).forms['participant-form']
+        form_url = queries.get_idhash_url(
+            'edit_participant_form', parent, session)
+
+        form = app.get(form_url).forms['participant-form']
         form['name'] = "someone"
         form['children-0-name'] = "Kid"
         form['children-1-DELETE'] = True

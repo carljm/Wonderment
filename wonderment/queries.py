@@ -1,3 +1,7 @@
+from django.core.urlresolvers import reverse
+
+from . import utils
+
 # $125 for first kid, $90 for second, $50 for third, $20 for all others
 COSTS = [125, 90, 50, 20]
 
@@ -12,3 +16,14 @@ def get_cost(parent, session):
         needed = num_students - len(COSTS)
         extra = COSTS[-1:] * needed
     return sum(COSTS[:num_students] + extra)
+
+
+def get_idhash_url(urlname, parent, session=None):
+    kwargs = {
+        'parent_id': parent.id,
+        'id_hash': utils.idhash(parent.id),
+    }
+    if session is not None:
+        kwargs['session_id'] = session.id
+
+    return reverse(urlname, kwargs=kwargs)

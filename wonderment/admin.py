@@ -2,7 +2,10 @@ from django.conf import settings
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from . import models
+from . import (
+    models,
+    queries,
+)
 
 
 class ParticipantInline(admin.TabularInline):
@@ -40,22 +43,12 @@ class ParentAdmin(admin.ModelAdmin):
         '__str__',
         'phone',
         'email',
-        'registration_link',
-        'classes_link',
         'fall2016eval_link',
     ]
     inlines = [ParticipantInline, ChildInline]
 
-    def registration_link(self, obj):
-        url = settings.BASE_URL + obj.participant_url
-        return mark_safe('<a href="%s">%s</a>' % (url, url))
-
-    def classes_link(self, obj):
-        url = settings.BASE_URL + obj.select_classes_url
-        return mark_safe('<a href="%s">%s</a>' % (url, url))
-
     def fall2016eval_link(self, obj):
-        url = settings.BASE_URL + obj.fall2016eval_url
+        url = settings.BASE_URL + queries.get_idhash_url('fall2016eval', obj)
         return mark_safe('<a href="%s">%s</a>' % (url, url))
 
 

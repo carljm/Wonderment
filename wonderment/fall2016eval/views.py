@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import (
@@ -10,7 +11,10 @@ from . import (
     forms,
     models,
 )
-from .. import utils
+from .. import (
+    queries,
+    utils,
+)
 from ..models import Parent
 from .viewmodels import ResponseSummary
 
@@ -46,7 +50,9 @@ def done(request, parent_id, id_hash):
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
 
-    context = {'parent': parent}
+    eval_url = queries.get_idhash_url('fall2016eval', parent)
+
+    context = {'parent': parent, 'eval_url': settings.BASE_URL + eval_url}
 
     return render(request, 'fall2016eval/done.html', context)
 

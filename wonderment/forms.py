@@ -16,7 +16,10 @@ from django.forms.models import (
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from . import models
+from . import (
+    models,
+    queries,
+)
 
 
 class AttendanceForm(forms.ModelForm):
@@ -183,11 +186,13 @@ class ParticipantUrlRequestForm(forms.Form):
             raise forms.ValidationError(
                 "No previous registrant found with that email address.")
 
-    def send(self):
+    def send(self, session):
         for parent in self._parents:
+            url = queries.get_idhash_url(
+                'edit_participant_form', parent, session)
             context = {
                 'parent': parent,
-                'BASE_URL': settings.BASE_URL,
+                'edit_participant_url': settings.BASE_URL + url,
             }
             subject = "Wonderment registration link for %s" % parent.name
             body = render_to_string('emails/participant_url.txt', context)

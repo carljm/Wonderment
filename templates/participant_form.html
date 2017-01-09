@@ -12,14 +12,14 @@
   <strong>NOTE:</strong> If you've already registered for a previous Wonderment
   session, you don't have to enter all your information again.
 
-  <a href="{% url 'participant_url_request' %}">Click here</a> to update your
+  <a href="{% url 'participant_url_request' session_id=session.id %}">Click here</a> to update your
   previous information.
 </p>
 {% else %}
 <p class="alert alert-info" role="alert">
   If this isn't your registration information, and you haven't previously
   registered for Wonderment, please fill out the
-  <a href="{% url 'new_participant_form' %}">new registrant form</a> instead.
+  <a href="{% url 'new_participant_form' session_id=session.id %}">new registrant form</a> instead.
 </p>
 {% endif %}
 

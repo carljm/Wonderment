@@ -6,6 +6,7 @@ from .models import (
     Chunk,
     Student,
 )
+from .queries import get_idhash_url
 
 DEFAULT_REG_BODY_INTRO = """
 We've received your Wonderment registration!
@@ -37,7 +38,10 @@ def send_registration_confirmation_email(parent, session):
     body_final = (
         Chunk.get('registration.confirmation-email-end')
         or DEFAULT_REG_BODY_FINAL
-    ) % {'payment_url': settings.BASE_URL + parent.payment_url}
+    ) % {
+        'payment_url': settings.BASE_URL + get_idhash_url(
+            'payment', parent, session)
+    }
 
     body = "%s,\n\n%s\n\n%s\n\n%s" % (
         parent.name,

@@ -1,6 +1,7 @@
 import datetime
 
 import factory
+from django.contrib.auth.models import User
 
 from wonderment import models
 
@@ -14,6 +15,15 @@ class ModelFactory(factory.DjangoModelFactory):
     def _setup_next_sequence(cls):
         """Set up an initial sequence value for Sequence attributes."""
         return 0
+
+
+class UserFactory(ModelFactory):
+    class Meta:
+        model = User
+
+    username = factory.Sequence(lambda n: 'user%s' % n)
+    is_staff = False
+    is_superuser = False
 
 
 class ParentFactory(ModelFactory):
@@ -36,6 +46,8 @@ class SessionFactory(ModelFactory):
         model = models.Session
 
     name = "Test Session"
+    registration_opens = datetime.datetime(2014, 9, 1, 12)
+    registration_closes = datetime.datetime(2014, 9, 5, 12)
     start_date = datetime.date(2014, 9, 12)
     end_date = datetime.date(2014, 12, 5)
 

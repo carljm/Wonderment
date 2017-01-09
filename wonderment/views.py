@@ -1,5 +1,4 @@
 import csv
-from datetime import date
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -17,6 +16,7 @@ from django.shortcuts import (
     redirect,
     render,
 )
+from django.utils import timezone
 from django.utils.text import slugify
 
 from . import (
@@ -27,28 +27,19 @@ from . import (
     utils,
 )
 
-CURRENT_SESSION_NAME = "Extension Fall 2016"
-CURRENT_SESSION_START = date(2016, 9, 22)
-CURRENT_SESSION_END = date(2016, 12, 9)
+
+def home(request):
+    now = timezone.now()
+    sessions = models.Session.objects.filter(
+        registration_opens__lte=now, registration_closes__gte=now
+    ).order_by('start_date')
+    if len(sessions) == 1:
+        return redirect('new_participant_form', session_id=sessions[0].id)
+    return render(request, 'home.html', {'sessions': sessions})
 
 
-def current_session():
-    session, created = models.Session.objects.update_or_create(
-        name=CURRENT_SESSION_NAME, defaults={
-            'start_date': CURRENT_SESSION_START,
-            'end_date': CURRENT_SESSION_END,
-        }
-    )
-
-    return session
-
-
-def active_paid_session():
-    return models.Session.objects.get(name="Fall 2016")
-
-
-def participant_form(request, parent_id=None, id_hash=None):
-    session = current_session()
+def participant_form(request, session_id, parent_id=None, id_hash=None):
+    session = get_object_or_404(models.Session, pk=session_id)
     if parent_id is None:
         parent = None
         participant = None
@@ -82,6 +73,7 @@ def participant_form(request, parent_id=None, id_hash=None):
                 participant.save()
             return redirect(
                 'select_classes',
+                session_id=session.id,
                 parent_id=parent.id,
                 id_hash=utils.idhash(parent.id),
             )
@@ -103,8 +95,8 @@ def participant_form(request, parent_id=None, id_hash=None):
     )
 
 
-def select_classes(request, parent_id, id_hash):
-    session = current_session()
+def select_classes(request, session_id, parent_id, id_hash):
+    session = get_object_or_404(models.Session, pk=session_id)
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
@@ -114,9 +106,10 @@ def select_classes(request, parent_id, id_hash):
         if formset.is_valid():
             with transaction.atomic():
                 formset.save()
-            # commands.send_registration_confirmation_email(parent, session)
+            commands.send_registration_confirmation_email(parent, session)
             return redirect(
-                'participant_thanks',  # 'payment',
+                'payment',
+                session_id=session_id,
                 parent_id=parent_id,
                 id_hash=id_hash,
             )
@@ -134,8 +127,8 @@ def select_classes(request, parent_id, id_hash):
     )
 
 
-def payment(request, parent_id, id_hash):
-    session = active_paid_session()
+def payment(request, session_id, parent_id, id_hash):
+    session = get_object_or_404(models.Session, pk=session_id)
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
@@ -143,6 +136,7 @@ def payment(request, parent_id, id_hash):
         parent=parent, session=session)
     amount = queries.get_cost(parent, session)
     owed = max(0, amount - participant.paid)
+    request.session['session_id'] = session_id
     request.session['parent_id'] = parent_id
     request.session['id_hash'] = id_hash
     request.session['owed'] = owed
@@ -162,50 +156,63 @@ def payment(request, parent_id, id_hash):
 
 
 def payment_cancel(request):
+    session_id = request.session.pop('session_id', 0)
     parent_id = request.session.pop('parent_id', 0)
     id_hash = request.session.pop('id_hash', 0)
     request.session.pop('owed', 0)
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
-    return redirect('participant_cancel', parent_id=parent_id, id_hash=id_hash)
+    return redirect(
+        'participant_cancel',
+        session_id=session_id,
+        parent_id=parent_id,
+        id_hash=id_hash,
+    )
 
 
 def payment_success(request):
+    session_id = request.session.pop('session_id', 0)
     parent_id = request.session.pop('parent_id', 0)
     id_hash = request.session.pop('id_hash', 0)
     owed = request.session.pop('owed', 0)
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
-    session = active_paid_session()
+    session = get_object_or_404(models.Session, pk=session_id)
     participant = models.Participant.objects.get(
         parent=parent, session=session)
     if owed:
         participant.paid += owed
         participant.save()
         commands.send_payment_confirmation_email(participant, owed)
-    return redirect('participant_thanks', parent_id=parent_id, id_hash=id_hash)
+    return redirect(
+        'participant_thanks',
+        session_id=session_id,
+        parent_id=parent_id,
+        id_hash=id_hash,
+    )
 
 
-def participant_cancel(request, parent_id, id_hash):
-    session = active_paid_session()
+def participant_cancel(request, session_id, parent_id, id_hash):
+    session = get_object_or_404(models.Session, pk=session_id)
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
+    url = queries.get_idhash_url('payment', parent, session)
     return render(
         request,
         'participant_cancel.html',
         {
-            'BASE_URL': settings.BASE_URL,
+            'payment_url': settings.BASE_URL + url,
             'session': session,
             'parent': parent,
         },
     )
 
 
-def participant_thanks(request, parent_id, id_hash):
-    session = active_paid_session()
+def participant_thanks(request, session_id, parent_id, id_hash):
+    session = get_object_or_404(models.Session, pk=session_id)
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
@@ -219,29 +226,39 @@ def participant_thanks(request, parent_id, id_hash):
     )
 
 
-def participant_url_request(request):
+def participant_url_request(request, session_id):
+    session = get_object_or_404(models.Session, pk=session_id)
     if request.method == 'POST':
         form = forms.ParticipantUrlRequestForm(request.POST)
         if form.is_valid():
-            form.send()
-            return redirect('participant_url_request_thanks')
+            form.send(session)
+            return redirect(
+                'participant_url_request_thanks',
+                session_id=session_id,
+            )
     else:
         form = forms.ParticipantUrlRequestForm()
 
-    return render(request, 'participant_url_request.html', {'form': form})
+    return render(
+        request,
+        'participant_url_request.html',
+        {'form': form, 'session': session},
+    )
 
 
-def participant_url_request_thanks(request):
+def participant_url_request_thanks(request, session_id):
+    session = get_object_or_404(models.Session, pk=session_id)
     return render(
         request,
         'participant_url_request_thanks.html',
+        {'session': session},
     )
 
 
 @login_required
-def home(request):
+def browse_home(request):
     sessions = models.Session.objects.all()
-    return render(request, 'home.html', {'sessions': sessions})
+    return render(request, 'browse_home.html', {'sessions': sessions})
 
 
 @login_required
@@ -498,12 +515,8 @@ def paid_participants_csv(request, session_id):
             p.email,
             p.name,
             p.spouse,
-            p.participant_url,
-            p.fall2016eval_url,
+            queries.get_idhash_url('edit_participant_form', p, session),
+            queries.get_idhash_url('fall2016eval', p),
         ])
 
     return response
-
-
-def registration_closed(request):
-    return render(request, 'registration_closed.html')

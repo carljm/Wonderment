@@ -3,14 +3,10 @@ from functools import lru_cache
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.functional import cached_property
 
-from . import (
-    fields,
-    utils,
-)
+from . import fields
 
 
 def today():
@@ -74,55 +70,6 @@ class Parent(models.Model):
         blank=True,
         default=list,
     )
-
-    @cached_property
-    def participant_url(self):
-        return reverse(
-            'edit_participant_form',
-            kwargs={'parent_id': self.id, 'id_hash': utils.idhash(self.id)},
-        )
-
-    @cached_property
-    def select_classes_url(self):
-        return reverse(
-            'select_classes',
-            kwargs={'parent_id': self.id, 'id_hash': utils.idhash(self.id)},
-        )
-
-    @cached_property
-    def payment_url(self):
-        return reverse(
-            'payment',
-            kwargs={'parent_id': self.id, 'id_hash': utils.idhash(self.id)},
-        )
-
-    @cached_property
-    def spring2015survey_url(self):
-        return reverse(
-            'spring2015survey',
-            kwargs={'parent_id': self.id, 'id_hash': utils.idhash(self.id)},
-        )
-
-    @cached_property
-    def fall2015eval_url(self):
-        return reverse(
-            'fall2015eval',
-            kwargs={'parent_id': self.id, 'id_hash': utils.idhash(self.id)},
-        )
-
-    @cached_property
-    def spring2016eval_url(self):
-        return reverse(
-            'spring2016eval',
-            kwargs={'parent_id': self.id, 'id_hash': utils.idhash(self.id)},
-        )
-
-    @cached_property
-    def fall2016eval_url(self):
-        return reverse(
-            'fall2016eval',
-            kwargs={'parent_id': self.id, 'id_hash': utils.idhash(self.id)},
-        )
 
     def __str__(self):
         return self.name
@@ -232,6 +179,8 @@ class Teacher(models.Model):
 
 class Session(models.Model):
     name = models.CharField(max_length=100)
+    registration_opens = models.DateTimeField()
+    registration_closes = models.DateTimeField()
     start_date = models.DateField()
     end_date = models.DateField()
 
