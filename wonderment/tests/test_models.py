@@ -103,15 +103,6 @@ class TestSession(object):
 
         assert families['students'][0].real_age == "2yr"
 
-    def test_families_filtered(self, db):
-        s = f.SessionFactory.create(start_date=date(2014, 9, 12))
-        p1 = f.ParticipantFactory.create(session=s, paid=30, level='weekly')
-        f.ParticipantFactory.create(session=s, paid=30, level='monthly')
-
-        families = s.families(level='weekly')
-
-        assert families['parents'] == [p1.parent]
-
 
 class TestParticipant(object):
     def test_str(self):

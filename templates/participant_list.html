@@ -19,16 +19,6 @@
   <a class="list-group-item" href="{% url 'participant_detail' session_id=session.id participant_id=p.id %}">
     {% if p.paid %}${% endif %}
     {% include "_contact.html" with person=p.parent link_email=False %}
-    {% if p.assigned_job_descs %}
-    {% endif %}
-    {% if p.job_notes or p.assigned_job_descs %}
-      <div class="alert alert-success">
-        {% for job in p.assigned_job_descs %}
-          {{ job }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-        {{ p.job_notes|linebreaks }}
-      </div>
-    {% endif %}
   </a>
   {% endfor %}
 </div>

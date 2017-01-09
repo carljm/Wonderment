@@ -116,23 +116,8 @@ class ParticipantForm(forms.ModelForm):
     class Meta:
         model = models.Participant
         fields = [
-            'drop_off',
-            'help_how',
-            'ideas',
-            'payment_amount',
-            'absences',
-            'part_time',
+            'volunteer',
         ]
-        widgets = {
-            # 'payment': forms.RadioSelect,
-            'help_how': forms.CheckboxSelectMultiple,
-        }
-
-    def __init__(self, *a, **kw):
-        super(ParticipantForm, self).__init__(*a, **kw)
-        # formfield = self.fields['payment']
-        # modelfield = models.Participant._meta.get_field_by_name('payment')[0]
-        # formfield.choices = modelfield.get_choices(include_blank=False)
 
 
 class ParentForm(forms.ModelForm):
@@ -148,16 +133,9 @@ class ParentForm(forms.ModelForm):
             'spouse_contact',
             'emergency',
             'emergency_contact',
+            'pick_up_names',
+            'future_job_interests',
         ]
-        widgets = {
-            'participate_by': forms.CheckboxSelectMultiple,
-        }
-
-    def save(self):
-        parent = super(ParentForm, self).save()
-        if 'teaching' in parent.participate_by:
-            models.Teacher.objects.get_or_create(parent=parent)
-        return parent
 
 
 class ChildForm(forms.ModelForm):

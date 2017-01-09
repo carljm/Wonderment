@@ -25,11 +25,6 @@ session_urls = [
         name='parent_emails',
     ),
     url(
-        r'^parents_by_contribution/$',
-        views.parents_by_contribution,
-        name='parents_by_contribution',
-    ),
-    url(
         r'^all-parents/$',
         views.participant_list,
         name='participant_list',

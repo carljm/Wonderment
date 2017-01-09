@@ -23,7 +23,7 @@
 </p>
 {% endif %}
 
-{% if parent_form.errors or children_formset.errors or participant_form.errors %}
+{% if parent_form.errors or children_formset.errors %}
 <p class="alert alert-danger" role="alert">
   Please correct the errors below:
 </p>
@@ -63,16 +63,6 @@
       {% buttons %}
         <button class="btn btn-lg btn-default add-child">Add Another Child</button>
       {% endbuttons %}
-    </fieldset>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h2 class="panel-title">Session Participation</h2>
-    </div>
-    <fieldset class="panel-body">
-      {% bootstrap_form_errors participant_form %}
-      {% bootstrap_form participant_form %}
     </fieldset>
   </div>
 

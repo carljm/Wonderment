@@ -17,19 +17,16 @@ class TestParticipantForm(object):
         form['email'] = 'someone@example.com'
         form['phone'] = '321-6543-9876'
         form['children-0-name'] = "Kid"
-        form['payment_amount'] = 100
         form.submit().follow()
 
         participant = models.Participant.objects.get()
         parent = participant.parent
         child = parent.children.get()
-        assert participant.level == 'weekly'
         assert parent.name == "someone"
         assert parent.email == 'someone@example.com'
         assert parent.phone == '321-6543-9876'
         assert child.name == "Kid"
         assert participant.session.name == views.CURRENT_SESSION_NAME
-        assert participant.payment_amount == 100
 
     def test_edit(self, app, monkeypatch):
         monkeypatch.setattr('wonderment.forms.ChildFormSet.extra', 1)

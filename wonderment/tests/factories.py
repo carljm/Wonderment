@@ -46,7 +46,6 @@ class ParticipantFactory(ModelFactory):
 
     parent = factory.SubFactory(ParentFactory)
     session = factory.SubFactory(SessionFactory)
-    payment_amount = 200
 
 
 class TeacherFactory(ModelFactory):
