@@ -16,7 +16,7 @@ from .queries import (
 def send_payment_confirmation_email(participant):
     parent = participant.parent
     session = participant.session
-    total_cost = get_cost(parent, session)
+    total_cost = get_cost(participant)
     subject = "You registered for Wonderment!"
     ctx = {
         'payment_url': settings.BASE_URL + get_idhash_url(

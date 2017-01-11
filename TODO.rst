@@ -1,12 +1,9 @@
 Wonderment TODO
 ===============
 
-- make signup automatically grant assistant discount to anyone who volunteered
-  as an assistant
+- agree-to-waiver step in signup
 
 - teacher logins: input their own info, access to class lists
-
-- agree-to-waiver step in signup
 
 - auto-generate teacher and class eval rating questions
 

@@ -131,7 +131,7 @@ def payment(request, session_id, parent_id, id_hash):
         raise Http404()
     participant = models.Participant.objects.get(
         parent=parent, session=session)
-    amount = queries.get_cost(parent, session)
+    amount = queries.get_cost(participant)
     owed = max(0, amount - participant.paid)
     payment_extra_info = models.Chunk.get('payment-extra-info')
     pay_success_url = queries.get_idhash_url(
@@ -142,6 +142,7 @@ def payment(request, session_id, parent_id, id_hash):
         request,
         'paypal.html',
         {
+            'assistant': 'assisting' in participant.volunteer,
             'session': session,
             'parent': parent,
             'amount': amount,
@@ -215,7 +216,7 @@ def participant_thanks(request, session_id, parent_id, id_hash):
     if session.online_payment:
         participant = models.Participant.objects.get(
             parent=parent, session=session)
-        amount = queries.get_cost(parent, session)
+        amount = queries.get_cost(participant)
         owed = max(0, amount - participant.paid)
         url = queries.get_idhash_url('payment', parent, session)
         ctx.update({

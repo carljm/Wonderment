@@ -48,7 +48,11 @@
 
 <p class="alert alert-warning" role="alert">
   Pricing: $125 for first child, $90 for second, $50 for third, $20 for each
-  additional.
+  additional.  {% if assistant %} You received a 50% discount since you
+  volunteered to be a classroom assistant. We may not have enough assistant
+  slots for all volunteers; if we aren't able to place you in an assistant
+  role, you will either need to pay the remaining amount or we will refund your
+  paid amount if you no longer wish to participate.{% endif %}
 </p>
 
 {% endblock %}

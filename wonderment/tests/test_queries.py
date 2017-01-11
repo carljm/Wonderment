@@ -5,17 +5,20 @@ from wonderment.tests import factories as f
 
 
 @pytest.mark.parametrize(
-    'num_kids,cost',
+    'assisting,num_kids,cost',
     [
-        (1, 125),
-        (2, 125 + 90),
-        (3, 125 + 90 + 50),
-        (4, 125 + 90 + 50 + 20),
-        (5, 125 + 90 + 50 + 20 + 20),
+        (False, 1, 125),
+        (False, 2, 125 + 90),
+        (False, 3, 125 + 90 + 50),
+        (False, 4, 125 + 90 + 50 + 20),
+        (False, 5, 125 + 90 + 50 + 20 + 20),
+        (True, 1, 63),
+        (True, 2, 108),
     ],
 )
-def test_get_cost(db, num_kids, cost):
-    p = f.ParticipantFactory.create()
+def test_get_cost(db, assisting, num_kids, cost):
+    volunteer = ['assisting'] if assisting else []
+    p = f.ParticipantFactory.create(volunteer=volunteer)
     c1 = f.ClassFactory.create(session=p.session)
     c2 = f.ClassFactory.create(session=p.session)
     for i in range(num_kids):
@@ -23,4 +26,4 @@ def test_get_cost(db, num_kids, cost):
         f.StudentFactory.create(klass=c1, child=child)
         f.StudentFactory.create(klass=c2, child=child)
 
-    assert queries.get_cost(p.parent, p.session) == cost
+    assert queries.get_cost(p) == cost

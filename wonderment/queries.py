@@ -1,3 +1,5 @@
+import math
+
 from django.core.urlresolvers import reverse
 
 from . import utils
@@ -6,8 +8,10 @@ from . import utils
 COSTS = [125, 90, 50, 20]
 
 
-def get_cost(parent, session):
+def get_cost(participant):
     """Return the amount owed by this parent for this session."""
+    parent = participant.parent
+    session = participant.session
     num_students = parent.children.filter(
         studies__klass__session=session
     ).distinct().count()
@@ -15,7 +19,10 @@ def get_cost(parent, session):
     if num_students > len(COSTS):
         needed = num_students - len(COSTS)
         extra = COSTS[-1:] * needed
-    return sum(COSTS[:num_students] + extra)
+    cost = sum(COSTS[:num_students] + extra)
+    if 'assisting' in participant.volunteer:
+        cost = math.ceil(cost / 2.0)
+    return cost
 
 
 def get_idhash_url(urlname, parent, session=None, **kwargs):
