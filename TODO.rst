@@ -1,8 +1,6 @@
 Wonderment TODO
 ===============
 
-- agree-to-waiver step in signup
-
 - teacher logins: input their own info, access to class lists
 
 - auto-generate teacher and class eval rating questions

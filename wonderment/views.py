@@ -104,8 +104,10 @@ def select_classes(request, session_id, parent_id, id_hash):
         if formset.is_valid():
             with transaction.atomic():
                 formset.save()
+            next_view = 'waiver' if session.waiver.strip() else (
+                'payment' if session.online_payment else 'participant_thanks')
             return redirect(
-                'payment' if session.online_payment else 'participant_thanks',
+                next_view,
                 session_id=session_id,
                 parent_id=parent_id,
                 id_hash=id_hash,
@@ -120,6 +122,39 @@ def select_classes(request, session_id, parent_id, id_hash):
             'session': session,
             'parent': parent,
             'formset': formset,
+        },
+    )
+
+
+def waiver(request, session_id, parent_id, id_hash):
+    session = get_object_or_404(models.Session, pk=session_id)
+    parent = get_object_or_404(models.Parent, pk=parent_id)
+    if utils.idhash(parent.id) != id_hash:
+        raise Http404()
+    participant = models.Participant.objects.get(
+        parent=parent, session=session)
+    form_kw = {'instance': participant}
+    if request.method == 'POST':
+        form = forms.WaiverForm(request.POST, **form_kw)
+        if form.is_valid():
+            with transaction.atomic():
+                form.save()
+            return redirect(
+                'payment' if session.online_payment else 'participant_thanks',
+                session_id=session_id,
+                parent_id=parent_id,
+                id_hash=id_hash,
+            )
+    else:
+        form = forms.WaiverForm(**form_kw)
+
+    return render(
+        request,
+        'waiver.html',
+        {
+            'session': session,
+            'parent': parent,
+            'form': form,
         },
     )
 

@@ -216,6 +216,7 @@ class Session(models.Model):
     registrar_email_address = models.EmailField(
         default='registrar@wondermentblackhills.com')
     online_payment = models.BooleanField(default=True)
+    waiver = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
@@ -355,6 +356,10 @@ class Participant(models.Model):
         verbose_name="I am interested in helping out this session by:",
         blank=True,
         default=list,
+    )
+    agreed_to_waiver = models.BooleanField(
+        "I agree to the terms of the above waiver",
+        default=False,
     )
     assigned_jobs = fields.ArrayChoiceField(
         models.TextField(choices=JOBS),

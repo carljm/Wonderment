@@ -18,6 +18,11 @@ idhash_urls = [
         name='select_classes',
     ),
     url(
+        r'^waiver/$',
+        views.waiver,
+        name='waiver',
+    ),
+    url(
         r'^pay/$',
         views.payment,
         name='payment',

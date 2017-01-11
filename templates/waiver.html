@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+
+{% block title %}Waiver | {{ session.name }} | Wonderment{% endblock %}
+
+{% block body %}
+<h2>Sign Waiver</h2>
+
+<p class="alert alert-success" role="alert">
+  Please sign the following waiver in order to sign up for Wonderment:
+</p>
+
+<p class="alert alert-warning" role="alert">
+  {{ session.waiver|linebreaksbr }}
+</p>
+
+<form method="POST" id="waiver-form">
+  {% csrf_token %}
+
+  <div class="panel panel-default">
+    <fieldset class="panel-body">
+      {% bootstrap_form form %}
+    </fieldset>
+  </div>
+
+  {% buttons %}
+    <button type="submit">Submit</button>
+  {% endbuttons %}
+</form>
+{% endblock %}

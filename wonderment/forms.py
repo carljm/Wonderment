@@ -115,6 +115,18 @@ ChildAttendanceFormset = inlineformset_factory(
 )
 
 
+class WaiverForm(forms.ModelForm):
+    class Meta:
+        model = models.Participant
+        fields = [
+            'agreed_to_waiver'
+        ]
+
+    def __init__(self, *a, **kw):
+        super(WaiverForm, self).__init__(*a, **kw)
+        self.fields['agreed_to_waiver'].required = True
+
+
 class ParticipantForm(forms.ModelForm):
     class Meta:
         model = models.Participant
