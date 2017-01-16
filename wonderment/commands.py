@@ -13,7 +13,7 @@ from .queries import (
 )
 
 
-def send_payment_confirmation_email(participant):
+def send_reg_confirmation_email(participant):
     parent = participant.parent
     session = participant.session
     total_cost = get_cost(participant)

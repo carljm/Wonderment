@@ -98,14 +98,21 @@ def select_classes(request, session_id, parent_id, id_hash):
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
+    participant = models.Participant.objects.get(
+        parent=parent, session=session)
     formkw = {'session': session, 'instance': parent}
     if request.method == 'POST':
         formset = forms.SelectClassesFormSet(request.POST, **formkw)
         if formset.is_valid():
             with transaction.atomic():
                 formset.save()
-            next_view = 'waiver' if session.waiver.strip() else (
-                'payment' if session.online_payment else 'participant_thanks')
+            if session.online_payment:
+                next_view = 'payment'
+            else:
+                next_view = 'participant_thanks'
+                commands.send_reg_confirmation_email(participant)
+            if session.waiver.strip():
+                next_view = 'waiver'
             return redirect(
                 next_view,
                 session_id=session_id,
@@ -212,7 +219,7 @@ def payment_success(request, session_id, parent_id, id_hash, paid):
     ).update(paid=F('paid') + int(paid))
     participant = models.Participant.objects.get(
         parent=parent, session=session)
-    commands.send_payment_confirmation_email(participant)
+    commands.send_reg_confirmation_email(participant)
     return redirect(
         'participant_thanks',
         session_id=session_id,
