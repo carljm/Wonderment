@@ -20,8 +20,13 @@ def get_cost(participant):
         needed = num_students - len(COSTS)
         extra = COSTS[-1:] * needed
     cost = sum(COSTS[:num_students] + extra)
+    discount = None
     if 'assisting' in participant.volunteer:
-        cost = math.ceil(cost / 2.0)
+        discount = 0.5
+    elif 'cleaning' in participant.volunteer:
+        discount = 0.2
+    if discount:
+        cost = math.ceil(cost * (1.0 - discount))
     return cost
 
 

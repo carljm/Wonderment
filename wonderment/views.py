@@ -185,6 +185,7 @@ def payment(request, session_id, parent_id, id_hash):
         'paypal.html',
         {
             'assistant': 'assisting' in participant.volunteer,
+            'cleaning': 'cleaning' in participant.volunteer,
             'session': session,
             'parent': parent,
             'amount': amount,

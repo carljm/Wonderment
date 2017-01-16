@@ -5,6 +5,19 @@
 {% block body %}
 <h2>{% if owed %}Complete your registration for Wonderment {{ session.name }}{% else %}Paid in full for Wonderment {{ session.name }}!{% endif %}</h2>
 
+{% if assistant or cleaning %}
+
+  You received a {% if assistant %}50{% else %}20{% endif %}% discount since
+  you volunteered to {% if assistant %}be a classroom assistant{% else %}help
+  with cleaning{% endif %}.{% if assistant %} <strong>We may not have enough
+  assistant slots for all volunteers</strong>; if we aren't able to place you
+  in an assistant role, you will either need to pay the remaining amount or we
+  will refund your paid amount if you no longer wish to participate. <strong>If
+  we are able to place you in an assistant role, your payment is
+  non-refundable.</strong>{% endif %}
+
+{% endif %}
+
 {% if owed %}
   <p class="alert alert-success" role="alert">
     <strong>To complete your registration</strong>, please click
@@ -48,11 +61,7 @@
 
 <p class="alert alert-warning" role="alert">
   Pricing: $125 for first child, $90 for second, $50 for third, $20 for each
-  additional.  {% if assistant %} You received a 50% discount since you
-  volunteered to be a classroom assistant. We may not have enough assistant
-  slots for all volunteers; if we aren't able to place you in an assistant
-  role, you will either need to pay the remaining amount or we will refund your
-  paid amount if you no longer wish to participate.{% endif %}
+  additional.
 </p>
 
 {% endblock %}

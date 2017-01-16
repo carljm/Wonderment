@@ -2,10 +2,6 @@ Wonderment TODO
 
 ===============
 
-- send confirmation email even if no online payment
-
-- 20% discount for people who sign up for cleaning
-
 - teachers don't pay upfront
 
 - make info about assistant discount more prominent, and clarify that if they
