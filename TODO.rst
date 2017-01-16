@@ -1,7 +1,23 @@
 Wonderment TODO
+
 ===============
 
+- send confirmation email even if no online payment
+
+- 20% discount for people who sign up for cleaning
+
+- teachers don't pay upfront
+
+- make info about assistant discount more prominent, and clarify that if they
+  are confirmed as an assistant, payment is not refundable.
+
+- verify waitlist JS for class signups
+
+- donation option in registration payment
+
 - teacher logins: input their own info, access to class lists
+
+- online payment for Extension
 
 - auto-generate teacher and class eval rating questions
 
