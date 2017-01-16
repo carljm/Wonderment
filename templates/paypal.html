@@ -9,12 +9,11 @@
 
   You received a {% if assistant %}50{% else %}20{% endif %}% discount since
   you volunteered to {% if assistant %}be a classroom assistant{% else %}help
-  with cleaning{% endif %}.{% if assistant %} <strong>We may not have enough
-  assistant slots for all volunteers</strong>; if we aren't able to place you
-  in an assistant role, you will either need to pay the remaining amount or we
-  will refund your paid amount if you no longer wish to participate. <strong>If
-  we are able to place you in an assistant role, your payment is
-  non-refundable.</strong>{% endif %}
+  with cleaning{% endif %}. <strong>We may not have enough slots for all
+  volunteers</strong>; if we aren't able to place you in a role, you will
+  either need to pay the remaining amount or we will refund your paid amount if
+  you no longer wish to participate. <strong>If we are able to place you in
+  your requested role, your payment is non-refundable.</strong>
 
 {% endif %}
 
@@ -22,12 +21,12 @@
   <p class="alert alert-success" role="alert">
     <strong>To complete your registration</strong>, please click
     the <strong>Pay Now</strong> button below to pay
-    <strong>${{ owed }}</strong> via PayPal.
-    {% if paid %} (Our records show that you have
-    already paid ${{ paid }} of your ${{ amount }} total.){% endif %} If you
-    choose not to pay now, you can bookmark this page and return to it later to
-    complete your payment; <strong>your class selections will not be confirmed
-    until you complete your payment</strong>.
+    <strong>${{ owed }}</strong> via PayPal.  {% if paid %} (Our records show
+    that you have already paid ${{ paid }} of your ${{ amount }} total.){%
+    endif %} If you choose not to pay now, you can bookmark this page and
+    return to it later to complete your payment; <strong>your class selections
+    will not be confirmed until you complete your
+    payment</strong>. <strong>Payment is non-refundable.</strong>
   </p>
 
   <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
