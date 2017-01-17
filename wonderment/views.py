@@ -1,8 +1,8 @@
 import csv
 
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import (
     Count,
@@ -189,10 +189,9 @@ def payment(request, session_id, parent_id, id_hash):
             )
     else:
         donation_form = forms.DonationForm(instance=participant)
-    amount = queries.get_cost(participant)
-    owed = max(0, amount - participant.paid)
+    bill = queries.get_bill(participant)
     pay_success_url = queries.get_idhash_url(
-        'payment_success', parent, session, paid=owed)
+        'payment_success', parent, session, paid=bill['owed'])
     pay_cancel_url = queries.get_idhash_url(
         'payment_cancel', parent, session)
     return render(
@@ -206,9 +205,8 @@ def payment(request, session_id, parent_id, id_hash):
             'cleaning': 'cleaning' in participant.volunteer,
             'session': session,
             'parent': parent,
-            'amount': amount,
-            'owed': owed,
-            'paid': participant.paid,
+            'bill': bill,
+            'bill_summary': queries.get_bill_summary(bill),
             'payment_success_url': settings.BASE_URL + pay_success_url,
             'payment_cancel_url': settings.BASE_URL + pay_cancel_url,
             'id_hash': id_hash,
@@ -289,13 +287,11 @@ def participant_thanks(request, session_id, parent_id, id_hash):
     }
 
     if session.online_payment:
-        amount = queries.get_cost(participant)
-        owed = max(0, amount - participant.paid)
+        bill = queries.get_bill(participant)
         url = queries.get_idhash_url('payment', parent, session)
         ctx.update({
             'paid': participant.paid,
-            'owed': owed,
-            'cost': amount,
+            'bill': bill,
             'payment_url': settings.BASE_URL + url,
         })
 

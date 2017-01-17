@@ -15,31 +15,43 @@ from .models import Student
 COSTS = [125, 90, 50, 20]
 
 
-def get_cost(participant):
-    """Return the amount owed by this parent for this session."""
+def get_bill(participant):
+    """Return bill for this participant.
+
+    Breakdown is a dictionary with keys 'costs', 'total', 'paid', and
+    'owed'. Value of 'costs' is a list of (description, amount) tuples; values
+    of the other three are integers. Discounts are just negative costs.
+
+    """
+    costs = []
     parent = participant.parent
     session = participant.session
-    if (
-            is_committee_member(parent, session) or
-            is_teacher(parent, session)
-    ):
-        return 0
     num_students = parent.children.filter(
         studies__klass__session=session
     ).distinct().count()
-    extra = []
-    if num_students > len(COSTS):
-        needed = num_students - len(COSTS)
-        extra = COSTS[-1:] * needed
-    cost = sum(COSTS[:num_students] + extra)
-    discount = None
-    if 'assisting' in participant.volunteer:
-        discount = 0.5
+    for i in range(num_students):
+        costs.append((
+            "%s kid" % ordinal(i + 1),
+            COSTS[i] if i < len(COSTS) else COSTS[-1],
+        ))
+    total = sum(c[1] for c in costs)
+    if is_committee_member(parent, session):
+        costs.append(("100% committee discount", -total))
+    elif is_teacher(parent, session):
+        costs.append(("Teacher (cost deducted from pay)", -total))
+    elif 'assisting' in participant.volunteer:
+        costs.append(("50% assistant discount", -math.floor(total * 0.5)))
     elif 'cleaning' in participant.volunteer:
-        discount = 0.2
-    if discount:
-        cost = math.ceil(cost * (1.0 - discount))
-    return cost + participant.donation
+        costs.append(("20% cleaning discount", -math.floor(total * 0.2)))
+    if participant.donation:
+        costs.append(("Donation", participant.donation))
+    total = sum(c[1] for c in costs)
+    return {
+        'costs': costs,
+        'total': total,
+        'paid': participant.paid,
+        'owed': max(0, total - participant.paid)
+    }
 
 
 def get_idhash_url(urlname, parent, session=None, **kwargs):
@@ -65,15 +77,14 @@ def is_committee_member(parent, session):
 def get_registration_summary_email_body(participant):
     parent = participant.parent
     session = participant.session
-    total_cost = get_cost(participant)
+    bill = get_bill(participant)
     ctx = {
         'payment_url': settings.BASE_URL + get_idhash_url(
             'payment', parent, session),
         'parent': parent,
         'session': session,
-        'just_paid': participant.paid,
-        'total_cost': total_cost,
-        'still_owed': max(0, total_cost - participant.paid),
+        'bill': bill,
+        'bill_summary': get_bill_summary(bill),
         'children_and_classes': get_children_classes(parent, session),
     }
     tpl = Template(session.confirm_email)
@@ -116,3 +127,49 @@ def get_classes(studies):
             line += " [WAITLIST]"
         ret.append(line)
     return ret
+
+
+def get_bill_summary(bill):
+    """Given dict from ``get_bill``, return preformatted text summary."""
+    line_data = bill['costs'][:]
+    line_data.append(('TOTAL', bill['total']))
+    line_data.append(('PAID', bill['paid']))
+    line_data.append(('OWED', bill['owed']))
+    longest = max(len(ld[0]) for ld in line_data)
+    lines = [''] + [
+        "%s  $%s" % (ld[0].ljust(longest), str(ld[1]).rjust(4))
+        for ld in line_data
+    ] + ['']
+    return "\n".join(lines)
+
+
+INITIAL_ORDINALS = [
+    "Zeroth",
+    "First",
+    "Second",
+    "Third",
+    "Fourth",
+    "Fifth",
+    "Sixth",
+    "Seventh",
+    "Eighth",
+    "Ninth",
+    "Tenth",
+    "11th",
+    "12th",
+    "13th",
+]
+
+
+def ordinal(num):
+    if 0 <= num < len(INITIAL_ORDINALS):
+        return INITIAL_ORDINALS[num]
+    suffix = "th"
+    mod10 = num % 10
+    if mod10 == 1:
+        suffix = 'st'
+    elif mod10 == 2:
+        suffix = 'nd'
+    elif mod10 == 3:
+        suffix = 'rd'
+    return "%s%s" % (num, suffix)

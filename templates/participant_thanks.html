@@ -5,12 +5,12 @@
 {% block body %}
 <h2>Thanks for registering for Wonderment {{ session.name }}!</h2>
 
-{% if session.online_payment and owed %}
+{% if session.online_payment and bill.owed %}
 <p class="alert alert-warning" role="alert">
   <strong>Your registration is not yet complete!</strong> You have paid
-  ${{ paid }} of your total of ${{ cost }}; your registration and class selections
+  ${{ paid }} of your total of ${{ bill.total }}; your registration and class selections
   are not confirmed until you return to
-  <a href="{{ payment_url }}">{{ payment_url }}</a> and pay the remaining ${{ owed }}.
+  <a href="{{ payment_url }}">{{ payment_url }}</a> and pay the remaining ${{ bill.owed }}.
 </p>
 {% else %}
 <p class="alert alert-success" role="alert">

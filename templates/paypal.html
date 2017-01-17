@@ -5,7 +5,7 @@
 {% block title %}Registration payment | {{ session.name }} | Wonderment{% endblock %}
 
 {% block body %}
-<h2>{% if owed %}Complete your registration for Wonderment {{ session.name }}{% else %}Paid in full for Wonderment {{ session.name }}!{% endif %}</h2>
+<h2>{% if bill.owed %}Complete your registration for Wonderment {{ session.name }}{% else %}Paid in full for Wonderment {{ session.name }}!{% endif %}</h2>
 
 
 {% if committee %}
@@ -30,12 +30,20 @@
 </p>
 {% endif %}
 
-{% if owed %}
+<p class="alert alert-info" role="alert">
+  Your registration summary:
+</p>
+
+<pre>
+  {{ bill_summary }}
+</pre>
+
+{% if bill.owed %}
   <p class="alert alert-success" role="alert">
     <strong>To complete your registration</strong>, please click
     the <strong>Pay Now</strong> button below to pay
-    <strong>${{ owed }}</strong> via PayPal.  {% if paid %} (Our records show
-    that you have already paid ${{ paid }} of your ${{ amount }} total.)
+    <strong>${{ bill.owed }}</strong> via PayPal.  {% if bill.paid %} (Our records show
+    that you have already paid ${{ bill.paid }} of your ${{ bill.total }} total.)
     {% endif %} If you choose not to pay now, you can bookmark this page and
     return to it later to complete your payment; <strong>your class selections
     will not be confirmed until you complete your
@@ -47,7 +55,7 @@
   <input type="hidden" name="business" value="PZNVGPYGZFUTG">
   <input type="hidden" name="lc" value="US">
   <input type="hidden" name="item_name" value="Wonderment">
-  <input type="hidden" name="amount" value="{{ owed }}.00">
+  <input type="hidden" name="amount" value="{{ bill.owed }}.00">
   <input type="hidden" name="currency_code" value="USD">
   <input type="hidden" name="button_subtype" value="services">
   <input type="hidden" name="no_note" value="1">
@@ -69,7 +77,7 @@
 {% else %}
   <p class="alert alert-success" role="alert">
     Our records show that you have already paid in full the
-    <strong>${{ amount }}</strong> cost for this session of Wonderment! You can
+    <strong>${{ bill.total }}</strong> cost for this session of Wonderment! You can
     go ahead to
     <a href="{% url 'participant_thanks' session_id=session.id parent_id=parent.id id_hash=id_hash %}">view your registration summary</a>.
   </p>
