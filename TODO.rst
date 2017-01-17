@@ -2,8 +2,6 @@ Wonderment TODO
 
 ===============
 
-- verify waitlist JS for class signups
-
 - validate 7+ numbers in phone fields
 
 - teacher logins: input their own info, access to class lists

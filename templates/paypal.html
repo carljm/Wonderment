@@ -18,10 +18,11 @@
   <strong>As a teacher for this session, you don't need to pay upfront; your
   cost will be deducted from your teacher pay.</strong>
 </p>
-{% elif assistant or cleaning %}
+{% elif assistant or sub or cleaning %}
 <p class="alert alert-warning">
-  You received a {% if assistant %}50{% else %}20{% endif %}% discount since
-  you volunteered to {% if assistant %}be a classroom assistant{% else %}help
+  You received a {% if assistant %}50{% elif sub %}25{% else %}20{% endif %}% discount since
+  you volunteered to
+  {% if assistant %}be a classroom assistant{% elif sub %}substitute-teach{% else %}help
   with cleaning{% endif %}. <strong>We may not have enough slots for all
   volunteers</strong>; if we aren't able to place you in a role, you will
   either need to pay the remaining amount or we will refund your paid amount if
