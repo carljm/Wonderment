@@ -220,6 +220,8 @@ class Session(models.Model):
     committee_members = models.ManyToManyField(
         Parent, related_name='committee_for_sessions', blank=True)
     payment_extra_info = models.TextField(blank=True)
+    donation_text = models.TextField(
+        default="Please consider adding a donation to your registration!")
 
     def __str__(self):
         return self.name
@@ -370,6 +372,7 @@ class Participant(models.Model):
         default=list,
     )
     notes = models.TextField(blank=True)
+    donation = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return "%s is signed up for %s" % (self.parent, self.session)

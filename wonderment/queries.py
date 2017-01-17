@@ -39,7 +39,7 @@ def get_cost(participant):
         discount = 0.2
     if discount:
         cost = math.ceil(cost * (1.0 - discount))
-    return cost
+    return cost + participant.donation
 
 
 def get_idhash_url(urlname, parent, session=None, **kwargs):

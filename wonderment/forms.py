@@ -127,6 +127,14 @@ class WaiverForm(forms.ModelForm):
         self.fields['agreed_to_waiver'].required = True
 
 
+class DonationForm(forms.ModelForm):
+    class Meta:
+        model = models.Participant
+        fields = [
+            'donation'
+        ]
+
+
 class ParticipantForm(forms.ModelForm):
     class Meta:
         model = models.Participant

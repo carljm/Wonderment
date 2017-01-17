@@ -6,8 +6,6 @@ Wonderment TODO
 
 - validate 7+ numbers in phone fields
 
-- donation option in registration payment
-
 - teacher logins: input their own info, access to class lists
 
 - online payment for Extension

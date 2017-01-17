@@ -5,35 +5,39 @@ from wonderment.tests import factories as f
 
 
 @pytest.mark.parametrize(
-    'committee,teacher,assisting,cleaning,num_kids,cost',
+    'donation, committee,teacher,assisting,cleaning,num_kids,cost',
     [
-        (False, False, False, False, 1, 125),
-        (False, False, False, False, 2, 125 + 90),
-        (False, False, False, False, 3, 125 + 90 + 50),
-        (False, False, False, False, 4, 125 + 90 + 50 + 20),
-        (False, False, False, False, 5, 125 + 90 + 50 + 20 + 20),
+        (0, False, False, False, False, 1, 125),
+        (0, False, False, False, False, 2, 125 + 90),
+        (0, False, False, False, False, 3, 125 + 90 + 50),
+        (0, False, False, False, False, 4, 125 + 90 + 50 + 20),
+        (0, False, False, False, False, 5, 125 + 90 + 50 + 20 + 20),
         # 50% discount for assisting
-        (False, False, True, False, 1, 63),
-        (False, False, True, False, 2, 108),
+        (0, False, False, True, False, 1, 63),
+        (0, False, False, True, False, 2, 108),
         # 20% discount for cleaning
-        (False, False, False, True, 1, 100),
-        (False, False, False, True, 2, 172),
+        (0, False, False, False, True, 1, 100),
+        (0, False, False, False, True, 2, 172),
         # discounts don't stack, just get the bigger one
-        (False, False, True, True, 1, 63),
-        (False, False, True, True, 2, 108),
+        (0, False, False, True, True, 1, 63),
+        (0, False, False, True, True, 2, 108),
         # committee members are free
-        (True, False, False, False, 1, 0),
+        (0, True, False, False, False, 1, 0),
         # teachers are free
-        (False, True, False, False, 1, 0),
+        (0, False, True, False, False, 1, 0),
+        # donation is included
+        (75, False, False, False, False, 1, 200),
     ],
 )
-def test_get_cost(db, committee, teacher, assisting, cleaning, num_kids, cost):
+def test_get_cost(
+        db, donation, committee, teacher, assisting, cleaning, num_kids, cost):
     volunteer = []
     if assisting:
         volunteer.append('assisting')
     if cleaning:
         volunteer.append('cleaning')
-    p = f.ParticipantFactory.create(volunteer=volunteer)
+    p = f.ParticipantFactory.create(
+        volunteer=volunteer, donation=donation)
     if committee:
         p.session.committee_members.add(p.parent)
     c1 = f.ClassFactory.create(session=p.session)

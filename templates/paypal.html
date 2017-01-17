@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load bootstrap3 %}
+
 {% block title %}Registration payment | {{ session.name }} | Wonderment{% endblock %}
 
 {% block body %}
@@ -77,5 +79,16 @@
   Pricing: $125 for first child, $90 for second, $50 for third, $20 for each
   additional.
 </p>
+
+<h3>Add a Donation</h3>
+
+<form method="post">
+  {% csrf_token %}
+  <p class="alert alert-info" role="alert">
+    {{ session.donation_text }}
+  </p>
+  {% bootstrap_form donation_form %}
+  <button type="submit">Update donation</button>
+</form>
 
 {% endblock %}

@@ -176,6 +176,19 @@ def payment(request, session_id, parent_id, id_hash):
         raise Http404()
     participant = models.Participant.objects.get(
         parent=parent, session=session)
+    if request.method == 'POST':
+        donation_form = forms.DonationForm(
+            request.POST, instance=participant)
+        if donation_form.is_valid():
+            donation_form.save()
+            return redirect(
+                'payment',
+                session_id=session_id,
+                parent_id=parent_id,
+                id_hash=id_hash,
+            )
+    else:
+        donation_form = forms.DonationForm(instance=participant)
     amount = queries.get_cost(participant)
     owed = max(0, amount - participant.paid)
     pay_success_url = queries.get_idhash_url(
@@ -186,6 +199,7 @@ def payment(request, session_id, parent_id, id_hash):
         request,
         'paypal.html',
         {
+            'donation_form': donation_form,
             'teacher': queries.is_teacher(parent, session),
             'committee': queries.is_committee_member(parent, session),
             'assistant': 'assisting' in participant.volunteer,
