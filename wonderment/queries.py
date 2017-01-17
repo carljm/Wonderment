@@ -12,6 +12,10 @@ def get_cost(participant):
     """Return the amount owed by this parent for this session."""
     parent = participant.parent
     session = participant.session
+    if session.committee_members.filter(pk=parent.pk).exists():
+        return 0
+    if session.classes.filter(teacher__parent=parent).exists():
+        return 0
     num_students = parent.children.filter(
         studies__klass__session=session
     ).distinct().count()

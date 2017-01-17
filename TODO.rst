@@ -2,12 +2,9 @@ Wonderment TODO
 
 ===============
 
-- teachers don't pay upfront
-
-- make info about assistant discount more prominent, and clarify that if they
-  are confirmed as an assistant, payment is not refundable.
-
 - verify waitlist JS for class signups
+
+- validate 7+ numbers in phone fields
 
 - donation option in registration payment
 

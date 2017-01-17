@@ -217,6 +217,8 @@ class Session(models.Model):
         default='registrar@wondermentblackhills.com')
     online_payment = models.BooleanField(default=True)
     waiver = models.TextField(blank=True)
+    committee_members = models.ManyToManyField(
+        Parent, related_name='committee_for_sessions')
 
     def __str__(self):
         return self.name

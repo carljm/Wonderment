@@ -48,6 +48,13 @@ class SessionQuestionAnswerInline(admin.TabularInline):
     extra = 0
 
 
+class CommitteeMembershipInline(admin.TabularInline):
+    model = models.Session.committee_members.through
+    extra = 0
+    verbose_name = "committee member"
+    verbose_name_plural = "committee members"
+
+
 class ParentAdmin(admin.ModelAdmin):
     list_display = [
         '__str__',
@@ -65,12 +72,18 @@ class ParentAdmin(admin.ModelAdmin):
 class TeacherAdmin(admin.ModelAdmin):
     inlines = [ClassInline]
 
+
 class SessionQuestionAdmin(admin.ModelAdmin):
     inlines = [SessionQuestionAnswerInline]
 
 
 class SessionAdmin(admin.ModelAdmin):
-    inlines = [ParticipantInline, ClassInline, SessionQuestionInline]
+    inlines = [
+        ParticipantInline,
+        ClassInline,
+        SessionQuestionInline,
+        CommitteeMembershipInline,
+    ]
 
 
 class ClassAdmin(admin.ModelAdmin):
