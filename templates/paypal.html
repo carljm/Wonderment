@@ -5,8 +5,19 @@
 {% block body %}
 <h2>{% if owed %}Complete your registration for Wonderment {{ session.name }}{% else %}Paid in full for Wonderment {{ session.name }}!{% endif %}</h2>
 
-{% if assistant or cleaning %}
 
+{% if committee %}
+<p class="alert alert-info">
+  <strong>As a member of the Wonderment volunteer organizing committee, you
+  don't need to pay.</strong>
+</p>
+{% elif teacher %}
+<p class="alert alert-info">
+  <strong>As a teacher for this session, you don't need to pay upfront; your
+  cost will be deducted from your teacher pay.</strong>
+</p>
+{% elif assistant or cleaning %}
+<p class="alert alert-warning">
   You received a {% if assistant %}50{% else %}20{% endif %}% discount since
   you volunteered to {% if assistant %}be a classroom assistant{% else %}help
   with cleaning{% endif %}. <strong>We may not have enough slots for all
@@ -14,7 +25,7 @@
   either need to pay the remaining amount or we will refund your paid amount if
   you no longer wish to participate. <strong>If we are able to place you in
   your requested role, your payment is non-refundable.</strong>
-
+</p>
 {% endif %}
 
 {% if owed %}
@@ -22,8 +33,8 @@
     <strong>To complete your registration</strong>, please click
     the <strong>Pay Now</strong> button below to pay
     <strong>${{ owed }}</strong> via PayPal.  {% if paid %} (Our records show
-    that you have already paid ${{ paid }} of your ${{ amount }} total.){%
-    endif %} If you choose not to pay now, you can bookmark this page and
+    that you have already paid ${{ paid }} of your ${{ amount }} total.)
+    {% endif %} If you choose not to pay now, you can bookmark this page and
     return to it later to complete your payment; <strong>your class selections
     will not be confirmed until you complete your
     payment</strong>. <strong>Payment is non-refundable.</strong>
@@ -47,14 +58,18 @@
   <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
   </form>
 
-  <p class="alert alert-warning" role="alert">
-    {{ payment_extra_info|linebreaksbr }}
-  </p>
+  {% if session.payment_extra_info %}
+    <p class="alert alert-warning" role="alert">
+      {{ session.payment_extra_info|linebreaksbr }}
+    </p>
+  {% endif %}
 
 {% else %}
   <p class="alert alert-success" role="alert">
     Our records show that you have already paid in full the
-    <strong>${{ amount }}</strong> cost for this session of Wonderment!
+    <strong>${{ amount }}</strong> cost for this session of Wonderment! You can
+    go ahead to
+    <a href="{% url 'participant_thanks' session_id=session.id parent_id=parent.id id_hash=id_hash %}">view your registration summary</a>.
   </p>
 {% endif %}
 

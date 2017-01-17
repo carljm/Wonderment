@@ -84,6 +84,7 @@ class SessionAdmin(admin.ModelAdmin):
         SessionQuestionInline,
         CommitteeMembershipInline,
     ]
+    exclude = ['committee_members']
 
 
 class ClassAdmin(admin.ModelAdmin):

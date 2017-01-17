@@ -19,4 +19,22 @@
 </p>
 {% endif %}
 
+<p class="alert alert-info" role="alert">
+  Your registration summary:
+</p>
+
+<pre>
+  {{ summary }}
+</pre>
+
+<form method="post">
+  {% csrf_token %}
+  <p class="alert alert-warning" role="alert">
+    If you haven't received a registration confirmation email, or want a
+    summary of your registration re-sent to you:
+
+    <button type="submit">Send me my registration summary by email</button>
+  </p>
+</form>
+
 {% endblock %}

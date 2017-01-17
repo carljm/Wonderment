@@ -218,7 +218,8 @@ class Session(models.Model):
     online_payment = models.BooleanField(default=True)
     waiver = models.TextField(blank=True)
     committee_members = models.ManyToManyField(
-        Parent, related_name='committee_for_sessions')
+        Parent, related_name='committee_for_sessions', blank=True)
+    payment_extra_info = models.TextField(blank=True)
 
     def __str__(self):
         return self.name

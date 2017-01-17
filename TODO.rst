@@ -12,6 +12,8 @@ Wonderment TODO
 
 - online payment for Extension
 
+- cost breakdown on payment page
+
 - auto-generate teacher and class eval rating questions
 
 - per-session eval questions

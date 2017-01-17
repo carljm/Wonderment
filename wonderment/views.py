@@ -2,6 +2,7 @@ import csv
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.db import transaction
 from django.db.models import (
     Count,
@@ -106,13 +107,13 @@ def select_classes(request, session_id, parent_id, id_hash):
         if formset.is_valid():
             with transaction.atomic():
                 formset.save()
-            if session.online_payment:
+            if session.waiver.strip():
+                next_view = 'waiver'
+            elif session.online_payment:
                 next_view = 'payment'
             else:
                 next_view = 'participant_thanks'
                 commands.send_reg_confirmation_email(participant)
-            if session.waiver.strip():
-                next_view = 'waiver'
             return redirect(
                 next_view,
                 session_id=session_id,
@@ -146,6 +147,8 @@ def waiver(request, session_id, parent_id, id_hash):
         if form.is_valid():
             with transaction.atomic():
                 form.save()
+            if not session.online_payment:
+                commands.send_reg_confirmation_email(participant)
             return redirect(
                 'payment' if session.online_payment else 'participant_thanks',
                 session_id=session_id,
@@ -175,7 +178,6 @@ def payment(request, session_id, parent_id, id_hash):
         parent=parent, session=session)
     amount = queries.get_cost(participant)
     owed = max(0, amount - participant.paid)
-    payment_extra_info = models.Chunk.get('payment-extra-info')
     pay_success_url = queries.get_idhash_url(
         'payment_success', parent, session, paid=owed)
     pay_cancel_url = queries.get_idhash_url(
@@ -184,6 +186,8 @@ def payment(request, session_id, parent_id, id_hash):
         request,
         'paypal.html',
         {
+            'teacher': queries.is_teacher(parent, session),
+            'committee': queries.is_committee_member(parent, session),
             'assistant': 'assisting' in participant.volunteer,
             'cleaning': 'cleaning' in participant.volunteer,
             'session': session,
@@ -191,9 +195,9 @@ def payment(request, session_id, parent_id, id_hash):
             'amount': amount,
             'owed': owed,
             'paid': participant.paid,
-            'payment_extra_info': payment_extra_info,
             'payment_success_url': settings.BASE_URL + pay_success_url,
             'payment_cancel_url': settings.BASE_URL + pay_cancel_url,
+            'id_hash': id_hash,
         },
     )
 
@@ -251,14 +255,26 @@ def participant_thanks(request, session_id, parent_id, id_hash):
     parent = get_object_or_404(models.Parent, pk=parent_id)
     if utils.idhash(parent.id) != id_hash:
         raise Http404()
+    participant = models.Participant.objects.get(
+        parent=parent, session=session)
+
+    if request.method == 'POST':
+        commands.send_reg_confirmation_email(participant)
+        messages.add_message(request, messages.SUCCESS, "Email summary sent.")
+        return redirect(
+            'participant_thanks',
+            session_id=session_id,
+            parent_id=parent_id,
+            id_hash=id_hash,
+        )
+
     ctx = {
         'session': session,
         'parent': parent,
-    },
+        'summary': queries.get_registration_summary_email_body(participant)
+    }
 
     if session.online_payment:
-        participant = models.Participant.objects.get(
-            parent=parent, session=session)
         amount = queries.get_cost(participant)
         owed = max(0, amount - participant.paid)
         url = queries.get_idhash_url('payment', parent, session)
