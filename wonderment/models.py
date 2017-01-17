@@ -363,7 +363,8 @@ class Participant(models.Model):
     paid = models.IntegerField(default=0)
     volunteer = fields.ArrayChoiceField(
         models.TextField(choices=JOBS),
-        verbose_name="I am interested in helping out this session by:",
+        verbose_name=(
+            "I am interested in helping out this session by (optional):"),
         blank=True,
         default=list,
     )

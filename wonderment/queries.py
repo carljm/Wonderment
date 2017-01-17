@@ -41,6 +41,8 @@ def get_bill(participant):
         costs.append(("Teacher (cost deducted from pay)", -total))
     elif 'assisting' in participant.volunteer:
         costs.append(("50% assistant discount", -math.floor(total * 0.5)))
+    elif 'sub' in participant.volunteer:
+        costs.append(("25% sub discount", -math.floor(total * 0.25)))
     elif 'cleaning' in participant.volunteer:
         costs.append(("20% cleaning discount", -math.floor(total * 0.2)))
     if participant.donation:

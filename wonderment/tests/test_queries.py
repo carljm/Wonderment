@@ -5,10 +5,10 @@ from wonderment.tests import factories as f
 
 
 @pytest.mark.parametrize(
-    'donation,paid,committee,teacher,assisting,cleaning,num_kids,breakdown',
+    'donation,paid,committee,teacher,assist,sub,cleaning,num_kids,breakdown',
     [
         (
-            0, 0, False, False, False, False, 1,
+            0, 0, False, False, False, False, False, 1,
             {
                 'costs': [("First kid", 125)],
                 'total': 125,
@@ -17,7 +17,7 @@ from wonderment.tests import factories as f
             }
         ),
         (
-            0, 0, False, False, False, False, 2,
+            0, 0, False, False, False, False, False, 2,
             {
                 'costs': [
                     ("First kid", 125),
@@ -29,7 +29,7 @@ from wonderment.tests import factories as f
             }
         ),
         (
-            0, 0, False, False, False, False, 3,
+            0, 0, False, False, False, False, False, 3,
             {
                 'costs': [
                     ("First kid", 125),
@@ -42,7 +42,7 @@ from wonderment.tests import factories as f
             }
         ),
         (
-            0, 0, False, False, False, False, 4,
+            0, 0, False, False, False, False, False, 4,
             {
                 'costs': [
                     ("First kid", 125),
@@ -56,7 +56,7 @@ from wonderment.tests import factories as f
             }
         ),
         (
-            0, 0, False, False, False, False, 5,
+            0, 0, False, False, False, False, False, 5,
             {
                 'costs': [
                     ("First kid", 125),
@@ -72,7 +72,7 @@ from wonderment.tests import factories as f
         ),
         # 50% discount for assisting
         (
-            0, 0, False, False, True, False, 1,
+            0, 0, False, False, True, False, False, 1,
             {
                 'costs': [
                     ("First kid", 125),
@@ -83,9 +83,22 @@ from wonderment.tests import factories as f
                 'owed': 63,
             }
         ),
+        # 25% discount for subbing
+        (
+            0, 0, False, False, False, True, False, 1,
+            {
+                'costs': [
+                    ("First kid", 125),
+                    ("25% sub discount", -31),
+                ],
+                'total': 94,
+                'paid': 0,
+                'owed': 94,
+            }
+        ),
         # 20% discount for cleaning
         (
-            0, 0, False, False, False, True, 1,
+            0, 0, False, False, False, False, True, 1,
             {
                 'costs': [
                     ("First kid", 125),
@@ -98,7 +111,7 @@ from wonderment.tests import factories as f
         ),
         # discounts don't stack, just get the bigger one
         (
-            0, 0, False, False, True, True, 1,
+            0, 0, False, False, True, False, True, 1,
             {
                 'costs': [
                     ("First kid", 125),
@@ -111,7 +124,7 @@ from wonderment.tests import factories as f
         ),
         # committee members are free
         (
-            0, 0, True, False, False, False, 1,
+            0, 0, True, False, False, False, False, 1,
             {
                 'costs': [
                     ("First kid", 125),
@@ -124,7 +137,7 @@ from wonderment.tests import factories as f
         ),
         # teachers are free
         (
-            0, 0, False, True, False, False, 1,
+            0, 0, False, True, False, False, False, 1,
             {
                 'costs': [
                     ("First kid", 125),
@@ -137,7 +150,7 @@ from wonderment.tests import factories as f
         ),
         # donation is included
         (
-            75, 0, False, False, False, False, 1,
+            75, 0, False, False, False, False, False, 1,
             {
                 'costs': [
                     ("First kid", 125),
@@ -150,7 +163,7 @@ from wonderment.tests import factories as f
         ),
         # already-paid is deducated
         (
-            0, 100, False, False, False, False, 1,
+            0, 100, False, False, False, False, False, 1,
             {
                 'costs': [("First kid", 125)],
                 'total': 125,
@@ -162,12 +175,14 @@ from wonderment.tests import factories as f
 )
 def test_get_bill(
         db,
-        donation, paid, committee, teacher, assisting, cleaning, num_kids,
+        donation, paid, committee, teacher, assist, sub, cleaning, num_kids,
         breakdown
 ):
     volunteer = []
-    if assisting:
+    if assist:
         volunteer.append('assisting')
+    if sub:
+        volunteer.append('sub')
     if cleaning:
         volunteer.append('cleaning')
     p = f.ParticipantFactory.create(
