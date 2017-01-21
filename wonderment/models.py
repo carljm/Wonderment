@@ -21,6 +21,9 @@ JOBS = [
 ]
 
 
+JOBS_MAP = dict(JOBS)
+
+
 FUTURE_JOBS = [
     ('coordination', "joining the planning team"),
     ('teaching', "teaching a class"),

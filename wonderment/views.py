@@ -470,7 +470,7 @@ def parents_by_contribution(request, session_id):
         all_contributions = set(participant.volunteer)
         all_contributions.update(participant.assigned_jobs)
         for contribution in all_contributions:
-            desc = models.JOB_MAP.get(contribution, contribution)
+            desc = models.JOBS_MAP.get(contribution, contribution)
             assigned = (contribution in participant.assigned_jobs)
             existing = participants_by_contribution.setdefault(desc, [])
             if assigned:
