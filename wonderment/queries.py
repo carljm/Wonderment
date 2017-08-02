@@ -1,3 +1,4 @@
+import datetime
 import math
 
 from django.conf import settings
@@ -9,7 +10,10 @@ from django.template import (
 )
 
 from . import utils
-from .models import Student
+from .models import (
+    Session,
+    Student,
+)
 
 # $125 for first kid, $90 for second, $50 for third, $20 for all others
 COSTS = [125, 90, 50, 20]
@@ -54,6 +58,16 @@ def get_bill(participant):
         'paid': participant.paid,
         'owed': max(0, total - participant.paid)
     }
+
+
+def get_next_upcoming_session():
+    today = datetime.date.today()
+    sessions = Session.objects.filter(
+        end_date__gte=today
+    ).order_by('start_date')
+    if len(sessions):
+        return sessions[0]
+    return None
 
 
 def get_idhash_url(urlname, parent, session=None, **kwargs):

@@ -60,12 +60,16 @@ class ParentAdmin(admin.ModelAdmin):
         '__str__',
         'phone',
         'email',
-        'fall2016eval_link',
+        'registration_link',
     ]
     inlines = [ChildInline, ParticipantInline, SessionQuestionAnswerInline]
 
-    def fall2016eval_link(self, obj):
-        url = settings.BASE_URL + queries.get_idhash_url('fall2016eval', obj)
+    def registration_link(self, obj):
+        session = queries.get_next_upcoming_session()
+        if session is None:
+            return 'No upcoming session.'
+        url = settings.BASE_URL + queries.get_idhash_url(
+            'edit_participant_form', obj, session=session)
         return mark_safe('<a href="%s">%s</a>' % (url, url))
 
 
