@@ -15,9 +15,6 @@ from .models import (
     Student,
 )
 
-# $125 for first kid, $90 for second, $50 for third, $20 for all others
-COSTS = [125, 90, 50, 20]
-
 
 def get_bill(participant):
     """Return bill for this participant.
@@ -33,22 +30,18 @@ def get_bill(participant):
     num_students = parent.children.filter(
         studies__klass__session=session
     ).distinct().count()
-    for i in range(num_students):
-        costs.append((
-            "%s kid" % ordinal(i + 1),
-            COSTS[i] if i < len(COSTS) else COSTS[-1],
-        ))
+    costs.append(
+        (
+            "%s student%s x $30" % (
+                num_students, '' if num_students == 1 else 's'),
+            30 * num_students,
+        )
+    )
     total = sum(c[1] for c in costs)
     if is_committee_member(parent, session):
         costs.append(("100% committee discount", -total))
     elif is_teacher(parent, session):
         costs.append(("Teacher (cost deducted from pay)", -total))
-    elif 'assisting' in participant.volunteer:
-        costs.append(("50% assistant discount", -math.floor(total * 0.5)))
-    elif 'sub' in participant.volunteer:
-        costs.append(("25% sub discount", -math.floor(total * 0.25)))
-    elif 'cleaning' in participant.volunteer:
-        costs.append(("20% cleaning discount", -math.floor(total * 0.2)))
     if participant.donation:
         costs.append(("Donation", participant.donation))
     total = sum(c[1] for c in costs)
