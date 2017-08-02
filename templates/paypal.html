@@ -69,12 +69,6 @@
   <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
   </form>
 
-  {% if session.payment_extra_info %}
-    <p class="alert alert-warning" role="alert">
-      {{ session.payment_extra_info|linebreaksbr }}
-    </p>
-  {% endif %}
-
 {% else %}
   <p class="alert alert-success" role="alert">
     Our records show that you have already paid in full the
@@ -84,10 +78,11 @@
   </p>
 {% endif %}
 
-<p class="alert alert-warning" role="alert">
-  Pricing: $125 for first child, $90 for second, $50 for third, $20 for each
-  additional.
-</p>
+{% if session.payment_extra_info %}
+  <p class="alert alert-warning" role="alert">
+    {{ session.payment_extra_info|linebreaksbr }}
+  </p>
+{% endif %}
 
 <h3>Add a Donation</h3>
 
