@@ -96,8 +96,13 @@ class ClassAdmin(admin.ModelAdmin):
     inlines = [StudentInline]
 
 
+class TransferInline(admin.TabularInline):
+    model = models.ChildTransfer
+    extra = 0
+
+
 class ChildAdmin(admin.ModelAdmin):
-    inlines = [StudentInline]
+    inlines = [StudentInline, TransferInline]
 
 
 admin.site.register(models.Parent, ParentAdmin)

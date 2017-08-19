@@ -20,3 +20,8 @@ def json(val):
 @register.filter
 def newlineslash(val):
     return val.strip().replace('\n', ' / ')
+
+
+@register.filter
+def sign_in_status(child):
+    return child.sign_in_status(today())

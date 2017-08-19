@@ -1,0 +1,52 @@
+{% extends "class_attendance.html" %}
+{% load wonderment %}
+{% load bootstrap3 %}
+
+{% block title %}Sign {{ signout|yesno:"Out,In" }} | {{ child.name }} | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: {{ class.name }} : {{ child.name }} : Sign {{ signout|yesno:"Out,In" }}{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li><a href="{% url 'sign_in_out' session_id=session.id class_id=class.id child_id=child.id %}">{{ child.name }} Sign {{ signout|yesno:"Out,In" }}</a></li>
+{% endblock %}
+
+{% block main %}
+<article class="panel panel-{{ signout|yesno:'danger,success' }}">
+  <div class="panel-heading">
+    <h2 class="panel-title">
+      I am <strong>{{ signout|yesno:"picking up,dropping off"}}</strong> my child,
+       <strong>{{ child.name }}</strong>,
+      at Wonderment
+      on <strong>{% now "l F j, Y, \a\t g:i a" %}</strong>
+    </h2>
+  </div>
+  <div class="panel-body">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <strong>Parent:</strong> {{ child.parent.name }} ({{ child.parent.phone }})
+      </li>
+      {% if child.parent.spouse %}
+        <li class="list-group-item">
+          <strong>Spouse:</strong> {{ child.parent.spouse }}
+        </li>
+      {% endif %}
+      {% if child.parent.pick_up_names %}
+        <li class="list-group-item">
+          <strong>May pick up:</strong> {{ child.parent.pick_up_names|linebreaksbr }}
+        </li>
+      {% endif %}
+    </ul>
+    <form method="POST">
+      {% csrf_token %}
+      {% bootstrap_form_errors form %}
+      {% bootstrap_form form %}
+      {% buttons %}
+        <button class="btn btn-lg btn-default" name="in_out" value="{{ signout|yesno:"out,in" }}">
+          Sign {{ child.name }} {{ signout|yesno:"Out,In" }}
+        </button>
+      {% endbuttons %}
+    </form>
+  </div>
+</article>
+{% endblock %}

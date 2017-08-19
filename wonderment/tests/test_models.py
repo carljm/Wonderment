@@ -62,6 +62,48 @@ class TestChild:
 
         assert c.age_display(date(2014, 10, 1)) == "?"
 
+    def test_sign_in_status_never_has(self, db):
+        """If child has never signed in, status is none."""
+        c = f.ChildFactory.create()
+
+        assert c.sign_in_status(date(2017, 8, 18)) == 'none'
+
+    def test_sign_in_status_in(self, db):
+        """If child has signed in today, they are signed in."""
+        ct = f.ChildTransferFactory.create(
+            timestamp=datetime(2017, 8, 18, 10),
+            in_out='in')
+
+        assert ct.child.sign_in_status(date(2017, 8, 18)) == 'in'
+
+    def test_sign_in_status_out(self, db):
+        """If child has signed in and out, they are signed out."""
+        ct = f.ChildTransferFactory.create(
+            timestamp=datetime(2017, 8, 18, 10),
+            in_out='in')
+        f.ChildTransferFactory.create(
+            child=ct.child,
+            timestamp=datetime(2017, 8, 18, 11),
+            in_out='out')
+
+        assert ct.child.sign_in_status(date(2017, 8, 18)) == 'out'
+
+    def test_sign_in_status_stale(self, db):
+        """If last xfer was previous-day sign in, status is stale."""
+        ct = f.ChildTransferFactory.create(
+            timestamp=datetime(2017, 8, 17, 10),
+            in_out='in')
+
+        assert ct.child.sign_in_status(date(2017, 8, 18)) == 'stale'
+
+    def test_sign_in_status_none(self, db):
+        """If last xfer was previous-day sign out, status is none."""
+        ct = f.ChildTransferFactory.create(
+            timestamp=datetime(2017, 8, 17, 10),
+            in_out='out')
+
+        assert ct.child.sign_in_status(date(2017, 8, 18)) == 'none'
+
 
 class TestSession:
     def test_str(self):

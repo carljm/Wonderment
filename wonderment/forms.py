@@ -22,6 +22,14 @@ from . import (
 )
 
 
+class TransferForm(forms.ModelForm):
+    class Meta:
+        model = models.ChildTransfer
+        fields = [
+            'initials',
+        ]
+
+
 class WaiverForm(forms.ModelForm):
     class Meta:
         model = models.Participant

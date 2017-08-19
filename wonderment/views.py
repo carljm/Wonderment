@@ -369,6 +369,53 @@ def class_detail(request, session_id, class_id, include_parents=False):
 
 
 @login_required
+def class_attendance(request, session_id, class_id):
+    session = get_object_or_404(models.Session, pk=session_id)
+    klass = get_object_or_404(models.Class, pk=class_id, session=session)
+    return render(
+        request,
+        'class_attendance.html',
+        {
+            'session': session,
+            'class': klass,
+        },
+    )
+
+
+@login_required
+def sign_in_out(request, session_id, class_id, child_id):
+    session = get_object_or_404(models.Session, pk=session_id)
+    student = get_object_or_404(
+        models.Student,
+        child_id=child_id,
+        klass__session=session,
+        klass_id=class_id,
+    )
+    if request.method == 'POST':
+        form = forms.TransferForm(request.POST)
+        if form.is_valid():
+            transfer = form.save(commit=False)
+            transfer.child = student.child
+            transfer.timestamp = timezone.now()
+            transfer.in_out = request.POST.get('in_out')
+            transfer.save()
+            return redirect(
+                'class_attendance', session_id=session_id, class_id=class_id)
+    else:
+        form = forms.TransferForm()
+    return render(
+        request,
+        'sign_in_out.html',
+        {
+            'session': session,
+            'class': student.klass,
+            'child': student.child,
+            'signout': student.child.sign_in_status(models.today()) == 'in',
+            'form': form,
+        },
+    )
+
+@login_required
 def all_students(request, session_id):
     session = get_object_or_404(models.Session, pk=session_id)
     participants = models.Participant.objects.filter(

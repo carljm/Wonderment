@@ -127,6 +127,14 @@ class Child(models.Model):
             return "%syr" % age.years
         return "?"
 
+    def sign_in_status(self, as_of):
+        last_xfer = self.transfers.order_by('-timestamp').first()
+        if last_xfer is None:
+            return 'none'
+        elif last_xfer.timestamp.date() < as_of:
+            return 'stale' if last_xfer.in_out == 'in' else 'none'
+        return last_xfer.in_out
+
     def __str__(self):
         return self.name
 

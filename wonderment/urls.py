@@ -137,6 +137,16 @@ session_urls = [
         {'include_parents': True},
         name='class_detail_parents',
     ),
+    url(
+        r'^classes/(?P<class_id>\d+)/attendance/$',
+        views.class_attendance,
+        name='class_attendance',
+    ),
+    url(
+        r'^classes/(?P<class_id>\d+)/attendance/(?P<child_id>\d+)/$',
+        views.sign_in_out,
+        name='sign_in_out',
+    )
 ]
 
 

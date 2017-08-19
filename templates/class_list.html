@@ -19,6 +19,7 @@
     -- {{ class.num_students }}/{{ class.max_students }} signed up
     -- <a href="{% url 'class_detail' session_id=session.id class_id=class.id %}">Roster</a>
     -- <a href="{% url 'class_detail_parents' session_id=session.id class_id=class.id %}">Roster/parents</a>
+    -- <a href="{% url 'class_attendance' session_id=session.id class_id=class.id %}">Attendance</a>
   </div>
   {% endfor %}
 </div>

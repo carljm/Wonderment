@@ -1,0 +1,50 @@
+{% extends "class_list.html" %}
+{% load wonderment %}
+
+{% block title %}Attendance | {{ class.name }} | {{ block.super }}{% endblock %}
+
+{% block header %}{{ session }}: {{ class.name }} : Attendance{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li><a href="{% url 'class_attendance' session_id=session.id class_id=class.id %}">{{ class.name }} Attendance</a></li>
+{% endblock %}
+
+{% block main %}
+{% with class.students.all as students %}
+<article class="panel panel-primary">
+  <div class="panel-heading">
+    <h2 class="panel-title">
+      <strong>{{ class }} (age {{ class.min_age }}-{{ class.max_age }})</strong>
+      -- {{ class.teacher.name }}
+    </h2>
+  </div>
+  <div class="panel-body">
+    {% if students %}
+    <ul class="list-group">
+      {% for student in students %}
+      {% with student.child as child %}
+      <li class="list-group-item">
+        <a href="{% url 'sign_in_out' session_id=session.id class_id=class.id child_id=child.id %}">
+          {% with child|sign_in_status as status %}
+            {% if status == 'in' %}
+              <span class="label label-success">Signed In</span>
+            {% elif status == 'none' %}
+              <span class="label label-default">Not Signed In</span>
+            {% elif status == 'stale' %}
+              <span class="label label-warning">Still Signed In From Last Time!</span>
+            {% elif status == 'out' %}
+              <span class="label label-danger">Signed Out</span>
+            {% endif %}
+          {% endwith %}
+          {{ child.name }}
+        </a>
+      </li>
+      {% endwith %}
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</article>
+{% endwith %}
+{% endblock %}
