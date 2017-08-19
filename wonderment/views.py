@@ -532,12 +532,6 @@ def participant_detail(request, session_id, participant_id):
 
 
 @login_required
-def classdays(request, session_id):
-    session = get_object_or_404(models.Session, pk=session_id)
-    return render(request, 'classday_list.html', {'session': session})
-
-
-@login_required
 def paid_participants_csv(request, session_id):
     session = get_object_or_404(models.Session, pk=session_id)
     participants = models.Participant.objects.filter(

@@ -1,9 +1,0 @@
-{% for group_name, choices in optgroups %}
-  {% for choice in choices %}
-    <label for="{{ attrs.id }}_{{ forloop.counter }}" class="attendance-select-label label {% cycle 'label-default' 'label-success' 'label-info' 'label-warning' 'label-danger' %}">
-      &nbsp;
-      <input type="radio" id="{{ attrs.id }}_{{ forloop.counter }}" value="{{ choice.0 }}" name="{{ name }}"{% if choice.0 in value or forloop.first and not value %} checked{% endif %}>
-      &nbsp;
-    </label>
-  {% endfor %}
-{% endfor %}
