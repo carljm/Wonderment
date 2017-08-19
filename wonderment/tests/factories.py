@@ -91,9 +91,11 @@ class StudentFactory(ModelFactory):
     signed_up = datetime.datetime(2016, 1, 22, 20, 15)
 
 
-class ClassDayFactory(ModelFactory):
+class ChildTransferFactory(ModelFactory):
     class Meta:
-        model = models.ClassDay
+        model = models.ChildTransfer
 
-    session = factory.SubFactory(SessionFactory)
-    date = datetime.date(2014, 9, 12)
+    child = factory.SubFactory(ChildFactory)
+    in_out = models.ChildTransfer.IN
+    initials = 'POK'
+    timestamp = datetime.datetime(2014, 9, 12, 10)

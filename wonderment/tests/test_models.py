@@ -1,16 +1,17 @@
-from datetime import date
+from datetime import datetime, date
 
 from dateutil.relativedelta import relativedelta
+import pytz
 
 from wonderment.tests import factories as f
 
 
-class TestParent(object):
+class TestParent:
     def test_str(self):
         assert str(f.ParentFactory.build(name="Foo")) == "Foo"
 
 
-class TestChild(object):
+class TestChild:
     def test_str(self):
         assert str(f.ChildFactory.build(name="Foo")) == "Foo"
 
@@ -62,7 +63,7 @@ class TestChild(object):
         assert c.age_display(date(2014, 10, 1)) == "?"
 
 
-class TestSession(object):
+class TestSession:
     def test_str(self):
         assert str(f.SessionFactory.build(name="Bar")) == "Bar"
 
@@ -104,7 +105,7 @@ class TestSession(object):
         assert families['students'][0].real_age == "2yr"
 
 
-class TestParticipant(object):
+class TestParticipant:
     def test_str(self):
         p = f.ParticipantFactory.build(
             parent__name="Parent", session__name="Session")
@@ -112,8 +113,14 @@ class TestParticipant(object):
         assert str(p) == "Parent is signed up for Session"
 
 
-class TestClassDay(object):
-    def test_str(self):
-        cd = f.ClassDayFactory.build(date=date(2014, 9, 1))
+denver = pytz.timezone('America/Denver')
 
-        assert str(cd) == "September 01, 2014"
+
+class TestChildTransfer:
+    def test_str(self):
+        ct = f.ChildTransferFactory.build(
+            child__name="Kid", in_out='in', initials='POK',
+            timestamp=denver.localize(datetime(2017, 8, 18, 10))
+        )
+
+        assert str(ct) == "Kid signed in by POK at Fri Aug 18 10:00:00 2017"

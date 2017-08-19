@@ -390,16 +390,24 @@ class Participant(models.Model):
         verbose_name = "participant in session"
 
 
-class ClassDay(models.Model):
-    session = models.ForeignKey(Session, related_name='classdays')
-    date = models.DateField()
+class ChildTransfer(models.Model):
+    """Child sign in/out event."""
+    IN = 'in'
+    OUT = 'out'
+    TRANSFER_TYPES = [
+        (IN, 'sign in'),
+        (OUT, 'sign out'),
+    ]
+    child = models.ForeignKey(Child, related_name='transfers')
+    in_out = models.CharField(max_length=10, choices=TRANSFER_TYPES)
+    initials = models.CharField(max_length=50)
+    timestamp = models.DateTimeField()
 
     def __str__(self):
-        return self.date.strftime('%B %d, %Y')
-
-    class Meta:
-        ordering = ['-date']
-
+        return "%s signed %s by %s at %s" % (
+            self.child, self.in_out, self.initials,
+            self.timestamp.strftime('%c')
+        )
 
 # Archives (ignore) #######
 

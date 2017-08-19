@@ -103,7 +103,6 @@ class ChildAdmin(admin.ModelAdmin):
 admin.site.register(models.Parent, ParentAdmin)
 admin.site.register(models.Teacher, TeacherAdmin)
 admin.site.register(models.Session, SessionAdmin)
-admin.site.register(models.ClassDay)
 admin.site.register(models.Class, ClassAdmin)
 admin.site.register(models.Child, ChildAdmin)
 admin.site.register(models.ParentArchive)
