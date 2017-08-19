@@ -538,42 +538,6 @@ def classdays(request, session_id):
 
 
 @login_required
-def attendance(request, session_id, classday_id=None):
-    session = get_object_or_404(models.Session, pk=session_id)
-    form_kwargs = {'session': session, 'instance': None}
-    classday = None
-    creating = True
-    if classday_id is not None:
-        classday = get_object_or_404(
-            models.ClassDay,
-            session=session,
-            pk=classday_id,
-        )
-        form_kwargs['instance'] = classday
-        creating = False
-    if request.method == 'POST':
-        with transaction.atomic():
-            form = forms.AttendanceForm(request.POST, **form_kwargs)
-            if form.is_valid():
-                classday = form.save()
-                if creating:
-                    return redirect(
-                        'attendance',
-                        session_id=session.id,
-                        classday_id=classday.id,
-                    )
-                return redirect('classdays', session_id=session.id)
-    else:
-        form = forms.AttendanceForm(**form_kwargs)
-
-    return render(
-        request,
-        'attendance_form.html',
-        {'form': form, 'classday': classday, 'session': session},
-    )
-
-
-@login_required
 def paid_participants_csv(request, session_id):
     session = get_object_or_404(models.Session, pk=session_id)
     participants = models.Participant.objects.filter(

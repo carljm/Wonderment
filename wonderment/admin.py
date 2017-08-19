@@ -18,16 +18,6 @@ class ChildInline(admin.TabularInline):
     extra = 0
 
 
-class ChildAttendanceInline(admin.TabularInline):
-    model = models.ChildAttendance
-    extra = 0
-
-
-class ParentAttendanceInline(admin.TabularInline):
-    model = models.ParentAttendance
-    extra = 0
-
-
 class ClassInline(admin.TabularInline):
     model = models.Class
     extra = 0
@@ -110,17 +100,12 @@ class ChildAdmin(admin.ModelAdmin):
     inlines = [StudentInline]
 
 
-class ClassDayAdmin(admin.ModelAdmin):
-    inlines = [ChildAttendanceInline, ParentAttendanceInline]
-
-
 admin.site.register(models.Parent, ParentAdmin)
 admin.site.register(models.Teacher, TeacherAdmin)
 admin.site.register(models.Session, SessionAdmin)
-admin.site.register(models.ClassDay, ClassDayAdmin)
+admin.site.register(models.ClassDay)
 admin.site.register(models.Class, ClassAdmin)
 admin.site.register(models.Child, ChildAdmin)
-admin.site.register(models.Chunk)
 admin.site.register(models.ParentArchive)
 admin.site.register(models.ParticipantArchive)
 admin.site.register(models.SessionQuestion, SessionQuestionAdmin)

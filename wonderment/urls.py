@@ -75,17 +75,6 @@ registration_urls = [
 session_urls = [
     url(r'^register/', include(registration_urls)),
     url(r'^browse/$', views.session, name='session'),
-    url(r'^attendance/$', views.classdays, name='classdays'),
-    url(
-        r'^attendance/new/$',
-        views.attendance,
-        name='attendance',
-    ),
-    url(
-        r'^attendance/(?P<classday_id>\d+)/$',
-        views.attendance,
-        name='attendance',
-    ),
     url(
         r'^parent_emails/$',
         views.parent_emails,

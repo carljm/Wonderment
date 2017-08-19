@@ -1,5 +1,4 @@
 from datetime import date
-from functools import lru_cache
 
 import floppyforms.__future__ as forms
 from dateutil import rrule
@@ -400,49 +399,6 @@ class ClassDay(models.Model):
 
     class Meta:
         ordering = ['-date']
-
-
-ATTENDANCE = [
-    ('present', 'present'),
-    ('planned', 'absent (planned)'),
-    ('short', 'absent (short notice)'),
-    ('surprise', 'absent (no notice)'),
-]
-
-
-class ParentAttendance(models.Model):
-    classday = models.ForeignKey(ClassDay)
-    parent = models.ForeignKey(Parent)
-    attendance = models.CharField(
-        max_length=20, choices=ATTENDANCE, blank=True, null=True)
-
-
-class ChildAttendance(models.Model):
-    classday = models.ForeignKey(ClassDay)
-    child = models.ForeignKey(Child)
-    attendance = models.CharField(
-        max_length=20, choices=ATTENDANCE, blank=True, null=True)
-
-
-class Chunk(models.Model):
-    name = models.CharField(max_length=100)
-    text = models.TextField()
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ['name']
-
-    @classmethod
-    @lru_cache(maxsize=32)
-    def get(cls, name):
-        """Get chunk text by name, or empty string."""
-        try:
-            chunk = cls.objects.get(name=name)
-        except cls.DoesNotExist:
-            return ''
-        return chunk.text
 
 
 # Archives (ignore) #######
