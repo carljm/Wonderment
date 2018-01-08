@@ -21,53 +21,11 @@ from wonderment.tests import factories as f
             {
                 'costs': [
                     ("First kid", 85),
-                    ("Second kid", 70),
+                    ("Second kid", 85),
                 ],
-                'total': 155,
+                'total': 170,
                 'paid': 0,
-                'owed': 155,
-            }
-        ),
-        (
-            0, 0, False, False, 3,
-            {
-                'costs': [
-                    ("First kid", 85),
-                    ("Second kid", 70),
-                    ("Third kid", 55),
-                ],
-                'total': 210,
-                'paid': 0,
-                'owed': 210,
-            }
-        ),
-        (
-            0, 0, False, False, 4,
-            {
-                'costs': [
-                    ("First kid", 85),
-                    ("Second kid", 70),
-                    ("Third kid", 55),
-                    ("Fourth kid", 55),
-                ],
-                'total': 265,
-                'paid': 0,
-                'owed': 265,
-            }
-        ),
-        (
-            0, 0, False, False, 5,
-            {
-                'costs': [
-                    ("First kid", 85),
-                    ("Second kid", 70),
-                    ("Third kid", 55),
-                    ("Fourth kid", 55),
-                    ("Fifth kid", 55),
-                ],
-                'total': 320,
-                'paid': 0,
-                'owed': 320,
+                'owed': 170,
             }
         ),
         # committee members are free

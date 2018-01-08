@@ -14,8 +14,8 @@ from .models import (
     Student,
 )
 
-# $85 for first kid, $70 for second, $55 for third
-COSTS = [85, 70, 55]
+# $85 per kid
+COSTS = [85]
 
 
 def get_bill(participant):
