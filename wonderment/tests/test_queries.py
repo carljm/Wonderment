@@ -10,21 +10,64 @@ from wonderment.tests import factories as f
         (
             0, 0, False, False, 1,
             {
-                'costs': [("1 student x $30", 30)],
-                'total': 30,
+                'costs': [("First kid", 85)],
+                'total': 85,
                 'paid': 0,
-                'owed': 30,
+                'owed': 85,
             }
         ),
         (
             0, 0, False, False, 2,
             {
                 'costs': [
-                    ("2 students x $30", 60),
+                    ("First kid", 85),
+                    ("Second kid", 70),
                 ],
-                'total': 60,
+                'total': 155,
                 'paid': 0,
-                'owed': 60,
+                'owed': 155,
+            }
+        ),
+        (
+            0, 0, False, False, 3,
+            {
+                'costs': [
+                    ("First kid", 85),
+                    ("Second kid", 70),
+                    ("Third kid", 55),
+                ],
+                'total': 210,
+                'paid': 0,
+                'owed': 210,
+            }
+        ),
+        (
+            0, 0, False, False, 4,
+            {
+                'costs': [
+                    ("First kid", 85),
+                    ("Second kid", 70),
+                    ("Third kid", 55),
+                    ("Fourth kid", 55),
+                ],
+                'total': 265,
+                'paid': 0,
+                'owed': 265,
+            }
+        ),
+        (
+            0, 0, False, False, 5,
+            {
+                'costs': [
+                    ("First kid", 85),
+                    ("Second kid", 70),
+                    ("Third kid", 55),
+                    ("Fourth kid", 55),
+                    ("Fifth kid", 55),
+                ],
+                'total': 320,
+                'paid': 0,
+                'owed': 320,
             }
         ),
         # committee members are free
@@ -32,8 +75,8 @@ from wonderment.tests import factories as f
             0, 0, True, False, 1,
             {
                 'costs': [
-                    ("1 student x $30", 30),
-                    ("100% committee discount", -30),
+                    ("First kid", 85),
+                    ("100% committee discount", -85),
                 ],
                 'total': 0,
                 'paid': 0,
@@ -45,8 +88,8 @@ from wonderment.tests import factories as f
             0, 0, False, True, 1,
             {
                 'costs': [
-                    ("1 student x $30", 30),
-                    ("Teacher (cost deducted from pay)", -30),
+                    ("First kid", 85),
+                    ("Teacher (cost deducted from pay)", -85),
                 ],
                 'total': 0,
                 'paid': 0,
@@ -55,33 +98,31 @@ from wonderment.tests import factories as f
         ),
         # donation is included
         (
-            70, 0, False, False, 1,
+            75, 0, False, False, 1,
             {
                 'costs': [
-                    ("1 student x $30", 30),
-                    ("Donation", 70),
+                    ("First kid", 85),
+                    ("Donation", 75),
                 ],
-                'total': 100,
+                'total': 160,
                 'paid': 0,
-                'owed': 100,
+                'owed': 160,
             }
         ),
-        # already-paid is deducted
+        # already-paid is deducated
         (
-            0, 10, False, False, 1,
+            0, 60, False, False, 1,
             {
-                'costs': [("1 student x $30", 30)],
-                'total': 30,
-                'paid': 10,
-                'owed': 20,
+                'costs': [("First kid", 85)],
+                'total': 85,
+                'paid': 60,
+                'owed': 25,
             }
         ),
     ],
 )
 def test_get_bill(db, donation, paid, committee, teacher, num_kids, breakdown):
-    volunteer = []
-    p = f.ParticipantFactory.create(
-        volunteer=volunteer, donation=donation, paid=paid)
+    p = f.ParticipantFactory.create(donation=donation, paid=paid)
     if committee:
         p.session.committee_members.add(p.parent)
     c1 = f.ClassFactory.create(session=p.session)

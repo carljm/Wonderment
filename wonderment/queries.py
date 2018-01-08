@@ -14,6 +14,9 @@ from .models import (
     Student,
 )
 
+# $85 for first kid, $70 for second, $55 for third
+COSTS = [85, 70, 55]
+
 
 def get_bill(participant):
     """Return bill for this participant.
@@ -29,13 +32,11 @@ def get_bill(participant):
     num_students = parent.children.filter(
         studies__klass__session=session
     ).distinct().count()
-    costs.append(
-        (
-            "%s student%s x $30" % (
-                num_students, '' if num_students == 1 else 's'),
-            30 * num_students,
-        )
-    )
+    for i in range(num_students):
+        costs.append((
+            "%s kid" % ordinal(i + 1),
+            COSTS[i] if i < len(COSTS) else COSTS[-1],
+        ))
     total = sum(c[1] for c in costs)
     if is_committee_member(parent, session):
         costs.append(("100% committee discount", -total))
