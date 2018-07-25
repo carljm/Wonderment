@@ -10,22 +10,22 @@ from wonderment.tests import factories as f
         (
             0, 0, False, False, 1,
             {
-                'costs': [("First kid", 85)],
-                'total': 85,
+                'costs': [("First kid", 35)],
+                'total': 35,
                 'paid': 0,
-                'owed': 85,
+                'owed': 35,
             }
         ),
         (
             0, 0, False, False, 2,
             {
                 'costs': [
-                    ("First kid", 85),
-                    ("Second kid", 85),
+                    ("First kid", 35),
+                    ("Second kid", 35),
                 ],
-                'total': 170,
+                'total': 70,
                 'paid': 0,
-                'owed': 170,
+                'owed': 70,
             }
         ),
         # committee members are free
@@ -33,8 +33,8 @@ from wonderment.tests import factories as f
             0, 0, True, False, 1,
             {
                 'costs': [
-                    ("First kid", 85),
-                    ("100% committee discount", -85),
+                    ("First kid", 35),
+                    ("100% committee discount", -35),
                 ],
                 'total': 0,
                 'paid': 0,
@@ -46,8 +46,8 @@ from wonderment.tests import factories as f
             0, 0, False, True, 1,
             {
                 'costs': [
-                    ("First kid", 85),
-                    ("Teacher (cost deducted from pay)", -85),
+                    ("First kid", 35),
+                    ("Teacher (cost deducted from pay)", -35),
                 ],
                 'total': 0,
                 'paid': 0,
@@ -59,21 +59,21 @@ from wonderment.tests import factories as f
             75, 0, False, False, 1,
             {
                 'costs': [
-                    ("First kid", 85),
+                    ("First kid", 35),
                     ("Donation", 75),
                 ],
-                'total': 160,
+                'total': 110,
                 'paid': 0,
-                'owed': 160,
+                'owed': 110,
             }
         ),
-        # already-paid is deducated
+        # already-paid is deducted
         (
-            0, 60, False, False, 1,
+            0, 10, False, False, 1,
             {
-                'costs': [("First kid", 85)],
-                'total': 85,
-                'paid': 60,
+                'costs': [("First kid", 35)],
+                'total': 35,
+                'paid': 10,
                 'owed': 25,
             }
         ),
