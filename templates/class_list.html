@@ -13,7 +13,7 @@
 <div class="list-group">
   {% for class in classes %}
   <div class="list-group-item">
-    {{ class.name }} (age {{ class.min_age }}-{{ class.max_age }})
+    {{ class.name }}
     -- {{ class.start|date:"P" }} - {{ class.end|date:"P" }}
     -- {{ class.teacher.name }}
     -- {{ class.num_students }}/{{ class.max_students }} signed up
